@@ -24,9 +24,11 @@ def converter(file, myjson):
 
     jsonfile.write(json.dumps(json_tab))
     jsonfile.close()
+    return json_tab
 
 
 @app.route('/convertFile', methods=['POST'])
 def convertFile():
-    converter(request.form['filename'],'data.json')
-    return render_template('index.html',converted = True, filename = request.form['filename'])
+    json_tab = converter(request.form['filename'],'data.json')
+
+    return render_template('index.html',converted = True, filename = request.form['filename'],json_tab = json_tab)
