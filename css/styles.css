@@ -1,0 +1,15 @@
+nav{
+	background-image: url('../img/giphy.gif');
+    background-repeat: no-repeat;
+	background-size: 100%;
+
+}
+.logo{
+	height:100%;
+	display: inline-block;
+	margin-top:-1%;
+}
+.logo>img{
+	vertical-align:middle;
+	height:100px;
+}
