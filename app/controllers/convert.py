@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, request, session, redirect
-from viSpace import app
+from run import app
 
 import json
 
