@@ -1,7 +1,6 @@
-from flask import Flask, render_template, url_for, request, session, redirect
-from run import app
-
-import json
+from flask import render_template, url_for, request, redirect
+from app.run import app
+from db.db_conf import collection
 import os
 from werkzeug.utils import secure_filename
 
@@ -37,7 +36,6 @@ def upload_file():
 @app.route('/convert-file/<filename>')
 def convert_file(filename):
     json_tab = convert_file_to_json(filename)
-
     return render_template('index.html', converted=True, filename=filename, json_tab=json_tab)
 
 
@@ -58,12 +56,12 @@ def convert_file_to_json(file):
             elif i >= 4:
                 file_data = line.split()
                 json_tab.append(dict(zip(parameters, file_data)))
-        create_json_file(file + 'json', json_tab)
+        create_json_file(file, json_tab)
     return json_tab
 
 
 # This function create a json file which it contains the json of the imported file
 def create_json_file(json_file_name, json_tab):
-    json_file = open("data/json/" + json_file_name, "w")
-    json_file.write(json.dumps(json_tab))
-    json_file.close()
+    file_name = json_file_name.split(".")[-1]
+    print(file_name)
+    print(json_tab)
