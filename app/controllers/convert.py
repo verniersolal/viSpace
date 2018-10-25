@@ -36,6 +36,7 @@ def upload_file():
 @app.route('/convert-file/<filename>')
 def convert_file(filename):
     json_tab = convert_file_to_json(filename)
+
     return render_template('index.html', converted=True, filename=filename, json_tab=json_tab)
 
 
@@ -63,5 +64,4 @@ def convert_file_to_json(file):
 # This function create a json file which it contains the json of the imported file
 def create_json_file(json_file_name, json_tab):
     file_name = json_file_name.split(".")[-1]
-    print(file_name)
-    print(json_tab)
+    collection.insert_one({"filename" : file_name, "params": json_tab})
