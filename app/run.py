@@ -3,7 +3,9 @@ from flask_pymongo import PyMongo
 from db.db_conf import vispace_uri
 
 app = Flask(__name__)
-mongo = PyMongo(app, uri=vispace_uri)
+app.config['MONGO_URI'] = vispace_uri
+mongo = PyMongo(app)
+
 from app.index import *
 
 if __name__ == '__main__':
