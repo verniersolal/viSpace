@@ -1,15 +1,15 @@
 from flask import render_template, url_for, request, redirect
-from app.run import app
-from db.db_conf import collection
+from app.run import app, mongo
 import os
 from werkzeug.utils import secure_filename
 
+collection = mongo.db.file
 UPLOAD_FOLDER = 'data/'
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/upload_file', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         file = request.files['file']
