@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+{% block body %}
+<body onload="uploadSuccess();">
+<div class="container">
+    <div class="row graph-interface">
+        <h3 class="center">Vos graphiques</h3>
+        <div class="row"></div>
+        <div class="col m6 center">
+            <div class="card-panel teal">
+                <a class="btn-floating btn-large waves-effect waves-light red modal-trigger" href="#modal1"><i
+                        class="material-icons">add</i></a>
+            </div>
+        </div>
+        <div class="col m6 center">
+            <div class="card-panel teal">
+                <a class="btn-floating btn-large waves-effect waves-light red modal-trigger" href="#modal1"><i
+                        class="material-icons">add</i></a>
+            </div>
+        </div>
+        <div class="col m6 center">
+            <div class="card-panel teal">
+                <a class="btn-floating btn-large waves-effect waves-light red modal-trigger" href="#modal1"><i
+                        class="material-icons">add</i></a>
+            </div>
+        </div>
+        <div class="col m6 center ">
+            <div class="card-panel teal">
+                <a class="btn-floating btn-large waves-effect waves-light red modal-trigger" href="#modal1"><i
+                        class="material-icons">add</i></a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Structure -->
+<div id="modal1" class="modal">
+    <div class="modal-content">
+        <h4>Choix des paramètres</h4>
+        <div class="row">
+            <div class="input-field col s12">
+                <select>
+                    <option value="" disabled selected>Teff</option>
+                    <option value="1">Geff</option>
+                    <option value="2">L</option>
+                    <option value="3">model</option>
+                </select>
+                <label>Axe X</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <select>
+                    <option value="" disabled selected>Teff</option>
+                    <option value="1">Geff</option>
+                    <option value="2">L</option>
+                    <option value="3">model</option>
+                </select>
+                <label>Axe Y</label>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
+    </div>
+</div>
+</body>
+{% endblock %}

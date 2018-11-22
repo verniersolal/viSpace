@@ -1,9 +1,3 @@
-nav{
-	background-image: url('../img/giphy.gif');
-    background-repeat: no-repeat;
-	background-size: 100%;
-
-}
 .logo{
 	height:100%;
 	display: inline-block;
@@ -12,4 +6,16 @@ nav{
 .logo>img{
 	vertical-align:middle;
 	height:100px;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: white;
+}
+
+.graph-interface{
+margin-top:10vh;
+}
+
+.modal{
+height:50%;
 }

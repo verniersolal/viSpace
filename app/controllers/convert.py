@@ -37,7 +37,7 @@ def upload_file():
 def convert_file(filename):
     json_tab = convert_file_to_json(filename)
 
-    return render_template('index.html', converted=True, filename=filename, json_tab=json_tab)
+    return render_template('graph_interface.html', converted=True, filename=filename, json_tab=json_tab)
 
 
 # This function convert the imported file to json

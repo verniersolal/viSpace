@@ -92,3 +92,14 @@ function draw(data){
 }
 draw(jdata);
 
+function uploadSuccess(){
+    M.toast({html: 'Fichiers correctement importés !'});
+
+    $(document).ready(function(){
+    $('.modal').modal();
+  });
+
+  $(document).ready(function(){
+    $('select').formSelect();
+  });
+}
