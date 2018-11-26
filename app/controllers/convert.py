@@ -2,6 +2,8 @@ from flask import render_template, url_for, request, redirect
 from app.run import app, mongo
 collection = mongo.db.file
 import gzip
+import os
+from functools import reduce
 UPLOAD_FOLDER = 'data/'
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -10,12 +12,15 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 @app.route('/upload_files', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        jsontab = []
         files = request.files.getlist("file[]")
         for file in files:
-            jsontab.append(convert_file_to_json(file.filename))
-        return render_template('index.html', converted=True, json_tab=jsontab)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
+        return render_template('graph_interface.html', converted=True, json_tab=convert_file_to_json(file.filename))
     return render_template('index.html')
+
+
+def get_column(array, i):
+    return [row[i] for row in array]
 
 
 # This function convert the imported file to json
@@ -23,9 +28,10 @@ def upload_file():
 def convert_file_to_json(file):
     parameters = []
     split = file.split('.')
+    data = []
+    final= {}
     if split[-1] == 'gz':
         with gzip.open(UPLOAD_FOLDER + file, 'rt') as f:
-            json_tab = []
             for i in range(3):  # we skip the header of the imported file
                 next(f)
             for i, line in enumerate(f):
@@ -35,17 +41,16 @@ def convert_file_to_json(file):
                         parameters.append(j)
                 elif i >= 4:
                     file_data = line.split()
-                    json_tab.append(dict(zip(parameters, file_data)))
-        postVisu(file, json_tab)
-        return json_tab
+                    data.append(file_data)
+            for p in range(len(parameters)):
+                final[parameters[p]] = get_column(data, p)
+            import_file(file, final)
+        return final
 
 
-# This function create a json file which it contains the json of the imported file
-def postVisu(json_file_name, json_tab):
-    file_name = json_file_name.split(".")[-3] + '.' + json_file_name.split(".")[-2]
+# This function import the data in the db
+def import_file(json_file_name, json_tab):
     star_status = json_file_name.split(".")[:3]
     status = star_status[0] + '.' + star_status[1] + '.' + star_status[2]
-    data = {"filename": file_name, "params": json_tab}
-    print(status)
-    print(data['filename'])
-    collection.insert({status: data}, check_keys=False)
+    for key in json_tab:
+        collection.update_one({"prefixe": status}, {"$set": {"params."+str(key): json_tab[key]}}, upsert=True)
