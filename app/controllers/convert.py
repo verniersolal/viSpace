@@ -3,7 +3,6 @@ from app.run import app, mongo
 collection = mongo.db.file
 import gzip
 import os
-from functools import reduce
 UPLOAD_FOLDER = 'data/'
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
