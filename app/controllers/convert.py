@@ -53,3 +53,37 @@ def import_file(json_file_name, json_tab):
     status = star_status[0] + '.' + star_status[1] + '.' + star_status[2]
     for key in json_tab:
         collection.update_one({"prefixe": status}, {"$set": {"params."+str(key): json_tab[key]}}, upsert=True)
+
+
+@app.route('/dashboard', methods=['GET'])
+def get_models():
+    if request.method == 'GET':
+        models = collection.find({}, {'prefixe':1})
+        result = []
+        for model in models:
+            result.append(model['prefixe'])
+        get_parameters_by_model(result[0])
+        get_parameters(result[0])
+    return render_template('index.html')
+
+
+def get_parameters_by_model(model):
+    parameters = collection.find_one({"prefixe": model})
+    keys = parameters['params'].keys()
+    result = []
+    # We change our results to an array who is more simple to pass in JS
+    for key in keys:
+        result.append(key)
+    return result
+
+
+@app.route('/dashboard', methods=['POST'])
+def get_parameters(model):
+    results = dict()
+    # Ici nous aurons dans la variable request les parametres des axes ainsi que le nom du model
+    parameters = collection.find_one({"prefixe": model})
+    for k in parameters['params'].keys():
+        if k in request.parameters:
+            results[k] = parameters['params'][k]
+    return results
+
