@@ -1,7 +1,11 @@
 class Chart {
 
+    title = "";
+    size = 0;
+    position = 0;
+
     constructor(title, size, position) {
-        this.title = title
+        this.title = title;
         this.size = size;
         this.position = position;
     }
@@ -29,10 +33,5 @@ class Chart {
     setTitle(title) {
         this.title = title;
     }
-
-}
-
-function main() {
-    new Chart2D()
 
 }

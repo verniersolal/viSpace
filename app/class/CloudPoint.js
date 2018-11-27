@@ -1,10 +1,12 @@
 class CloudPoint extends Chart2D {
+    xAxe = new Axe();
+    yAxe = new Axe();
 
-    constructor(title, size, position, xAxe, yAXe) {
-        super(title, size, position, xAxe, yAXe);
+    constructor(title, size, position, xAxe, yAxe) {
+        super(title, size, position, xAxe, yAxe);
     }
 
-    drawCloudPoint(){
+    drawCloudPoint() {
         super.getXAxe();
         super.getYAxe();
     }
