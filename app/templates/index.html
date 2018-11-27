@@ -1,50 +1,48 @@
 {% extends "layout.html" %}
 {% block body %}
 
-<div class="container">
-    <h2 class="center">Bienvenue sur viSpace</h2>
-    {% if not converted %}
-
-    <p class="float center">Importez votre fichier pour démarrer la visualisation</p>
-
-    <div class="row">
-        <form method='POST' action="{{ url_for('upload_file') }}" class="col s12" enctype="multipart/form-data">
-            <fieldset>
-                <legend>
-                    <strong>
-                        Selectionnez votre fichier
-                    </strong>
-                </legend>
-                <div class="file-field input-field">
-                    <div class="btn waves-effect waves-light black">
-                        <i class="material-icons right">attach_file</i>
-                        <span>Parcourir</span>
-                        <input type="file" name="file[]" multiple="" required>
+    <div class="container homepage">
+        <h1 class="center">Bienvenue sur viSpace</h1>
+        {% if not converted %}
+            <div class="row">
+            <h5 class="float center">Importez votre fichier pour démarrer la visualisation</h5>
+            <form method='POST' action="{{ url_for('upload_file') }}" class="col s12" enctype="multipart/form-data">
+                <fieldset>
+                    <legend>
+                        <strong>
+                            Sélectionnez vos fichiers
+                        </strong>
+                    </legend>
+                    <div class="file-field input-field">
+                        <div class="btn waves-effect waves-light white black-text">
+                            <i class="material-icons right">attach_file</i>
+                            <span>Parcourir</span>
+                            <input type="file" name="file" required>
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate" name="filename" type="text"
+                                   placeholder="Vous pouvez faire glisser votre fichier">
+                        </div>
                     </div>
-                    <div class="file-path-wrapper white-text">
-                        <input class="file-path validate" name="filename" type="text"
-                               placeholder="Vous pouvez faire glisser votre fichier">
-                    </div>
+                </fieldset>
+                <div class="row"></div>
+                <div class="row center">
+                    <button class="btn waves-effect waves-light white black-text" type="submit"><i
+                            class="material-icons left">file_upload</i>
+                        Importer
+                    </button>
+
                 </div>
-            </fieldset>
-            <div class="row"></div>
-            <div class="row center">
-                <button class="btn waves-effect waves-light black" type="submit" ><i
-                        class="material-icons left">file_upload</i>
-                    Importer
-                </button>
-
-            </div>
-        </form>
+            </form>
         {% else %}
-        <h2 class="center">Le fichier {{ filename }} a été converti avec succès</h2>
-        <svg id="svg">
-            <script>
-                var jdata = {{ json_tab }};
-                var filename = "{{ filename }}";
-            </script>
+            <h2 class="center">Le fichier {{ filename }} a été converti avec succès</h2>
+            <svg id="svg">
+                <script>
+                    var jdata = {{ json_tab }};
+                    var filename = "{{ filename }}";
+                </script>
             </svg>
         {% endif %}
+        </div>
     </div>
-</div>
 {% endblock %}

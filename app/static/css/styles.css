@@ -1,4 +1,5 @@
-.logo{
+/*LOGO*/
+. logo{
 	height:100%;
 	display: inline-block;
 	margin-top:-1%;
@@ -10,6 +11,26 @@
 
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
     color: white;
+	font-weight: bold;
+}
+
+/*BODY BACKGROUND*/
+body{
+	background-image: url("../img/bg.jpg");
+	background-repeat: repeat-y;
+	background-size: cover;
+	color:white;
+}
+/*NAVBAR BACKGROUND*/
+nav{
+	background-color: transparent;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+}
+/*HOMEPAGE*/
+.homepage{
+	margin-top: 10vh;
 }
 
 .graph-interface{
@@ -18,4 +39,17 @@ margin-top:10vh;
 
 .modal{
 height:50%;
+}
+
+legend{
+	font-size: 17px !important;
+}
+
+.card-panel{
+	padding: 10vh;
+	background:rgba(255,255,255, 0.3);
+}
+
+.card-panel:hover{
+	background:rgba(255,255,255, 0.6);
 }
