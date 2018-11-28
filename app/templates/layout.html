@@ -27,13 +27,16 @@
 </nav>
 {% endblock %}
 
-{% block body %}{% endblock %}
+{% block body %}
+{% endblock %}
 
 {% block scripts %}
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
 <script src="https://d3js.org/d3.v5.js"></script>
+<script src="{{ url_for('static', filename='js/visualisation-script.js') }}"></script>
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
 {% endblock %}
 
 </body>

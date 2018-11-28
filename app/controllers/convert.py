@@ -91,4 +91,6 @@ def get_parameters():
             model_y = collection.find_one({"prefixe": request.form['model_y']})
             if request.form['axe_y'] in model_y['params']:
                 results[request.form['axe_y']] = model_y['params']
+            results['isLog_x'] = request.form['isLog_x']
+            results['isLog_y'] = request.form['isLog_y']
         return render_template('graph_interface.html', data=results)
