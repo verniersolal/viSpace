@@ -33,7 +33,28 @@ function drawLinearChart(position, xAxe, yAxe){
         line.attr("fill", "none");
         line.attr("stroke-opacity", 1);
 }
-
+function drawPointCloud(position, xAxe, yAxe){
+    let svg = d3.select('#svg'+position);
+    let gContainer = svg.append('g');
+    let gAxisX = gContainer.append('g');
+    gAxisX.attr("transform", "translate(25, 410)");
+    let gAxisY = gContainer.append('g');
+    gAxisY.attr("transform", "translate(25,10)");
+    gAxisX.call(drawAxe(xAxe.isVertical, xAxe.isLog, xAxe.data));
+    gAxisY.call(drawAxe(yAxe.isVertical, yAxe.isLog, yAxe.data));
+    let xy = [];
+    for(let i = 0; i< xAxe.data.length; i++){
+        xy.push({x: xAxe.data[i], y: yAxe.data[i]});
+    }
+    let gcircle = gContainer.append("g");
+    for(let i=0; i< xy.length; i++){
+        let circle = gcircle.append("circle");
+            circle.attr("cx", 25+getScale(xAxe.isVertical, xAxe.isLog, xAxe.data)(xy[i].x))
+                  .attr("cy", 10+getScale(yAxe.isVertical, yAxe.isLog, yAxe.data)(xy[i].y))
+                  .attr("r", 5)
+                  .attr('fill', 'red');
+    }
+}
 let xAxe = {
     data : [10,20,30,40,50],
     isLog : false,
@@ -44,5 +65,3 @@ let yAxe = {
     isLog: false,
     isVertical: true
 };
-
-drawLinearChart(1, xAxe, yAxe);
