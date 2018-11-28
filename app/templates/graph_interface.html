@@ -32,31 +32,101 @@
         </div>
     </div>
     <!-- Modal Structure -->
-    <div id="modal1" class="modal">
+    <div id="modal1" class="modal black-text">
         <div class="modal-content">
-            <h4>Choix des paramètres</h4>
-            <div class="row">
-                <div class="input-field col s12">
-                    <select>
-                        <option value="" disabled selected>Teff</option>
-                        <option value="1">Geff</option>
-                        <option value="2">L</option>
-                        <option value="3">model</option>
-                    </select>
-                    <label>Axe X</label>
+            <h4>Configuration du graphique</h4>
+            <form action="#">
+                <div class="row">
+                    <div class="col m2">
+                        <p>
+                            <label>
+                                <input class="with-gap" name="family_chart" type="radio" checked/>
+                                <span>Graphique linéaire</span>
+                            </label>
+                        </p>
+                    </div>
+                    <div class="col m2">
+                        <p>
+                            <label>
+                                <input class="with-gap" name="family_chart" type="radio"/>
+                                <span>Nuage de points</span>
+                            </label>
+                        </p>
+                    </div>
+                    <div class="col m2">
+                        <p>
+                            <label>
+                                <input class="with-gap" name="family_chart" type="radio"/>
+                                <span>Coordonnées parallèles</span>
+                            </label>
+                        </p>
+                    </div>
+                    <div class="col m2">
+                        <p>
+                            <label>
+                                <input class="with-gap" name="family_chart" type="radio"/>
+                                <span>Toto</span>
+                            </label>
+                        </p>
+                    </div>
+                    <div class="col m2">
+                        <p>
+                            <label>
+                                <input class="with-gap" name="family_chart" type="radio"/>
+                                <span>Titi</span>
+                            </label>
+                        </p>
+                    </div>
+                    <div class="col m2">
+                        <p>
+                            <label>
+                                <input class="with-gap" name="family_chart" type="radio"/>
+                                <span>Tutu</span>
+                            </label>
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s12">
-                    <select>
-                        <option value="" disabled selected>Teff</option>
-                        <option value="1">Geff</option>
-                        <option value="2">L</option>
-                        <option value="3">model</option>
-                    </select>
-                    <label>Axe Y</label>
+                <div class="row">
+                    <fieldset>
+                        <legend>
+                            <strong>
+                                Axe X
+                            </strong>
+                        </legend>
+                        <div class="input-field col m6">
+                            <select name="model_x">
+                                <option value="" disabled selected>Modèle X</option>
+                            </select>
+                            <label>Modèle pour l'axe X</label>
+                        </div>
+                        <div class="input-field col m6">
+                            <select name="axe_x">
+                                <option value="" disabled selected>Axe X</option>
+                            </select>
+                            <label>Axe X</label>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>
+                            <strong>
+                                Axe Y
+                            </strong>
+                        </legend>
+                        <div class="input-field col m6">
+                            <select name="model_y">
+                                <option value="" disabled selected>Modèle Y</option>
+                            </select>
+                            <label>Modèle pour l'axe Y</label>
+                        </div>
+                        <div class="input-field col m6">
+                            <select name="axe_y">
+                                <option value="" disabled selected>Axe Y</option>
+                            </select>
+                            <label>Axe Y</label>
+                        </div>
+                    </fieldset>
                 </div>
-            </div>
+            </form>
         </div>
         <div class="modal-footer">
             <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
