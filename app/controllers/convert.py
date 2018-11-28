@@ -74,7 +74,7 @@ def get_models():
 def get_parameters_by_model(model):
     parameters = collection.find_one({"prefixe": model})
     if not parameters:
-        exit()
+        return "No parameters found"
     keys = parameters['params'].keys()
     result = []
     # We change our results to an array who is more simple to pass in JS
