@@ -16,6 +16,7 @@ def upload_file():
         for file in files:
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
             convert_file_to_json(file.filename)
+            os.remove(app.config['UPLOAD_FOLDER'] + "/" + file.filename)
         return render_template('graph_interface.html', converted=True)
     return render_template('index.html')
 
