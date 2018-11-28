@@ -3,6 +3,7 @@ from app.run import app, mongo
 collection = mongo.db.file
 import gzip
 import os
+import json
 UPLOAD_FOLDER = 'data/'
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -15,6 +16,7 @@ def upload_file():
         for file in files:
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
             convert_file_to_json(file.filename)
+            os.remove(app.config['UPLOAD_FOLDER'] + "/" + file.filename)
         return render_template('graph_interface.html', converted=True)
     return render_template('index.html')
 
@@ -56,18 +58,18 @@ def import_file(json_file_name, json_tab):
         collection.update_one({"prefixe": status}, {"$set": {"params."+str(key): json_tab[key]}}, upsert=True)
 
 
-@app.route('/dashboard', methods=['GET'])
+
+@app.route('/models')
 def get_models():
     if request.method == 'GET':
-        models = collection.find({}, {'prefixe':1})
+        models = collection.find({}, {'prefixe': 1})
         result = []
         for model in models:
             result.append(model['prefixe'])
-        get_parameters_by_model(result[0])
-        get_parameters(result[0])
-    return render_template('index.html')
+    return json.dumps(result)
 
 
+@app.route('/models/<model>')
 def get_parameters_by_model(model):
     parameters = collection.find_one({"prefixe": model})
     keys = parameters['params'].keys()
@@ -75,16 +77,18 @@ def get_parameters_by_model(model):
     # We change our results to an array who is more simple to pass in JS
     for key in keys:
         result.append(key)
-    return result
+    return json.dumps(result)
 
 
-@app.route('/dashboard', methods=['POST'])
-def get_parameters(model):
-    results = dict()
-    # Ici nous aurons dans la variable request les parametres des axes ainsi que le nom du model
-    parameters = collection.find_one({"prefixe": model})
-    for k in parameters['params'].keys():
-        if k in request.parameters:
-            results[k] = parameters['params'][k]
-    return results
-
+@app.route('/axe_data', methods=['POST'])
+def get_parameters():
+    if request.method == 'POST':
+        results = dict()
+        if request.form['family_chart'] == "2Dchart":
+            model_x = collection.find_one({"prefixe": request.form['model_x']})
+            if request.form['axe_x'] in model_x['params']:
+                results[request.form['axe_x']] = model_x['params']
+            model_y = collection.find_one({"prefixe": request.form['model_y']})
+            if request.form['axe_y'] in model_y['params']:
+                results[request.form['axe_y']] = model_y['params']
+        return render_template('graph_interface.html', data=results)
