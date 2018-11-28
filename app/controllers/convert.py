@@ -90,9 +90,9 @@ def get_parameters():
         if request.form['family_chart'] == "2Dchart":
             model_x = collection.find_one({"prefixe": request.form['model_x']})
             if request.form['axe_x'] in model_x['params'].keys():
-                results[request.form['axe_x']] = model_x['params'][request.form['axe_x']]
+                axe_x = request.form['axe_x']
+                results = dict({"axe_x": {axe_x: model_x['params'][axe_x]}})
             model_y = collection.find_one({"prefixe": request.form['model_y']})
             if request.form['axe_y'] in model_y['params'].keys():
-                results[request.form['axe_y']] = model_y['params'][request.form['axe_y']]
-            print(results)
-            return render_template('graph_interface.html', data=json.dumps(results))
+                results.update(dict({"axe_y": {request.form['axe_y']: model_y['params'][request.form['axe_y']]}}))
+            return json.dumps(results)

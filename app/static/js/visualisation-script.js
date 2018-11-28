@@ -55,13 +55,3 @@ function drawPointCloud(position, xAxe, yAxe){
                   .attr('fill', 'red');
     }
 }
-let xAxe = {
-    data : [10,20,30,40,50],
-    isLog : false,
-    isVertical: false
-};
-let yAxe = {
-    data: [13,34,32,10,40],
-    isLog: false,
-    isVertical: true
-};

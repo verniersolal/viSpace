@@ -157,10 +157,13 @@
             </div>
         </form>
     </div>
+    <div class="row">
+        <svg id="svg1" width="500" height="500"></svg>
+    </div>
     </body>
 {% endblock %}
 {% block scripts %}
     {{ super() }}
-    <script src="{{ url_for('static', filename='js/chart_settings.js') }}"></script>
     <script src="{{ url_for('static', filename='js/visualisation-script.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/chart_settings.js') }}"></script>
 {% endblock %}

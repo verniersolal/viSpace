@@ -59,7 +59,20 @@ function init() {
             url: url,
             data: form.serialize(), // serializes the form's elements.
             success: function (data) {
-                console.log("toto");
+                var axe_x = $('#axe_x').val();
+                var axe_y = $('#axe_y').val();
+                console.log(axe_x);
+                let xAxe = {
+                    data : data[axe_x],
+                    isLog : false,
+                    isVertical: false
+                };
+                let yAxe = {
+                    data: data[axe_y],
+                    isLog: false,
+                    isVertical: true
+                };
+                drawPointCloud(1,xAxe, yAxe);
             }
         });
 
