@@ -1,6 +1,6 @@
 function init() {
     // Toast Materialize
-    M.toast({html: 'Fichiers correctement importés !'});
+    M.toast({html: 'Fichiers correctement importés !', classes: 'rounded', displayLength: 5000});
 
     // Modal Materialize
     $(document).ready(function () {
@@ -49,6 +49,21 @@ function init() {
                 });
             }
         });
+    });
+
+    $("#settings_form").submit(function (e) {
+        var form = $(this);
+        var url = form.attr('action');
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: form.serialize(), // serializes the form's elements.
+            success: function (data) {
+                console.log("toto");
+            }
+        });
+
+        e.preventDefault(); // avoid to execute the actual submit of the form.
     });
 
 
