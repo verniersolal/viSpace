@@ -61,6 +61,20 @@ function init() {
             data: form.serialize(), // serializes the form's elements.
             success: function (data) {
                 $('.modal').modal('close');
+                var axe_x = $('#axe_x').val();
+                var axe_y = $('#axe_y').val();
+                console.log(axe_x);
+                let xAxe = {
+                    data : data[axe_x],
+                    isLog : false,
+                    isVertical: false
+                };
+                let yAxe = {
+                    data: data[axe_y],
+                    isLog: false,
+                    isVertical: true
+                };
+                drawPointCloud(1,xAxe, yAxe);
             }
         });
         e.preventDefault(); // avoid to execute the actual submit of the form.
