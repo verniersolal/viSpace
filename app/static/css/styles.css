@@ -36,6 +36,10 @@ nav {
     margin-top: 10vh;
 }
 
+.file-path.validate {
+    color: white !important;
+}
+
 /*GRAPH INTERFACE*/
 .graph-interface {
     margin-top: 10vh;
@@ -52,9 +56,14 @@ nav {
 }
 
 /* Fieldset color*/
-fieldset {
+#modal1 fieldset {
     border-color: black;
     border-style: solid;
+}
+
+#uploadFieldset {
+    border-color: white;
+    border-style: groove;
 }
 
 /* Input color*/
@@ -78,6 +87,11 @@ fieldset {
     font-weight: bold;
 }
 
+/*Modal max height*/
+.modal.bottom-sheet {
+    max-height: 100% !important;
+}
+
 legend {
     font-size: 17px !important;
 }
@@ -85,8 +99,10 @@ legend {
 .card-panel {
     padding: 10vh;
     background: rgba(255, 255, 255, 0.3);
+    opacity: 0.8;
 }
 
 .card-panel:hover {
     background: rgba(255, 255, 255, 0.6);
+    opacity: 1;
 }
