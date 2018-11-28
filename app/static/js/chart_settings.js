@@ -14,6 +14,7 @@ function init() {
 
 
     $('.modal-trigger').click(function () {
+        $('#settings_form').trigger('reset');
         $.ajax({
             url: '/models',
             type: 'GET',
@@ -59,10 +60,9 @@ function init() {
             url: url,
             data: form.serialize(), // serializes the form's elements.
             success: function (data) {
-                console.log("toto");
+                $('.modal').modal('close');
             }
         });
-
         e.preventDefault(); // avoid to execute the actual submit of the form.
     });
 

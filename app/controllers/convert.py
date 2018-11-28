@@ -1,5 +1,6 @@
 from flask import render_template, url_for, request, redirect
 from app.run import app, mongo
+
 collection = mongo.db.file
 import gzip
 import os
@@ -32,7 +33,7 @@ def convert_file_to_json(file):
     parameters = []
     split = file.split('.')
     data = []
-    final= {}
+    final = {}
     if split[-1] == 'gz':
         with gzip.open(UPLOAD_FOLDER + file, 'rt') as f:
             for i in range(3):  # we skip the header of the imported file
@@ -56,8 +57,7 @@ def import_file(json_file_name, json_tab):
     star_status = json_file_name.split(".")[:3]
     status = star_status[0] + '.' + star_status[1] + '.' + star_status[2]
     for key in json_tab:
-        collection.update_one({"prefixe": status}, {"$set": {"params."+str(key): json_tab[key]}}, upsert=True)
-
+        collection.update_one({"prefixe": status}, {"$set": {"params." + str(key): json_tab[key]}}, upsert=True)
 
 
 @app.route('/models')
@@ -94,5 +94,4 @@ def get_parameters():
             model_y = collection.find_one({"prefixe": request.form['model_y']})
             if request.form['axe_y'] in model_y['params'].keys():
                 results[request.form['axe_y']] = model_y['params'][request.form['axe_y']]
-            print(results)
-            return render_template('graph_interface.html', data=json.dumps(results))
+            return json.dumps(results)
