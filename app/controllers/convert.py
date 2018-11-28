@@ -87,15 +87,11 @@ def get_parameters_by_model(model):
 def get_parameters():
     if request.method == 'POST':
         results = dict()
-        print(request.form['model_x'])
-        print(request.form['axe_x'])
-        print(request.form['model_y'])
-        print(request.form['axe_y'])
         if request.form['family_chart'] == "2Dchart":
             model_x = collection.find_one({"prefixe": request.form['model_x']})
-            if request.form['axe_x'] in model_x['params']:
-                results[request.form['axe_x']] = model_x['params']
+            if request.form['axe_x'] in model_x['params'].keys():
+                results[request.form['axe_x']] = model_x['params'][request.form['axe_x']]
             model_y = collection.find_one({"prefixe": request.form['model_y']})
-            if request.form['axe_y'] in model_y['params']:
-                results[request.form['axe_y']] = model_y['params']
-        return render_template('graph_interface.html', data=results)
+            if request.form['axe_y'] in model_y['params'].keys():
+                results[request.form['axe_y']] = model_y['params'][request.form['axe_y']]
+            return render_template('graph_interface.html', data=json.dumps(results))
