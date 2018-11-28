@@ -1,55 +1,92 @@
 /*LOGO*/
-. logo{
-	height:100%;
-	display: inline-block;
-	margin-top:-1%;
+. logo {
+    height: 100%;
+    display: inline-block;
+    margin-top: -1%;
 }
-.logo>img{
-	vertical-align:middle;
-	height:100px;
+
+.logo > img {
+    vertical-align: middle;
+    height: 100px;
 }
 
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
     color: white;
-	font-weight: bold;
+    font-weight: bold;
 }
 
 /*BODY BACKGROUND*/
-body{
-	background-image: url("../img/bg.jpg");
-	background-repeat: repeat-y;
-	background-size: cover;
-	color:white;
+body {
+    background-image: url("../img/bg.jpg");
+    background-repeat: repeat-y;
+    background-size: cover;
+    color: white;
 }
+
 /*NAVBAR BACKGROUND*/
-nav{
-	background-color: transparent;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
-	box-shadow: none;
+nav {
+    background-color: transparent;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
 }
+
 /*HOMEPAGE*/
-.homepage{
-	margin-top: 10vh;
+.homepage {
+    margin-top: 10vh;
 }
 
-.graph-interface{
-margin-top:10vh;
+/*GRAPH INTERFACE*/
+.graph-interface {
+    margin-top: 10vh;
 }
 
-.modal{
-height:50%;
+/*radio button color*/
+[type="radio"]:checked + span:after, [type="radio"].with-gap:checked + span:after {
+    background-color: #ffc107;
 }
 
-legend{
-	font-size: 17px !important;
+[type="radio"]:checked + span:after, [type="radio"].with-gap:checked + span:before,
+[type="radio"].with-gap:checked + span:after {
+    border: 2px solid #ffc107;
 }
 
-.card-panel{
-	padding: 10vh;
-	background:rgba(255,255,255, 0.3);
+/* Fieldset color*/
+fieldset {
+    border-color: black;
+    border-style: solid;
 }
 
-.card-panel:hover{
-	background:rgba(255,255,255, 0.6);
+/* Input color*/
+.input-field .prefix.active {
+    color: #ffc107;
+}
+
+/* label underline focus color */
+.input-field input:focus {
+    border-bottom: 1px solid #ffc107 !important;
+    box-shadow: 0 1px 0 0 #ffc107 !important
+}
+
+.input-field input:focus + label {
+    color: #ffc107 !important;
+}
+
+/*Autocomplete color*/
+.dropdown-content li > a, .dropdown-content li > span {
+    color: #ffc107;
+    font-weight: bold;
+}
+
+legend {
+    font-size: 17px !important;
+}
+
+.card-panel {
+    padding: 10vh;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.card-panel:hover {
+    background: rgba(255, 255, 255, 0.6);
 }

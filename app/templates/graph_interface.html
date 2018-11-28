@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block body %}
-    <body onload="uploadSuccess();">
+    <body onload="init();">
     <div class="container">
         <div class="row graph-interface">
             <h3 class="center">Vos graphiques</h3>
@@ -31,36 +31,135 @@
             </div>
         </div>
     </div>
+
     <!-- Modal Structure -->
-    <div id="modal1" class="modal">
-        <div class="modal-content">
-            <h4>Choix des paramètres</h4>
-            <div class="row">
-                <div class="input-field col s12">
-                    <select>
-                        <option value="" disabled selected>Teff</option>
-                        <option value="1">Geff</option>
-                        <option value="2">L</option>
-                        <option value="3">model</option>
-                    </select>
-                    <label>Axe X</label>
+    <div id="modal1" class="modal black-text">
+        <form method="post" action="{{ url_for('get_parameters') }}">
+            <div class="modal-content">
+                <h4>Configuration du graphique</h4>
+                <div class="row">
+                    <div class="col m2">
+                        <p>
+                            <label>
+                                <input class="with-gap" name="family_chart" value="2Dchart" type="radio" checked/>
+                                <span>Graphique linéaire</span>
+                            </label>
+                        </p>
+                    </div>
+                    <div class="col m2">
+                        <p>
+                            <label>
+                                <input class="with-gap" name="family_chart" value="" type="radio"/>
+                                <span>Nuage de points</span>
+                            </label>
+                        </p>
+                    </div>
+                    <div class="col m2">
+                        <p>
+                            <label>
+                                <input class="with-gap" name="family_chart" value="" type="radio"/>
+                                <span>Coordonnées parallèles</span>
+                            </label>
+                        </p>
+                    </div>
+                    <div class="col m2">
+                        <p>
+                            <label>
+                                <input class="with-gap" name="family_chart" value="" type="radio"/>
+                                <span>Toto</span>
+                            </label>
+                        </p>
+                    </div>
+                    <div class="col m2">
+                        <p>
+                            <label>
+                                <input class="with-gap" name="family_chart" value="" type="radio"/>
+                                <span>Titi</span>
+                            </label>
+                        </p>
+                    </div>
+                    <div class="col m2">
+                        <p>
+                            <label>
+                                <input class="with-gap" name="family_chart" value="" type="radio"/>
+                                <span>Tutu</span>
+                            </label>
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="row">
+                        <fieldset>
+                            <legend>
+                                <strong>
+                                    Axe X
+                                </strong>
+                            </legend>
+                            <div class="axe_settings" id="1">
+                                <div class="input-field col m4">
+                                    <i class="material-icons prefix">insert_drive_file</i>
+                                    <input type="text" name="model_x" id="model_x" class="autocomplete model_name"
+                                           required>
+                                    <label for="model_x">Modèle pour l'axe X</label>
+                                </div>
+                                <div class="input-field col m4">
+                                    <i class="material-icons prefix">insert_chart</i>
+                                    <input type="text" name="axe_x" id="axe_x" class="autocomplete axe_name" required>
+                                    <label for="axe_x">Axe X</label>
+                                </div>
+                                <div class="input-field col m4">
+                                    <p>
+                                        <label>
+                                            <input name="isLog_x" type="checkbox"/>
+                                            <span>Log 10</span>
+                                        </label>
+                                    </p>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="row">
+                        <fieldset>
+                            <legend>
+                                <strong>
+                                    Axe Y
+                                </strong>
+                            </legend>
+                            <div class="axe_settings" id="2">
+                                <div class="input-field col m4">
+                                    <i class="material-icons prefix">insert_drive_file</i>
+                                    <input type="text" name="model_y" id="model_y" class="autocomplete model_name"
+                                           required>
+                                    <label for="model_y">Modèle pour l'axe Y</label>
+                                </div>
+                                <div class="input-field col m4">
+                                    <i class="material-icons prefix">insert_chart</i>
+                                    <input type="text" name="axe_y" id="axe_y" class="autocomplete axe_name" required>
+                                    <label for="axe_y">Axe Y</label>
+                                </div>
+                                <div class="input-field col m4">
+                                    <p>
+                                        <label>
+                                            <input name="isLog_y" type="checkbox"/>
+                                            <span>Log 10</span>
+                                        </label>
+                                    </p>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="input-field col s12">
-                    <select>
-                        <option value="" disabled selected>Teff</option>
-                        <option value="1">Geff</option>
-                        <option value="2">L</option>
-                        <option value="3">model</option>
-                    </select>
-                    <label>Axe Y</label>
-                </div>
+            <div class="modal-footer">
+                <button class="btn waves-effect waves-light black" type="submit" name="action">Créer
+                    <i class="material-icons right">done</i>
+                </button>
             </div>
-        </div>
-        <div class="modal-footer">
-            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
-        </div>
+        </form>
     </div>
     </body>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/chart_settings.js') }}"></script>
 {% endblock %}

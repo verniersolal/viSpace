@@ -4,6 +4,7 @@ collection = mongo.db.file
 import gzip
 import os
 import json
+
 UPLOAD_FOLDER = 'data/'
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -12,7 +13,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 @app.route('/upload_files', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        files = request.files.getlist("file[]")
+        files = request.files.getlist("files")
         for file in files:
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
             convert_file_to_json(file.filename)
@@ -72,6 +73,8 @@ def get_models():
 @app.route('/models/<model>')
 def get_parameters_by_model(model):
     parameters = collection.find_one({"prefixe": model})
+    if not parameters:
+        exit()
     keys = parameters['params'].keys()
     result = []
     # We change our results to an array who is more simple to pass in JS
@@ -84,6 +87,10 @@ def get_parameters_by_model(model):
 def get_parameters():
     if request.method == 'POST':
         results = dict()
+        print(request.form['model_x'])
+        print(request.form['axe_x'])
+        print(request.form['model_y'])
+        print(request.form['axe_y'])
         if request.form['family_chart'] == "2Dchart":
             model_x = collection.find_one({"prefixe": request.form['model_x']})
             if request.form['axe_x'] in model_x['params']:
