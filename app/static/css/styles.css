@@ -1,3 +1,7 @@
+html, body {
+    height: 100%;
+}
+
 /*LOGO*/
 . logo {
     height: 100%;
@@ -106,4 +110,10 @@ legend {
 .card-panel:hover {
     background: rgba(255, 255, 255, 0.6);
     opacity: 1;
+}
+
+.svg {
+    display: none;
+    height: 33vh;
+    width: 100%;
 }
