@@ -110,6 +110,6 @@ def get_parameters():
                 results['position'] = request.form['position']
                 return json.dumps(results)
             else:
-                return json.dumps({"message": "Not valid parameters", "error": True})
+                return json.dumps({"message": "CP in construct", "error": True})
         else:
-            return json.dumps({"message": "CP in construct", "error": True})
+            return json.dumps({"message": "Not valid parameters", "error": True})
