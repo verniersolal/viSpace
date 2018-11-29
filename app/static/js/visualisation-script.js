@@ -13,7 +13,6 @@ function getScale(isVertical, isLog, data) {
 function drawLinearChart(position, xAxe, yAxe) {
     let svg = d3.select('#svg' + position);
     let card = $('#card' + position);
-    svg.attr('height', card.outerHeight()).attr('width', card.outerWidth());
     let gContainer = svg.append('g');
     let gAxisX = gContainer.append('g');
     let translateY = parseInt(card.outerHeight() - 90);
@@ -47,7 +46,6 @@ function drawLinearChart(position, xAxe, yAxe) {
 function drawPointCloud(position, xAxe, yAxe) {
     let svg = d3.select('#svg' + position);
     let card = $('#card' + position);
-    svg.attr('height', card.outerHeight()).attr('width', card.outerWidth());
     let gContainer = svg.append('g');
     let gAxisX = gContainer.append('g');
     let translateY = parseInt(card.outerHeight()-30);

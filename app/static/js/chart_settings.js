@@ -14,8 +14,6 @@ function init() {
         $('select').formSelect();
     });
 
-    $('.svg').hide();
-
     $('.modal-trigger').click(function () {
         var position = parseInt($(this).attr('id'));
         $('#settings_form').trigger('reset');
