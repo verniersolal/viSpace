@@ -14,9 +14,17 @@ function init() {
         $('select').formSelect();
     });
 
+    $('.svg').hide();
 
     $('.modal-trigger').click(function () {
+        var position = parseInt($(this).attr('id'));
         $('#settings_form').trigger('reset');
+        $('<input>').attr({
+            type: 'hidden',
+            value: position,
+            id: 'position',
+            name: 'position'
+        }).appendTo('#settings_form');
         $.ajax({
             url: '/models',
             type: 'GET',
@@ -64,14 +72,14 @@ function init() {
             success: function (data) {
                 var axe_x = $('#axe_x').val();
                 var axe_y = $('#axe_y').val();
+                var position = $('#position').val();
+                $('#position').remove();
                 data = JSON.parse(data);
-                console.log(typeof(parseInt(data['axe_y'][axe_y][0])) + data['axe_y'][axe_y][0]);
-                console.log(typeof(parseInt(data['axe_x'][axe_x][0])) + data['axe_x'][axe_x][0]);
                 $('.modal').modal('close');
 
                 let xAxe = {
-                    data : data['axe_x'][axe_x],
-                    isLog : false,
+                    data: data['axe_x'][axe_x],
+                    isLog: false,
                     isVertical: false
                 };
                 let yAxe = {
@@ -79,8 +87,10 @@ function init() {
                     isLog: false,
                     isVertical: true
                 };
-                drawPointCloud(1,xAxe, yAxe);
-                drawLinearChart(2, xAxe, yAxe);
+                drawPointCloud(position, xAxe, yAxe);
+                console.log("svg"+position);
+                $('#svg' + position).show();
+                $('#card' + position + '.card-panel').hide();
             }
         });
         e.preventDefault(); // avoid to execute the actual submit of the form.
