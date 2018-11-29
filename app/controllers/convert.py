@@ -87,7 +87,8 @@ def get_parameters_by_model(model):
 def get_parameters():
     if request.method == 'POST':
         results = dict()
-        if request.form['family_chart'] == "2Dchart":
+        if request.form['family_chart'] == "linearChart" or request.form['family_chart'] == "pointCloud":
+            print(request.form)
             model_x = collection.find_one({"prefixe": request.form['model_x']})
             if request.form['axe_x'] in model_x['params'].keys():
                 axe_x = request.form['axe_x']

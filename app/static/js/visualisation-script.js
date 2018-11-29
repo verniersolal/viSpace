@@ -68,7 +68,7 @@ function drawPointCloud(titleX, titleY, position, xAxe, yAxe){
                   .attr("cy", getScale(yAxe.isVertical, yAxe.isLog, yAxe.data)(xy[i].y))
                   .attr("r", 5)
                   .attr('transform','translate(80, 10)')
-                  .attr('fill', 'red');
+                  .attr('fill', '#ffc107');
     }
     let gTextX = gContainer.append("g");
     gTextX.append('text')
@@ -84,4 +84,13 @@ function drawPointCloud(titleX, titleY, position, xAxe, yAxe){
         .attr("y", 25)
         .attr("fill", "#ffc107")
         .text(titleY.toUpperCase());
+}
+function max(data, param){
+    var max = 0;
+    for(var i = 0; i < data.length; i++){
+        if (parseFloat(data[i][param]) >= parseFloat(max)){
+            max = data[i][param];
+        }
+    }
+    return max;
 }
