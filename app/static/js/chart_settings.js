@@ -60,7 +60,6 @@ function init() {
     });
 
     $("#settings_form").submit(function (e) {
-        e.preventDefault(); // avoid to execute the actual submit of the form.
         var form = $(this);
         var url = form.attr('action');
         $.ajax({
@@ -68,29 +67,24 @@ function init() {
             url: url,
             data: form.serialize(), // serializes the form's elements.
             success: function (data) {
-                var axe_x = $('#axe_x').val();
-                var axe_y = $('#axe_y').val();
-                var position = $('#position').val();
-                $('#position').remove();
                 data = JSON.parse(data);
-                $('#modal1').modal('close');
-
-                let xAxe = {
-                    data: data['axe_x'][axe_x],
-                    isLog: false,
-                    isVertical: false
-                };
-                let yAxe = {
-                    data: data['axe_y'][axe_y],
-                    isLog: false,
-                    isVertical: true
-                };
-                drawPointCloud(position, xAxe, yAxe);
-                console.log("svg" + position);
-                $('#svg' + position).show();
-                $('#card' + position + '.card-panel').hide();
+                if(data.hasOwnProperty('error')){
+                    console.log(data);
+                }
+                $('#position').remove();
+                $('.modal').modal('close');
+                switch (data['family_chart']){
+                    case 'linearChart':
+                        //drawLinearChart(data);
+                        break;
+                    case 'pointCloud':
+                        drawPointCloud(data);
+                }
+                $('#card' + data['position'] + '.card-panel')   .hide();
+                $('#svg' + data['position']).show();
             }
         });
+        e.preventDefault(); // avoid to execute the actual submit of the form.
     });
 
 
