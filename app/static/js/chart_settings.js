@@ -6,7 +6,7 @@ function sendToast() {
 function init() {
     // Modal Materialize
     $(document).ready(function () {
-        $('.modal').modal();
+        $('#modal1').modal();
     });
 
     // Select Materialize
@@ -61,6 +61,7 @@ function init() {
     });
 
     $("#settings_form").submit(function (e) {
+        e.preventDefault(); // avoid to execute the actual submit of the form.
         var form = $(this);
         var url = form.attr('action');
         $.ajax({
@@ -73,7 +74,7 @@ function init() {
                 var position = $('#position').val();
                 $('#position').remove();
                 data = JSON.parse(data);
-                $('.modal').modal('close');
+                $('#modal1').modal('close');
 
                 let xAxe = {
                     data: data['axe_x'][axe_x],
@@ -86,12 +87,11 @@ function init() {
                     isVertical: true
                 };
                 drawPointCloud(position, xAxe, yAxe);
-                console.log("svg"+position);
+                console.log("svg" + position);
                 $('#svg' + position).show();
                 $('#card' + position + '.card-panel').hide();
             }
         });
-        e.preventDefault(); // avoid to execute the actual submit of the form.
     });
 
 

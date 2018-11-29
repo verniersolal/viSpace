@@ -105,6 +105,7 @@ legend {
     background: rgba(255, 255, 255, 0.3);
     opacity: 0.8;
     height: 33vh;
+    cursor: pointer;
 }
 
 .card-panel:hover {
