@@ -1,7 +1,9 @@
-function init() {
+function sendToast() {
     // Toast Materialize
     M.toast({html: 'Fichiers correctement importés !', classes: 'rounded', displayLength: 5000});
+}
 
+function init() {
     // Modal Materialize
     $(document).ready(function () {
         $('.modal').modal();

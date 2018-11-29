@@ -163,6 +163,9 @@
 {% endblock %}
 {% block scripts %}
     {{ super() }}
-    <script src="{{ url_for('static', filename='js/visualisation-script.js')}}"></script>
     <script src="{{ url_for('static', filename='js/chart_settings.js') }}"></script>
+    {% if converted %}
+        <script>sendToast()</script>
+    {% endif %}
+    <script src="{{ url_for('static', filename='js/visualisation-script.js') }}"></script>
 {% endblock %}

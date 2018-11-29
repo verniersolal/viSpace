@@ -10,8 +10,7 @@ UPLOAD_FOLDER = 'data/'
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-
-@app.route('/upload_files', methods=['GET', 'POST'])
+@app.route('/dashboard', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         files = request.files.getlist("files")
@@ -20,7 +19,8 @@ def upload_file():
             convert_file_to_json(file.filename)
             os.remove(app.config['UPLOAD_FOLDER'] + "/" + file.filename)
         return render_template('graph_interface.html', converted=True)
-    return render_template('index.html')
+    elif request.method == 'GET':
+        return render_template('graph_interface.html')
 
 
 def get_column(array, i):
