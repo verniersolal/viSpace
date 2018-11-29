@@ -87,13 +87,29 @@ def get_parameters_by_model(model):
 def get_parameters():
     if request.method == 'POST':
         results = dict()
-        if request.form['family_chart'] == "linearChart" or request.form['family_chart'] == "pointCloud":
-            print(request.form)
-            model_x = collection.find_one({"prefixe": request.form['model_x']})
-            if request.form['axe_x'] in model_x['params'].keys():
-                axe_x = request.form['axe_x']
-                results = dict({"axe_x": {axe_x: model_x['params'][axe_x]}})
-            model_y = collection.find_one({"prefixe": request.form['model_y']})
-            if request.form['axe_y'] in model_y['params'].keys():
-                results.update(dict({"axe_y": {request.form['axe_y']: model_y['params'][request.form['axe_y']]}}))
-            return json.dumps(results)
+        if 'family_chart' in request.form and 'axe_x' in request.form and 'axe_y' in request.form and 'position' in request.form:
+            if request.form['family_chart'] == "linearChart" or request.form['family_chart'] == "pointCloud":
+                model_x = collection.find_one({"prefixe": request.form['model_x']})
+                if request.form['axe_x'] in model_x['params'].keys():
+                    axe_x = request.form['axe_x']
+                    results = dict({"axe_x": {"name": axe_x, "values": model_x['params'][axe_x]}})
+                model_y = collection.find_one({"prefixe": request.form['model_y']})
+                if request.form['axe_y'] in model_y['params'].keys():
+                    results.update(dict({"axe_y": {"name": request.form['axe_y'], "values": model_y['params'][request.form['axe_y']]}}))
+
+                results['family_chart'] = request.form['family_chart']
+                if 'isLog_y' in request.form:
+                    results['isLog_y'] = True
+                else:
+                    results['isLog_y'] = False
+                if 'isLog_x' in request.form:
+                    results['isLog_x'] = True
+                else:
+                    results['isLog_x'] = False
+
+                results['position'] = request.form['position']
+                return json.dumps(results)
+            else:
+                return json.dumps({"message": "Not valid parameters", "error": True})
+        else:
+            return json.dumps({"message": "CP in construct", "error": True})
