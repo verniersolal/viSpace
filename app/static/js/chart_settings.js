@@ -60,21 +60,25 @@ function init() {
             url: url,
             data: form.serialize(), // serializes the form's elements.
             success: function (data) {
-                $('.modal').modal('close');
                 var axe_x = $('#axe_x').val();
                 var axe_y = $('#axe_y').val();
-                console.log(axe_x);
+                data = JSON.parse(data);
+                console.log(typeof(parseInt(data['axe_y'][axe_y][0])) + data['axe_y'][axe_y][0]);
+                console.log(typeof(parseInt(data['axe_x'][axe_x][0])) + data['axe_x'][axe_x][0]);
+                $('.modal').modal('close');
+
                 let xAxe = {
-                    data : data[axe_x],
+                    data : data['axe_x'][axe_x],
                     isLog : false,
                     isVertical: false
                 };
                 let yAxe = {
-                    data: data[axe_y],
+                    data: data['axe_y'][axe_y],
                     isLog: false,
                     isVertical: true
                 };
                 drawPointCloud(1,xAxe, yAxe);
+                drawLinearChart(2, xAxe, yAxe);
             }
         });
         e.preventDefault(); // avoid to execute the actual submit of the form.

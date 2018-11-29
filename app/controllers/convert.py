@@ -47,7 +47,7 @@ def convert_file_to_json(file):
                     file_data = line.split()
                     data.append(file_data)
             for p in range(len(parameters)):
-                final[parameters[p]] = get_column(data, p)
+                final[parameters[p]] = list(map(float, get_column(data, p)))
             import_file(file, final)
         return final
 
