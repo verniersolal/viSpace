@@ -6,30 +6,36 @@
             <h3 class="center">Vos graphiques</h3>
             <div class="row"></div>
             <div class="col m6 center">
-                <div class="card-panel">
-                    <a class="btn-floating btn-large waves-effect waves-light black modal-trigger" href="#modal1"><i
+                <div class="card-panel" id="card1">
+                    <a id="1" class="btn-floating btn-large waves-effect waves-light black modal-trigger"
+                       href="#modal1"><i
                             class="material-icons">add</i></a>
                 </div>
-                    <svg id="svg1" width="500" height="500"></svg>
+                <svg id="svg1" class="svg"></svg>
             </div>
             <div class="col m6 center">
-                <div class="card-panel">
-                    <a class="btn-floating btn-large waves-effect waves-light black modal-trigger" href="#modal1"><i
+                <div class="card-panel" id="card2">
+                    <a id="2" class="btn-floating btn-large waves-effect waves-light black modal-trigger"
+                       href="#modal1"><i
                             class="material-icons">add</i></a>
                 </div>
-                <svg id="svg2" width="500" height="500"></svg>
+                <svg id="svg2" class="svg"></svg>
             </div>
             <div class="col m6 center">
-                <div class="card-panel">
-                    <a class="btn-floating btn-large waves-effect waves-light black modal-trigger" href="#modal1"><i
+                <div class="card-panel" id="card3">
+                    <a id="3" class="btn-floating btn-large waves-effect waves-light black modal-trigger"
+                       href="#modal1"><i
                             class="material-icons">add</i></a>
                 </div>
+                <svg id="svg3" class="svg"></svg>
             </div>
             <div class="col m6 center">
-                <div class="card-panel">
-                    <a class="btn-floating btn-large waves-effect waves-light black modal-trigger" href="#modal1"><i
+                <div class="card-panel" id="card4">
+                    <a id="4" class="btn-floating btn-large waves-effect waves-light black modal-trigger"
+                       href="#modal1"><i
                             class="material-icons">add</i></a>
                 </div>
+                <svg id="svg4" class="svg"></svg>
             </div>
         </div>
     </div>
@@ -51,7 +57,7 @@
                     <div class="col m2">
                         <p>
                             <label>
-                                <input class="with-gap" name="family_chart" value="" type="radio"/>
+                                <input class="with-gap" name="family_chart" value="cloudPoint" type="radio"/>
                                 <span>Nuage de points</span>
                             </label>
                         </p>
@@ -97,7 +103,7 @@
                                     Axe X
                                 </strong>
                             </legend>
-                            <div class="axe_settings" id="1">
+                            <div class="axe_settings">
                                 <div class="input-field col m4">
                                     <i class="material-icons prefix">insert_drive_file</i>
                                     <input type="text" name="model_x" id="model_x" class="autocomplete model_name"

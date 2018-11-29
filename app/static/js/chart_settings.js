@@ -14,9 +14,17 @@ function init() {
         $('select').formSelect();
     });
 
+    $('.svg').hide();
 
     $('.modal-trigger').click(function () {
+        var position = parseInt($(this).attr('id'));
         $('#settings_form').trigger('reset');
+        $('<input>').attr({
+            type: 'hidden',
+            value: position,
+            id: 'position',
+            name: 'position'
+        }).appendTo('#settings_form');
         $.ajax({
             url: '/models',
             type: 'GET',
@@ -68,12 +76,14 @@ function init() {
                 var isLogY = $('#isLog_y').is(':checked');
                 console.log(isLogX);
                 console.log(isLogY);
+                var position = $('#position').val();
+                $('#position').remove();
                 data = JSON.parse(data);
                 $('.modal').modal('close');
 
                 let xAxe = {
                     data : data['axe_x'][axe_x],
-                    isLog : isLogX,
+                    isLog : isLog,
                     isVertical: false
                 };
                 let yAxe = {
@@ -81,8 +91,10 @@ function init() {
                     isLog: isLogY,
                     isVertical: true
                 };
-                drawPointCloud(axe_x,axe_y,1,xAxe, yAxe);
-                drawLinearChart(axe_x, axe_y,2, xAxe, yAxe);
+                drawPointCloud(position, xAxe, yAxe);
+                console.log("svg"+position);
+                $('#svg' + position).show();
+                $('#card' + position + '.card-panel').hide();
             }
         });
         e.preventDefault(); // avoid to execute the actual submit of the form.
