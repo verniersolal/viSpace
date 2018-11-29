@@ -8,13 +8,13 @@ function getScale(isVertical, isLog, data) {
 
         return scaleAxe;
 }
-function drawLinearChart(position, xAxe, yAxe){
+function drawLinearChart(titleX, titleY, position, xAxe, yAxe){
         let svg = d3.select('#svg'+position);
         let gContainer = svg.append('g');
         let gAxisX = gContainer.append('g');
-        gAxisX.attr("transform", "translate(50, 410)");
+        gAxisX.attr("transform", "translate(80, 410)");
         let gAxisY = gContainer.append('g');
-        gAxisY.attr("transform", "translate(50,10)");
+        gAxisY.attr("transform", "translate(80,10)");
         gAxisX.call(drawAxe(xAxe.isVertical, xAxe.isLog, xAxe.data));
         gAxisY.call(drawAxe(yAxe.isVertical, yAxe.isLog, yAxe.data));
         let xy = [];
@@ -29,18 +29,32 @@ function drawLinearChart(position, xAxe, yAxe){
 
         let line = gLine.append('path');
         line.attr("d", lineValue(xy));
-        line.attr("transform", "translate(50,10)");
+        line.attr("transform", "translate(80,10)");
         line.attr("stroke", "red");
         line.attr("fill", "none");
         line.attr("stroke-width", 3);
-}
-function drawPointCloud(position, xAxe, yAxe){
+        let gTextX = gContainer.append("g");
+        gTextX.append('text')
+            .attr('text-anchor', 'middle')
+            .attr("transform", 'translate(250,450)')
+            .attr("fill", "#ffc107")
+            .text(titleX.toUpperCase());
+        let gTextY = gContainer.append("g");
+        gTextY.append('text')
+            .attr('text-anchor', 'middle')
+            .attr('transform', 'rotate(-90)')
+            .attr("x", -230)
+            .attr("y", 25)
+            .attr("fill", "#ffc107")
+            .text(titleY.toUpperCase());
+    }
+function drawPointCloud(titleX, titleY, position, xAxe, yAxe){
     let svg = d3.select('#svg'+position);
     let gContainer = svg.append('g');
     let gAxisX = gContainer.append('g');
-    gAxisX.attr("transform", "translate(50, 410)");
+    gAxisX.attr("transform", "translate(80, 410)");
     let gAxisY = gContainer.append('g');
-    gAxisY.attr("transform", "translate(50,10)");
+    gAxisY.attr("transform", "translate(80,10)");
     gAxisX.call(drawAxe(xAxe.isVertical, xAxe.isLog, xAxe.data));
     gAxisY.call(drawAxe(yAxe.isVertical, yAxe.isLog, yAxe.data));
     let xy = [];
@@ -53,7 +67,21 @@ function drawPointCloud(position, xAxe, yAxe){
             circle.attr("cx", getScale(xAxe.isVertical, xAxe.isLog, xAxe.data)(xy[i].x))
                   .attr("cy", getScale(yAxe.isVertical, yAxe.isLog, yAxe.data)(xy[i].y))
                   .attr("r", 5)
-                  .attr('transform','translate(50, 10)')
+                  .attr('transform','translate(80, 10)')
                   .attr('fill', 'red');
     }
+    let gTextX = gContainer.append("g");
+    gTextX.append('text')
+        .attr('text-anchor', 'middle')
+        .attr("transform", 'translate(250,450)')
+        .attr("fill", "#ffc107")
+        .text(titleX.toUpperCase());
+    let gTextY = gContainer.append("g");
+    gTextY.append('text')
+        .attr('text-anchor', 'middle')
+        .attr('transform', 'rotate(-90)')
+        .attr("x", -230)
+        .attr("y", 25)
+        .attr("fill", "#ffc107")
+        .text(titleY.toUpperCase());
 }

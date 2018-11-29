@@ -81,8 +81,8 @@ function init() {
                     isLog: isLogY,
                     isVertical: true
                 };
-                drawPointCloud(1,xAxe, yAxe);
-                drawLinearChart(2, xAxe, yAxe);
+                drawPointCloud(axe_x,axe_y,1,xAxe, yAxe);
+                drawLinearChart(axe_x, axe_y,2, xAxe, yAxe);
             }
         });
         e.preventDefault(); // avoid to execute the actual submit of the form.
