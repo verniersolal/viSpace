@@ -15,8 +15,7 @@ function init() {
     });
 
     $('.modal-trigger').click(function () {
-        var position = parseInt($(this).attr('id'));
-        $('#settings_form').trigger('reset');
+        var position = parseInt($(this).attr('data-position'));
         $('<input>').attr({
             type: 'hidden',
             value: position,
