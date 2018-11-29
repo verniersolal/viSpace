@@ -1,9 +1,9 @@
 function drawAxe(isVertical, isLog, data) {
-    return (isVertical ? d3.axisLeft(getScale(isVertical,isLog, data)) : d3.axisBottom(getScale(isVertical, isLog, data)).ticks(5));
+    return (isVertical ? d3.axisLeft(getScale(isVertical,isLog, data)).ticks(10) : d3.axisBottom(getScale(isVertical, isLog, data)).ticks(8));
 }
 function getScale(isVertical, isLog, data) {
         let scaleAxe = (isLog ? d3.scaleLog() : d3.scaleLinear());
-        scaleAxe.domain([parseFloat(d3.min(data)), parseFloat(d3.max(data))]);
+        scaleAxe.domain([d3.min(data), d3.max(data)]);
         isVertical ? scaleAxe.range([400, 0]) : scaleAxe.range([0, 400]);
 
         return scaleAxe;
@@ -19,12 +19,11 @@ function drawLinearChart(position, xAxe, yAxe){
         gAxisY.call(drawAxe(yAxe.isVertical, yAxe.isLog, yAxe.data));
         let xy = [];
         for(let i = 0; i< xAxe.data.length; i++){
-            console.log(xAxe.data[i]);
-            xy.push({x: parseFloat(xAxe.data[i]), y: parseFloat(yAxe.data[i])});
+            xy.push({x: xAxe.data[i], y: yAxe.data[i]});
         }
         let lineValue = d3.line();
-        lineValue.x(function (d){return getScale(xAxe.isVertical,xAxe.isLog, xAxe.data)(parseFloat(d.x));});
-        lineValue.y(function(d){return getScale(yAxe.isVertical,yAxe.isLog, yAxe.data)(parseFloat(d.y));});
+        lineValue.x(function (d){return getScale(xAxe.isVertical,xAxe.isLog, xAxe.data)(d.x);});
+        lineValue.y(function(d){return getScale(yAxe.isVertical,yAxe.isLog, yAxe.data)(d.y);});
         lineValue.curve(d3.curveMonotoneX);
         let gLine = gContainer.append('g');
 
@@ -33,7 +32,7 @@ function drawLinearChart(position, xAxe, yAxe){
         line.attr("transform", "translate(50,10)");
         line.attr("stroke", "red");
         line.attr("fill", "none");
-        line.attr("stroke-opacity", 2);
+        line.attr("stroke-width", 3);
 }
 function drawPointCloud(position, xAxe, yAxe){
     let svg = d3.select('#svg'+position);

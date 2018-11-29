@@ -64,19 +64,21 @@ function init() {
             success: function (data) {
                 var axe_x = $('#axe_x').val();
                 var axe_y = $('#axe_y').val();
+                var isLogX = $('#isLog_x').is(':checked');
+                var isLogY = $('#isLog_y').is(':checked');
+                console.log(isLogX);
+                console.log(isLogY);
                 data = JSON.parse(data);
-                console.log(typeof(parseInt(data['axe_y'][axe_y][0])) + data['axe_y'][axe_y][0]);
-                console.log(typeof(parseInt(data['axe_x'][axe_x][0])) + data['axe_x'][axe_x][0]);
                 $('.modal').modal('close');
 
                 let xAxe = {
                     data : data['axe_x'][axe_x],
-                    isLog : false,
+                    isLog : isLogX,
                     isVertical: false
                 };
                 let yAxe = {
                     data: data['axe_y'][axe_y],
-                    isLog: false,
+                    isLog: isLogY,
                     isVertical: true
                 };
                 drawPointCloud(1,xAxe, yAxe);
