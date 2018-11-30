@@ -5,7 +5,6 @@ function drawAxe(data, isVertical, isLog, boundingBox) {
 function drawLinearChart(data) {
     let svg = d3.select('#svg' + data['position']);
     var boundingBox = $('#card' + data['position']).get(0).getBoundingClientRect();
-    console.log("init bounding box", boundingBox);
     let gContainer = svg.append('g');
     gContainer.attr('id', 'gContainer' + data['position']);
     let gAxisX = gContainer.append('g');
@@ -38,10 +37,23 @@ function drawLinearChart(data) {
     line.attr("stroke", d3.schemeCategory10[color]);
     line.attr("fill", "none");
     line.attr("stroke-width", 3);
+    svg.append('text')
+        .attr('x',0)
+        .attr('y', 0)
+        .attr('transform', 'translate('+parseFloat(boundingBox.width*0.033)+','+parseFloat(boundingBox.height / 2)+') rotate(-90)')
+        .style("text-anchor", "middle")
+        .attr('fill', 'white')
+        .text(data['axe_y']['name']);
+
+    svg.append('text')
+        .attr('x',parseFloat(boundingBox.width/2))
+        .attr('y', boundingBox.height*0.95)
+        .style("text-anchor", "middle")
+        .attr('fill', 'white')
+        .text(data['axe_x']['name']);
 }
 
 function getScale(data, isVertical, isLog, boundingBox) {
-    console.log(boundingBox);
     let scaleAxe = (isLog ? d3.scaleLog() : d3.scaleLinear());
     scaleAxe.domain([d3.min(data), d3.max(data)]);
     isVertical ? scaleAxe.range([parseFloat(0.77 * boundingBox.height), 0]) : scaleAxe.range([0, parseFloat(0.8 * boundingBox.width)]);
@@ -52,7 +64,6 @@ function getScale(data, isVertical, isLog, boundingBox) {
 function drawPointCloud(data) {
     let svg = d3.select('#svg' + data['position']);
     var boundingBox = $('#card' + data['position']).get(0).getBoundingClientRect();
-    console.log("init bounding box", boundingBox);
     let gContainer = svg.append('g');
     gContainer.attr('id', 'gContainer' + data['position']);
     let gAxisX = gContainer.append('g');
@@ -74,4 +85,18 @@ function drawPointCloud(data) {
             .attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + ", 50)")
             .attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")");
     }
+    svg.append('text')
+        .attr('x',0)
+        .attr('y', 0)
+        .attr('transform', 'translate('+parseFloat(boundingBox.width*0.033)+','+parseFloat(boundingBox.height / 2)+') rotate(-90)')
+        .style("text-anchor", "middle")
+        .attr('fill', 'white')
+        .text(data['axe_y']['name']);
+
+    svg.append('text')
+        .attr('x',parseFloat(boundingBox.width/2))
+        .attr('y', boundingBox.height*0.95)
+        .style("text-anchor", "middle")
+        .attr('fill', 'white')
+        .text(data['axe_x']['name']);
 }

@@ -87,7 +87,8 @@ def get_parameters_by_model(model):
 def get_parameters():
     if request.method == 'POST':
         results = dict()
-        if 'family_chart' in request.form and 'axe_x' in request.form and 'axe_y' in request.form and 'position' in request.form:
+        if 'family_chart' in request.form and 'axe_x' in request.form and 'axe_y' in request.form and \
+                'position' in request.form and 'model_x' in request.form and 'model_y' in request.form:
             if request.form['family_chart'] == "linearChart" or request.form['family_chart'] == "pointCloud":
                 model_x = collection.find_one({"prefixe": request.form['model_x']})
                 if request.form['axe_x'] in model_x['params'].keys():
@@ -108,6 +109,8 @@ def get_parameters():
                     results['isLog_x'] = False
 
                 results['position'] = request.form['position']
+                results['model_x'] = request.form['model_x']
+                results['model_y'] = request.form['model_y']
                 return json.dumps(results)
             else:
                 return json.dumps({"message": "CP in construct", "error": True})
