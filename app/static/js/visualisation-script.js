@@ -60,7 +60,7 @@ function drawPointCloud(data) {
         let circle = gcircle.append("circle");
         circle.attr("cx", getScale(data['axe_x']['values'], false, data['isLog_x'], boundingBox)(data['axe_x']['values'][i]))
             .attr("cy", getScale(data['axe_y']['values'], true, data['isLog_y'], boundingBox)(data['axe_y']['values'][i]))
-            .attr("r", 4)
+            .attr("r", 3)
             .attr("fill", d3.schemeCategory10[color])
             .attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + ", 50)")
             .attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")");
