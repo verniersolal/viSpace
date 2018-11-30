@@ -77,7 +77,7 @@ function init() {
 
                 switch (data['family_chart']) {
                     case 'linearChart':
-                        //drawLinearChart(data);
+                        drawLinearChart(data);
                         break;
                     case 'pointCloud':
                         drawPointCloud(data);

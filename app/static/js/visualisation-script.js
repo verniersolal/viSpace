@@ -2,11 +2,8 @@ function drawAxe(data, isVertical, isLog, boundingBox) {
     return (isVertical ? d3.axisLeft(getScale(data, isVertical, isLog, boundingBox)).ticks(5) : d3.axisBottom(getScale(data, isVertical, isLog, boundingBox)).ticks(5));
 }
 
-/*function drawLinearChart(data) {
+function drawLinearChart(data) {
     let svg = d3.select('#svg' + data['position']);
-    let svgHeight = parseInt($('#svg'+ data['position']).outerHeight());
-    let svgWidth = parseInt($('#svg' + data['position']).outerWidth());
-    console.log(svgWidth);
     let gContainer = svg.append('g');
     let gAxisX = gContainer.append('g');
     gAxisX.attr("transform", "translate(80,200)");
@@ -15,23 +12,31 @@ function drawAxe(data, isVertical, isLog, boundingBox) {
     gAxisY.attr("transform", "translate(80,50)");
     gAxisX.call(drawAxe(data['axe_x']['values'], false, data['isLog_x']));
     gAxisY.call(drawAxe(data['axe_y']['values'], true, data['isLog_y']));
+    var color = parseInt(Math.random()*10);
+
+    let xy = [];
+    for(var i = 0; i< data["axe_x"]['values'].length; i++){
+        xy.push({x:data['axe_x']["values"][i], y: data['axe_y']['values'][i]});
+    }
+    let scale_x = getScale(data['axe_x']['values'],false, data['isLog_x']);
+    let scale_y = getScale(data['axe_y']['values'], true, data['isLog_y']);
     let lineValue = d3.line();
     lineValue.x(function (d) {
-        return getScale()(parseFloat(data['axe_x']['values']));
+        return scale_x(parseFloat(d.x));
     });
     lineValue.y(function (d) {
-        return getScale(data['axe_y'])(parseFloat(d['axe_y']['values']));
+        return scale_y(parseFloat(d.y));
     });
     lineValue.curve(d3.curveMonotoneX);
     let gLine = gContainer.append('g');
 
     let line = gLine.append('path');
     line.attr("d", lineValue(xy));
-    line.attr("transform", "translate(50,10)");
-    line.attr("stroke", "red");
+    line.attr("transform", "translate(80,50)");
+    line.attr("stroke", d3.schemeCategory10[color]);
     line.attr("fill", "none");
     line.attr("stroke-opacity", 2);
-}*/
+}
 
 function getScale(data, isVertical, isLog, boundingBox) {
     console.log(boundingBox);
