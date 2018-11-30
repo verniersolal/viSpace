@@ -26,12 +26,14 @@ function drawLinearChart(data) {
     for(var i = 0; i< data["axe_x"]['values'].length; i++){
         xy.push({x:data['axe_x']["values"][i], y: data['axe_y']['values'][i]});
     }
+    let scale_x = getScale(data['axe_x']['values'],false, data['isLog_x']);
+    let scale_y = getScale(data['axe_y']['values'], true, data['isLog_y']);
     let lineValue = d3.line();
     lineValue.x(function (d) {
-        return getScale(data['axe_x']['values'],false, data['isLog_x'])(parseFloat(d.x));
+        return scale_x(parseFloat(d.x));
     });
     lineValue.y(function (d) {
-        return getScale(data['axe_y']['values'], true, data['isLog_y'])(parseFloat(d.y));
+        return scale_y(parseFloat(d.y));
     });
     lineValue.curve(d3.curveMonotoneX);
     let gLine = gContainer.append('g');
