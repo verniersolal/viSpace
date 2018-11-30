@@ -62,25 +62,27 @@ function init() {
     $("#settings_form").submit(function (e) {
         var form = $(this);
         var url = form.attr('action');
+        $('.modal').modal('close');
         $.ajax({
             type: "POST",
             url: url,
             data: form.serialize(), // serializes the form's elements.
             success: function (data) {
                 data = JSON.parse(data);
-                if(data.hasOwnProperty('error')){
+                if (data.hasOwnProperty('error')) {
                     console.log(data);
                 }
                 $('#position').remove();
-                $('.modal').modal('close');
-                switch (data['family_chart']){
+                $('#settings_form').trigger('reset');
+
+                switch (data['family_chart']) {
                     case 'linearChart':
                         //drawLinearChart(data);
                         break;
                     case 'pointCloud':
                         drawPointCloud(data);
                 }
-                $('#card' + data['position'] + '.card-panel')   .hide();
+                $('#card' + data['position'] + '.card-panel').hide();
                 $('#svg' + data['position']).show();
             }
         });

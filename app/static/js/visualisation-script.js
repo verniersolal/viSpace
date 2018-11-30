@@ -1,13 +1,5 @@
-function drawAxe(data,isVertical, isLog, height, width) {
-    return (isVertical ? d3.axisLeft(getScale(data, isVertical, isLog, height, width)).ticks(5) : d3.axisBottom(getScale(data, isVertical, isLog, height,width)).ticks(5));
-}
-
-function getScale(data, isVertical, isLog, height, width) {
-    let scaleAxe = (isLog ? d3.scaleLog() : d3.scaleLinear());
-    scaleAxe.domain([d3.min(data), d3.max(data)]);
-    isVertical ? scaleAxe.range([150, 0]) : scaleAxe.range([0, 400]);
-
-    return scaleAxe;
+function drawAxe(data, isVertical, isLog, boundingBox) {
+    return (isVertical ? d3.axisLeft(getScale(data, isVertical, isLog, boundingBox)).ticks(5) : d3.axisBottom(getScale(data, isVertical, isLog, boundingBox)).ticks(5));
 }
 
 /*function drawLinearChart(data) {
@@ -41,27 +33,36 @@ function getScale(data, isVertical, isLog, height, width) {
     line.attr("stroke-opacity", 2);
 }*/
 
+function getScale(data, isVertical, isLog, boundingBox) {
+    console.log(boundingBox);
+    let scaleAxe = (isLog ? d3.scaleLog() : d3.scaleLinear());
+    scaleAxe.domain([d3.min(data), d3.max(data)]);
+    isVertical ? scaleAxe.range([parseFloat(0.77 * boundingBox.height), 0]) : scaleAxe.range([0, parseFloat(0.8 * boundingBox.width)]);
+
+    return scaleAxe;
+}
+
 function drawPointCloud(data) {
     let svg = d3.select('#svg' + data['position']);
-    let svgHeight = parseInt($('#svg'+ data['position']).outerHeight());
-    let svgWidth = parseInt($('#svg' + data['position']).outerWidth());
-    console.log(svgWidth);
+    var boundingBox = $('#card' + data['position']).get(0).getBoundingClientRect();
+    console.log("init bounding box", boundingBox);
     let gContainer = svg.append('g');
+    gContainer.attr('id', 'gContainer' + data['position']);
     let gAxisX = gContainer.append('g');
-    gAxisX.attr("transform", "translate(80,200)");
-
+    gAxisX.attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + "," + parseFloat(0.8 * boundingBox.height) + ")");
     let gAxisY = gContainer.append('g');
-    gAxisY.attr("transform", "translate(80,50)");
-    gAxisX.call(drawAxe(data['axe_x']['values'], false, data['isLog_x']));
-    gAxisY.call(drawAxe(data['axe_y']['values'], true, data['isLog_y']));
-    var color = parseInt(Math.random()*10);
+    gAxisY.attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")");
+    gAxisX.call(drawAxe(data['axe_x']['values'], false, data['isLog_x'], boundingBox));
+    gAxisY.call(drawAxe(data['axe_y']['values'], true, data['isLog_y'], boundingBox));
+    var color = parseInt(Math.random() * 10);
     let gcircle = gContainer.append("g");
     for (let i = 0; i < data['axe_x']['values'].length; i++) {
         let circle = gcircle.append("circle");
-            circle.attr("cx", getScale(data['axe_x']['values'], false, data['isLog_x'], svgHeight, svgWidth)(data['axe_x']['values'][i]))
-                  .attr("cy", getScale(data['axe_y']['values'], true, data['isLog_y'], svgHeight, svgWidth)(data['axe_y']['values'][i]))
-                  .attr("r", 1)
-                  .attr('transform','translate(80, 50)')
-                  .attr('fill', d3.schemeCategory10[color]);
+        circle.attr("cx", getScale(data['axe_x']['values'], false, data['isLog_x'], boundingBox)(data['axe_x']['values'][i]))
+            .attr("cy", getScale(data['axe_y']['values'], true, data['isLog_y'], boundingBox)(data['axe_y']['values'][i]))
+            .attr("r", 4)
+            .attr("fill", d3.schemeCategory10[color])
+            .attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + ", 50)")
+            .attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")");
     }
 }
