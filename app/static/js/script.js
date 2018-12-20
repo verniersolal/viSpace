@@ -7,6 +7,7 @@ function max(data, param){
     }
     return max;
 }
+
 function draw(data){
     var svg = d3.select("#svg");
         console.log(svg);
