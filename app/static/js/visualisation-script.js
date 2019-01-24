@@ -49,7 +49,7 @@ function drawLinearChart(data) {
         .attr('x',parseFloat(boundingBox.width/2))
         .attr('y', boundingBox.height*0.95)
         .style("text-anchor", "middle")
-        .attr('fill', 'black')
+        .attr('fill', 'black ')
         .text(data['axe_x']['name']);
 }
 
