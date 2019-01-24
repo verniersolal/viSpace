@@ -42,14 +42,14 @@ function drawLinearChart(data) {
         .attr('y', 0)
         .attr('transform', 'translate('+parseFloat(boundingBox.width*0.033)+','+parseFloat(boundingBox.height / 2)+') rotate(-90)')
         .style("text-anchor", "middle")
-        .attr('fill', 'white')
+        .attr('fill', 'black')
         .text(data['axe_y']['name']);
 
     svg.append('text')
         .attr('x',parseFloat(boundingBox.width/2))
         .attr('y', boundingBox.height*0.95)
         .style("text-anchor", "middle")
-        .attr('fill', 'white')
+        .attr('fill', 'black')
         .text(data['axe_x']['name']);
 }
 
