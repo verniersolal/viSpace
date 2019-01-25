@@ -41,7 +41,6 @@ function init() {
 
     $("#settings_form").submit(function (e) {
         var form = $(this);
-        console.log(form.serialize());
         var url = form.attr('action');
         $('.modal').modal('close');
         var o = {};
@@ -67,10 +66,21 @@ function init() {
                 }
                 $('#position').remove();
                 $('#settings_form').trigger('reset');
-
-                switch (data['family_chart']) {
+                console.log(data);
+                switch (data['chartType']) {
                     case 'linearChart':
-                        drawLinearChart(data);
+                        let xdata = data['models'][0]['x_data'].concat( data['models'][1]['x_data']);
+                        let ydata = data['models'][0]['y_data'].concat( data['models'][1]['y_data']);
+                        let ymin = d3.min(ydata);
+                        let ymax = d3.max(ydata);
+                        let xmax = d3.max(xdata);
+                        let xmin = d3.min(xdata);
+                        for(let i =0; i < data['models'].length; i++){
+                            drawLinearChart(data['position'], data['models'][i], xmin, xmax, ymin, ymax);
+
+                        }
+
+                        //drawLinearChart(data['position'], data['models'][i]);
                         break;
                     case 'pointCloud':
                         drawPointCloud(data);

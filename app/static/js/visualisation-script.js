@@ -1,25 +1,27 @@
-function drawAxe(data, isVertical, isLog, boundingBox) {
-    return (isVertical ? d3.axisLeft(getScale(data, isVertical, isLog, boundingBox)).ticks(5) : d3.axisBottom(getScale(data, isVertical, isLog, boundingBox)).ticks(5));
+
+
+function drawAxe(min,max, isVertical, isLog, boundingBox) {
+    return (isVertical ? d3.axisLeft(getScale(min,max, isVertical, isLog, boundingBox)).ticks(5) : d3.axisBottom(getScale(min,max, isVertical, isLog, boundingBox)).ticks(5));
 }
 
-function drawLinearChart(data) {
-    let svg = d3.select('#svg' + data['position']);
-    var boundingBox = $('#card' + data['position']).get(0).getBoundingClientRect();
+function drawLinearChart(position, data, xmin, xmax, ymin, ymax) {
+    let svg = d3.select('#svg' + position);
+    var boundingBox = $('#card' + position).get(0).getBoundingClientRect();
     let gContainer = svg.append('g');
-    gContainer.attr('id', 'gContainer' + data['position']);
+    gContainer.attr('id', 'gContainer' +position);
     let gAxisX = gContainer.append('g');
     gAxisX.attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + "," + parseFloat(0.8 * boundingBox.height) + ")");
     let gAxisY = gContainer.append('g');
     gAxisY.attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")");
-    gAxisX.call(drawAxe(data['axe_x']['values'], false, data['isLog_x'], boundingBox));
-    gAxisY.call(drawAxe(data['axe_y']['values'], true, data['isLog_y'], boundingBox));
+    gAxisX.call(drawAxe(xmin, xmax, false, data['isLog_x'], boundingBox));
+    gAxisY.call(drawAxe(ymin,ymax, true, data['isLog_y'], boundingBox));
     var color = parseInt(Math.random() * 10);
     let xy = [];
-    for(var i = 0; i< data["axe_x"]['values'].length; i++){
-        xy.push({x:data['axe_x']["values"][i], y: data['axe_y']['values'][i]});
+    for(var i = 0; i< data["x_data"].length; i++){
+        xy.push({x:data['x_data'][i], y: data['y_data'][i]});
     }
-    let scale_x = getScale(data['axe_x']['values'],false, data['isLog_x'], boundingBox);
-    let scale_y = getScale(data['axe_y']['values'], true, data['isLog_y'], boundingBox);
+    let scale_x = getScale(xmin,xmax,false, data['isLog_x'], boundingBox);
+    let scale_y = getScale(ymin,ymax, true, data['isLog_y'], boundingBox);
     let lineValue = d3.line();
     lineValue.x(function (d) {
         return scale_x(parseFloat(d.x));
@@ -43,19 +45,19 @@ function drawLinearChart(data) {
         .attr('transform', 'translate('+parseFloat(boundingBox.width*0.033)+','+parseFloat(boundingBox.height / 2)+') rotate(-90)')
         .style("text-anchor", "middle")
         .attr('fill', 'white')
-        .text(data['axe_y']['name']);
+        .text("titi");
 
     svg.append('text')
         .attr('x',parseFloat(boundingBox.width/2))
         .attr('y', boundingBox.height*0.95)
         .style("text-anchor", "middle")
         .attr('fill', 'white')
-        .text(data['axe_x']['name']);
+        .text("toto");
 }
 
-function getScale(data, isVertical, isLog, boundingBox) {
+function getScale(min,max, isVertical, isLog, boundingBox) {
     let scaleAxe = (isLog ? d3.scaleLog() : d3.scaleLinear());
-    scaleAxe.domain([d3.min(data), d3.max(data)]);
+    scaleAxe.domain([min, max]);
     isVertical ? scaleAxe.range([parseFloat(0.77 * boundingBox.height), 0]) : scaleAxe.range([0, parseFloat(0.8 * boundingBox.width)]);
 
     return scaleAxe;
