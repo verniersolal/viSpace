@@ -121,3 +121,16 @@ legend {
     background: rgba(36, 38, 39, 0.8);
     border-radius: 10px;
 }
+.adminGraphique{
+    background-color: rgba(255, 255, 255, 0.6);
+}
+.adminGraphique>table{
+    color: #000000;
+}
+#adminAxes{
+    background-color: rgba(255, 255, 255, 0.6);
+    color: #000000;
+}
+.adminGraphType{
+    background-color: rgba(255, 255, 255, 0.2);
+}

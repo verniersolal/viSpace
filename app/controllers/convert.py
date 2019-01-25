@@ -18,9 +18,12 @@ def upload_file():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
             convert_file_to_json(file.filename)
             os.remove(app.config['UPLOAD_FOLDER'] + "/" + file.filename)
-        return render_template('graph_interface.html', converted=True)
+            models = json.loads(get_models())
+        return render_template('graph_interface.html', converted=True, models=models)
     elif request.method == 'GET':
-        return render_template('graph_interface.html')
+        models = json.loads(get_models())
+
+        return render_template('graph_interface.html', models= models)
 
 
 def get_column(array, i):
@@ -85,34 +88,13 @@ def get_parameters_by_model(model):
 
 @app.route('/axe_data', methods=['POST'])
 def get_parameters():
-    if request.method == 'POST':
-        results = dict()
-        if 'family_chart' in request.form and 'axe_x' in request.form and 'axe_y' in request.form and \
-                'position' in request.form and 'model_x' in request.form and 'model_y' in request.form:
-            if request.form['family_chart'] == "linearChart" or request.form['family_chart'] == "pointCloud":
-                model_x = collection.find_one({"prefixe": request.form['model_x']})
-                if request.form['axe_x'] in model_x['params'].keys():
-                    axe_x = request.form['axe_x']
-                    results = dict({"axe_x": {"name": axe_x, "values": model_x['params'][axe_x]}})
-                model_y = collection.find_one({"prefixe": request.form['model_y']})
-                if request.form['axe_y'] in model_y['params'].keys():
-                    results.update(dict({"axe_y": {"name": request.form['axe_y'], "values": model_y['params'][request.form['axe_y']]}}))
-
-                results['family_chart'] = request.form['family_chart']
-                if 'isLog_y' in request.form:
-                    results['isLog_y'] = True
-                else:
-                    results['isLog_y'] = False
-                if 'isLog_x' in request.form:
-                    results['isLog_x'] = True
-                else:
-                    results['isLog_x'] = False
-
-                results['position'] = request.form['position']
-                results['model_x'] = request.form['model_x']
-                results['model_y'] = request.form['model_y']
-                return json.dumps(results)
-            else:
-                return json.dumps({"message": "CP in construct", "error": True})
-        else:
-            return json.dumps({"message": "Not valid parameters", "error": True})
+    # Il faut chercher les deux paramètres x et y des models à construire
+    models = []
+    results = {}
+    for model in request.form.getlist('model[]'):
+        print(model)
+        mod = collection.find_one({"prefixe": model})
+        models.append(collection.find_one({"prefixe": model}))
+        results = dict({"model": model, "x_data": mod['params'][request.form['axe_x']]})
+        results.update(dict({"model": model, "y_data": mod['params'][request.form['axe_y']]}))
+    return json.dumps(results)
