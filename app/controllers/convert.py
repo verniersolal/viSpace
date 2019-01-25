@@ -88,11 +88,19 @@ def get_parameters_by_model(model):
 def get_parameters():
     # Il faut chercher les deux paramètres x et y des models à construire
     models = []
-    results = {}
+    results = []
+    tmp = {}
+    r = {}
+    print(request.form)
+    islogx = True if 'isLog_x' in request.form else False
+    isLogy = True if 'isLog_y' in request.form else False
+
     for model in request.form.getlist('model[]'):
         print(model)
         mod = collection.find_one({"prefixe": model})
         models.append(collection.find_one({"prefixe": model}))
-        results = dict({"model": model, "x_data": mod['params'][request.form['axe_x']]})
-        results.update(dict({"model": model, "y_data": mod['params'][request.form['axe_y']]}))
-    return json.dumps(results)
+        tmp[model] = dict({"x_data": mod['params'][request.form['axe_x']], "y_data": mod['params'][request.form['axe_y']]})
+        results.append(tmp[model])
+    #print(results)
+    r = dict({"models": results, "position": request.form['position'], "chartType": request.form['chartType'], "isLog_x": islogx, "isLog_y": isLogy})
+    return json.dumps(r)
