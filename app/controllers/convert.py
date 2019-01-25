@@ -18,8 +18,7 @@ def upload_file():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
             convert_file_to_json(file.filename)
             os.remove(app.config['UPLOAD_FOLDER'] + "/" + file.filename)
-            models = json.loads(get_models())
-        return render_template('graph_interface.html', converted=True, models=models)
+        return render_template('graph_interface.html', converted=True, models=json.loads(get_models()))
     elif request.method == 'GET':
         models = json.loads(get_models())
 
@@ -65,11 +64,10 @@ def import_file(json_file_name, json_tab):
 
 @app.route('/models')
 def get_models():
-    if request.method == 'GET':
-        models = collection.find({}, {'prefixe': 1})
-        result = []
-        for model in models:
-            result.append(model['prefixe'])
+    result = []
+    models = collection.find({}, {'prefixe': 1})
+    for model in models:
+        result.append(model['prefixe'])
     return json.dumps(result)
 
 
