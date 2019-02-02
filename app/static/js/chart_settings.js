@@ -81,6 +81,11 @@ function init() {
                         break;
                     case 'pointCloud':
                         drawPointCloud(data);
+                        break;
+                    case 'parallelCoord':
+                        var data={};
+                        drawparallelCoordinar(data);
+                    default;
                 }
                 $('#card' + data['position'] + '.card-panel').hide();
                 $('#svg' + data['position']).show();

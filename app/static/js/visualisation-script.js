@@ -1,7 +1,26 @@
 function drawAxe(data, isVertical, isLog, boundingBox) {
     return (isVertical ? d3.axisLeft(getScale(data, isVertical, isLog, boundingBox)).ticks(5) : d3.axisBottom(getScale(data, isVertical, isLog, boundingBox)).ticks(5));
 }
+function drawparallelCoordinar(data){
+    var svg = d3.select('#svg' + data['position']);
+    var gContainer = svg.append("g");
 
+					// Axis
+					var n=4;
+					var scales = [];
+					var axis = [];
+					var gAxis = [];
+
+					for(i=0;i<n;i++){
+
+						scales[i] = d3.scaleLinear();
+						scales[i].domain([d3.min(data, function(d) { return d.values[i]; }),d3.max(data, function(d) { return d.values[i]; })]);
+    					scales[i].range([500,0]);
+
+						axis[i] = d3.axisLeft(scales[i]);
+
+					}
+}
 function drawLinearChart(data) {
     let svg = d3.select('#svg' + data['position']);
     var boundingBox = $('#card' + data['position']).get(0).getBoundingClientRect();
