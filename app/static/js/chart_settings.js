@@ -50,7 +50,7 @@ function init() {
                     "                    </div>");
                 break;
             case "parCoord":
-                axesDiv.empty().append("                    <div class=\"col m5\">\n" +
+                axesDiv.empty().append(" <div class=\"col m5\">\n" +
                     "                        <div class=\"axe_settings\">\n" +
                     "                            <div class=\"input-field\">\n" +
                     "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
@@ -88,7 +88,8 @@ function init() {
     $("#adminAxes").change(function () {
         let axesDiv = $(this);
         console.log("waitging change for axe" + nbAxes);
-        if ($("input[name='axe_"+nbAxes+"']").val() !== "") {
+        let lastInputValue = $("input[name='axe_" + nbAxes + "']").val();
+        if (lastInputValue && lastInputValue !== "") {
             nbAxes++;
             console.log("append" + nbAxes);
             axesDiv.append(" <div class=\"col m5\">\n" +
