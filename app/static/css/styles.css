@@ -59,17 +59,17 @@ nav {
 
 /* Input color*/
 .input-field .prefix.active {
-    color: black;
+    color: #ffc107;
 }
 
 /* label underline focus color */
 .input-field input:focus {
-    border-bottom: 1px solid black !important;
-    box-shadow: 0 1px 0 0 black !important
+    border-bottom: 1px solid #ffc107 !important;
+    box-shadow: 0 1px 0 0 #ffc107 !important
 }
 
 .input-field input:focus + label {
-    color: black !important;
+    color: #ffc107 !important;
 }
 
 .input-field > label {

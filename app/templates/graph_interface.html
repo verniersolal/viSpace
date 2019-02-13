@@ -4,7 +4,7 @@
     <div class="row graph-interface">
         <h3 class="center">Vos graphiques</h3>
         <div class="container createGraph">
-            <form method="POST" action="{{ url_for('get_parameters') }}" id="settings_form">
+            <form autocomplete="off" method="POST" action="{{ url_for('get_parameters') }}" id="settings_form">
                 <div class="row adminGraphType">
                     <div class="col m2">
                         <p>
@@ -25,7 +25,7 @@
                     <div class="col m2">
                         <p>
                             <label>
-                                <input class="with-gap" name="chartType" value="" type="radio"/>
+                                <input class="with-gap" name="chartType" value="parCoord" type="radio"/>
                                 <span>Coordonnées parallèles</span>
                             </label>
                         </p>
@@ -56,7 +56,7 @@
                     </div>
                 </div>
                 <div class="row adminModels">
-                    <div class="col m6">
+                    <div class="input-field col m6">
                         <select name="position">
                             <option value="" disabled selected>Position du graphique</option>
                             <option value="1">1</option>
@@ -65,16 +65,16 @@
                             <option value="4">4</option>
                         </select>
                     </div>
-                    <div class="col m6">
+                    <div class="input-field col m6">
                         <select name="model" multiple id="selectTable">
-                            <option value="" disabled selected>Modèles</option>
+                            <option value="" disabled>Modèles</option>
                             {% for model in models %}
                                 <option value="{{ model }}">{{ model }}</option>
                             {% endfor %}
                         </select>
                     </div>
                 </div>
-                <div class="row adminAxes">
+                <div class="row" id="adminAxes">
                     <div class="col m5">
                         <div class="axe_settings">
                             <div class="input-field">
@@ -108,7 +108,7 @@
                 </div>
                 <div class="createBtn row center">
                     <button class="btn waves-effect waves-light black" type="submit" name="action">Créer
-                        <i class="material-icons right">done</i>
+                        <i class="material-icons right">create</i>
                     </button>
                 </div>
             </form>
