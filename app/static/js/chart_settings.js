@@ -125,11 +125,9 @@ function init() {
             success: function (data) {
                 data = JSON.parse(data);
                 if (data.hasOwnProperty('error')) {
-                    console.log(data);
                 }
                 $('#position').remove();
                 $('#settings_form').trigger('reset');
-                console.log(data);
 
 
                 let xdata = [];
@@ -140,29 +138,28 @@ function init() {
                         ydata.push(data['models'][i]['y_data'][j]);
                     }
                 }
-                console.log(xdata);
+                let ymin = d3.min(ydata);
+                let ymax = d3.max(ydata);
+                let xmax = d3.max(xdata);
+                let xmin = d3.min(xdata);
+                nbChart++;
+                console.log("nbChart : "+ nbChart);
+                switch (data['chartType']) {
+                    case 'linearChart':
+                        for (let i = 0; i < data['models'].length; i++) {
+                            drawLinearChart(nbChart, data['models'][i], xmin, xmax, ymin, ymax);
+                        }
+                        break;
+                    case 'pointCloud':
+                        for (let i = 0; i < data['models'].length; i++) {
+                            drawPointCloud(nbChart, data['models'][i], xmin, xmax, ymin, ymax);
+                        }
+                        break;
+                }
+                //drawLinearChart(data['position'], data['models'][i]);
 
-                        let ymin = d3.min(ydata);
-                        let ymax = d3.max(ydata);
-                        let xmax = d3.max(xdata);
-                        let xmin = d3.min(xdata);
-
-                            switch (data['chartType']) {
-                                case 'linearChart':
-                                    for (let i = 0; i < data['models'].length; i++) {
-                                        drawLinearChart(data['position'], data['models'][i], xmin, xmax, ymin, ymax);
-                                    }
-                                    break;
-                                case 'pointCloud':
-                                    for (let i = 0; i < data['models'].length; i++) {
-                                        drawPointCloud(data['position'], data['models'][i], xmin, xmax, ymin, ymax);
-                                    }
-                                    break;
-                            }
-                        //drawLinearChart(data['position'], data['models'][i]);
-
-                $('#card' + data['position'] + '.card-panel').hide();
-                $('#svg' + data['position']).show();
+                $('#card' + nbChart + '.card-panel').hide();
+                $('#svg' +nbChart).show();
             }
         });
         e.preventDefault(); // avoid to execute the actual submit of the form.

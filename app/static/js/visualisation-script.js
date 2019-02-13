@@ -1,7 +1,6 @@
 
 
 function drawAxe(min,max, isVertical, isLog, boundingBox) {
-    console.log(boundingBox);
     return (isVertical ? d3.axisLeft(getScale(min,max, isVertical, isLog, boundingBox)).ticks(5) : d3.axisBottom(getScale(min,max, isVertical, isLog, boundingBox)).ticks(5));
 }
 
@@ -14,15 +13,15 @@ function drawLinearChart(position, data, xmin, xmax, ymin, ymax) {
     gAxisX.attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + "," + parseFloat(0.8 * boundingBox.height) + ")");
     let gAxisY = gContainer.append('g');
     gAxisY.attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")");
-    gAxisX.call(drawAxe(xmin, xmax, false, data['isLog_x'], boundingBox));
-    gAxisY.call(drawAxe(ymin,ymax, true, data['isLog_y'], boundingBox));
+    gAxisX.call(drawAxe(xmin, xmax, false, data['isLog'], boundingBox));
+    gAxisY.call(drawAxe(ymin,ymax, true, data['isLog'], boundingBox));
     var color = parseInt(Math.random() * 10);
     let xy = [];
     for(var i = 0; i< data["x_data"].length; i++){
         xy.push({x:data['x_data'][i], y: data['y_data'][i]});
     }
-    let scale_x = getScale(xmin,xmax,false, data['isLog_x'], boundingBox);
-    let scale_y = getScale(ymin,ymax, true, data['isLog_y'], boundingBox);
+    let scale_x = getScale(xmin,xmax,false, data['isLog'], boundingBox);
+    let scale_y = getScale(ymin,ymax, true, data['isLog'], boundingBox);
     let lineValue = d3.line();
     lineValue.x(function (d) {
         return scale_x(parseFloat(d.x));
@@ -57,7 +56,7 @@ function drawLinearChart(position, data, xmin, xmax, ymin, ymax) {
 }
 
 function getScale(min,max, isVertical, isLog, boundingBox) {
-    let scaleAxe = (isLog ? d3.scaleLog() : d3.scaleLinear());
+    let scaleAxe = isLog ? d3.scaleLog() : d3.scaleLinear();
     scaleAxe.domain([min, max]);
     isVertical ? scaleAxe.range([parseFloat(0.77 * boundingBox.height), 0]) : scaleAxe.range([0, parseFloat(0.8 * boundingBox.width)]);
 
@@ -75,11 +74,11 @@ function drawPointCloud(position, data, xmin,xmax, ymin,ymax) {
     let gAxisY = gContainer.append('g');
     gAxisY.attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")");
     console.log(boundingBox);
-    gAxisX.call(drawAxe(xmin, xmax,false, data['isLog_x'], boundingBox));
-    gAxisY.call(drawAxe(ymin,ymax, true, data['isLog_y'], boundingBox));
+    gAxisX.call(drawAxe(xmin, xmax,false, data['isLog'], boundingBox));
+    gAxisY.call(drawAxe(ymin,ymax, true, data['isLog'], boundingBox));
     var color = parseInt(Math.random() * 10);
-    let scale_x = getScale(xmin,xmax,false, data['isLog_x'], boundingBox);
-    let scale_y = getScale(ymin,ymax, true, data['isLog_y'], boundingBox);
+    let scale_x = getScale(xmin,xmax,false, data['isLog'], boundingBox);
+    let scale_y = getScale(ymin,ymax, true, data['isLog'], boundingBox);
     let gcircle = gContainer.append("g");
     for (let i = 0; i < data['x_data'].length; i++) {
         let circle = gcircle.append("circle");

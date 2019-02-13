@@ -86,21 +86,31 @@ def get_parameters_by_model(model):
 
 @app.route('/axe_data', methods=['POST'])
 def get_parameters():
-    # Il faut chercher les deux paramètres x et y des models à construire
-    models = []
-    results = []
-    tmp = {}
-    r = {}
-    print(request.form)
-    islogx = True if 'isLog_x' in request.form else False
-    isLogy = True if 'isLog_y' in request.form else False
+    if request.form['chartType']=="coordParallel":
+        get_parameters_for_parallel_coord(request.form)
+    else:
+        # Il faut chercher les deux paramètres x et y des models à construire
+        print(request.form)
+        results = []
+        isLog = True if 'isLog' in request.form else False
 
-    for model in request.form.getlist('model[]'):
-        print(model)
+        for model in request.form.getlist('model[]'):
+            print(model)
+            mod = collection.find_one({"prefixe": model})
+            results.append(dict({"x_data": mod['params'][request.form['axe_x']], "y_data": mod['params'][request.form['axe_y']]}))
+        print(results)
+        final = dict({"models": results, "chartType": request.form['chartType'], "isLog": isLog})
+        print(final)
+        return json.dumps(final)
+# Pour les coordonnées parallèles il nous faut un tableau d'axes (axe 1 , axe 2 , ...) et un tableau de modèles (modèle 1 modèle 2 ...)
+def get_parameters_for_parallel_coord(data):
+
+    models = []
+    tmp = [[]]
+    for model in data.getlist('model[]'):
         mod = collection.find_one({"prefixe": model})
-        models.append(collection.find_one({"prefixe": model}))
-        tmp[model] = dict({"x_data": mod['params'][request.form['axe_x']], "y_data": mod['params'][request.form['axe_y']]})
-        results.append(tmp[model])
-    #print(results)
-    r = dict({"models": results, "position": request.form['position'], "chartType": request.form['chartType'], "isLog_x": islogx, "isLog_y": isLogy})
-    return json.dumps(r)
+        models.append(mod)
+        i = 0
+        for axe in data.getlist('axes[]'):
+            tmp[model].append(dict({"data_"+ i: mod['params'][axe]}))
+            i = i+1
