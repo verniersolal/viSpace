@@ -54,7 +54,6 @@ function init() {
                 o[this.name] = this.value || '';
             }
         });
-        console.log(o);
         $.ajax({
             type: "POST",
             url: url,
@@ -67,24 +66,37 @@ function init() {
                 $('#position').remove();
                 $('#settings_form').trigger('reset');
                 console.log(data);
-                switch (data['chartType']) {
-                    case 'linearChart':
-                        let xdata = data['models'][0]['x_data'].concat( data['models'][1]['x_data']);
-                        let ydata = data['models'][0]['y_data'].concat( data['models'][1]['y_data']);
+
+
+                let xdata = [];
+                let ydata = [];
+                for(let i=0; i< data['models'].length; i++){
+                    for(let j =0; j< data['models'][i]['x_data'].length; j++) {
+                        xdata.push(data['models'][i]['x_data'][j]);
+                        ydata.push(data['models'][i]['y_data'][j]);
+                    }
+                }
+                console.log(xdata);
+
                         let ymin = d3.min(ydata);
                         let ymax = d3.max(ydata);
                         let xmax = d3.max(xdata);
                         let xmin = d3.min(xdata);
-                        for(let i =0; i < data['models'].length; i++){
-                            drawLinearChart(data['position'], data['models'][i], xmin, xmax, ymin, ymax);
 
-                        }
-
+                            switch (data['chartType']) {
+                                case 'linearChart':
+                                    for (let i = 0; i < data['models'].length; i++) {
+                                        drawLinearChart(data['position'], data['models'][i], xmin, xmax, ymin, ymax);
+                                    }
+                                    break;
+                                case 'pointCloud':
+                                    for (let i = 0; i < data['models'].length; i++) {
+                                        drawPointCloud(data['position'], data['models'][i], xmin, xmax, ymin, ymax);
+                                    }
+                                    break;
+                            }
                         //drawLinearChart(data['position'], data['models'][i]);
-                        break;
-                    case 'pointCloud':
-                        drawPointCloud(data);
-                }
+
                 $('#card' + data['position'] + '.card-panel').hide();
                 $('#svg' + data['position']).show();
             }
