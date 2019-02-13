@@ -18,9 +18,11 @@ def upload_file():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
             convert_file_to_json(file.filename)
             os.remove(app.config['UPLOAD_FOLDER'] + "/" + file.filename)
-        return render_template('graph_interface.html', converted=True)
+        return render_template('graph_interface.html', converted=True, models=json.loads(get_models()))
     elif request.method == 'GET':
-        return render_template('graph_interface.html')
+        models = json.loads(get_models())
+
+        return render_template('graph_interface.html', models= models)
 
 
 def get_column(array, i):
@@ -62,11 +64,10 @@ def import_file(json_file_name, json_tab):
 
 @app.route('/models')
 def get_models():
-    if request.method == 'GET':
-        models = collection.find({}, {'prefixe': 1})
-        result = []
-        for model in models:
-            result.append(model['prefixe'])
+    result = []
+    models = collection.find({}, {'prefixe': 1})
+    for model in models:
+        result.append(model['prefixe'])
     return json.dumps(result)
 
 
@@ -85,31 +86,31 @@ def get_parameters_by_model(model):
 
 @app.route('/axe_data', methods=['POST'])
 def get_parameters():
-    if request.method == 'POST':
-        results = dict()
-        if 'family_chart' in request.form and 'axe_x' in request.form and 'axe_y' in request.form and 'position' in request.form:
-            if request.form['family_chart'] == "linearChart" or request.form['family_chart'] == "pointCloud":
-                model_x = collection.find_one({"prefixe": request.form['model_x']})
-                if request.form['axe_x'] in model_x['params'].keys():
-                    axe_x = request.form['axe_x']
-                    results = dict({"axe_x": {"name": axe_x, "values": model_x['params'][axe_x]}})
-                model_y = collection.find_one({"prefixe": request.form['model_y']})
-                if request.form['axe_y'] in model_y['params'].keys():
-                    results.update(dict({"axe_y": {"name": request.form['axe_y'], "values": model_y['params'][request.form['axe_y']]}}))
+    if request.form['chartType']=="coordParallel":
+        get_parameters_for_parallel_coord(request.form)
+    else:
+        # Il faut chercher les deux paramètres x et y des models à construire
+        print(request.form)
+        results = []
+        isLog = True if 'isLog' in request.form else False
 
-                results['family_chart'] = request.form['family_chart']
-                if 'isLog_y' in request.form:
-                    results['isLog_y'] = True
-                else:
-                    results['isLog_y'] = False
-                if 'isLog_x' in request.form:
-                    results['isLog_x'] = True
-                else:
-                    results['isLog_x'] = False
+        for model in request.form.getlist('model[]'):
+            print(model)
+            mod = collection.find_one({"prefixe": model})
+            results.append(dict({"x_data": mod['params'][request.form['axe_x']], "y_data": mod['params'][request.form['axe_y']]}))
+        print(results)
+        final = dict({"models": results, "chartType": request.form['chartType'], "isLog": isLog})
+        print(final)
+        return json.dumps(final)
+# Pour les coordonnées parallèles il nous faut un tableau d'axes (axe 1 , axe 2 , ...) et un tableau de modèles (modèle 1 modèle 2 ...)
+def get_parameters_for_parallel_coord(data):
 
-                results['position'] = request.form['position']
-                return json.dumps(results)
-            else:
-                return json.dumps({"message": "CP in construct", "error": True})
-        else:
-            return json.dumps({"message": "Not valid parameters", "error": True})
+    models = []
+    tmp = [[]]
+    for model in data.getlist('model[]'):
+        mod = collection.find_one({"prefixe": model})
+        models.append(mod)
+        i = 0
+        for axe in data.getlist('axes[]'):
+            tmp[model].append(dict({"data_"+ i: mod['params'][axe]}))
+            i = i+1

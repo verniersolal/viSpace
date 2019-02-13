@@ -1,52 +1,20 @@
 {% extends "layout.html" %}
 {% block body %}
     <body onload="init();">
-    <div class="container">
-        <div class="row graph-interface">
-            <h3 class="center">Vos graphiques</h3>
-            <div class="row"></div>
-            <div class="col m6 center">
-                <div class="card-panel modal-trigger" id="card1" href="#modal1" data-position="1">
-                    <a data-position="1" class="btn-floating btn-large waves-effect waves-light black"><i
-                            class="material-icons">add</i></a>
-                </div>
-                <svg id="svg1" class="svg"></svg>
-            </div>
-            <div class="col m6 center">
-                <div class="card-panel modal-trigger" id="card2" href="#modal1" data-position="2">
-                    <a data-position="2" class="btn-floating btn-large waves-effect waves-light black "><i
-                            class="material-icons">add</i></a>
-                </div>
-                <svg id="svg2" class="svg"></svg>
-            </div>
-            <div class="col m6 center">
-                <div class="card-panel modal-trigger" id="card3" href="#modal1" data-position="3">
-                    <a data-position="3" class="btn-floating btn-large waves-effect waves-light black"><i
-                            class="material-icons">add</i></a>
-                </div>
-                <svg id="svg3" class="svg"></svg>
-            </div>
-            <div class="col m6 center">
-                <div class="card-panel modal-trigger" id="card4" href="#modal1" data-position="4">
-                    <a data-position="4" class="btn-floating btn-large waves-effect waves-light black"><i
-                            class="material-icons">add</i></a>
-                </div>
-                <svg id="svg4" class="svg"></svg>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Structure -->
-    <div id="modal1" class="modal black-text bottom-sheet">
-        <form id="settings_form" action="{{ url_for('get_parameters') }}" autocomplete="off" method="post">
-            <div class="modal-content">
-                <h4>Configuration du graphique</h4>
-                <div class="row">
+    <div class="row graph-interface">
+        <h3 class="center">Vos graphiques</h3>
+        <div class="container createGraph">
+            <form autocomplete="off" method="POST" action="{{ url_for('get_parameters') }}" id="settings_form">
+                <div class="row adminGraphType">
                     <div class="col m2">
                         <p>
                             <label>
+<<<<<<< HEAD
                                 <input class="with-gap" name="family_chart" value="linearChart" type="radio" checked
                                 onclick="document.getElementById('pCld_pCrt').style.display='block';document.getElementById('pCrd').style.display='none'"/>
+=======
+                                <input class="with-gap" name="chartType" value="linearChart" type="radio" checked/>
+>>>>>>> f51d7a783674ad98683b2541b2e6f83ea0666636
                                 <span>Graphique linéaire</span>
                             </label>
                         </p>
@@ -54,8 +22,12 @@
                     <div class="col m2">
                         <p>
                             <label>
+<<<<<<< HEAD
                                 <input class="with-gap" name="family_chart" value="pointCloud" type="radio"
                                        onclick="document.getElementById('pCld_lCrt').style.display='block';document.getElementById('pCrd').style.display='none'"/>
+=======
+                                <input class="with-gap" name="chartType" value="pointCloud" type="radio"/>
+>>>>>>> f51d7a783674ad98683b2541b2e6f83ea0666636
                                 <span>Nuage de points</span>
                             </label>
                         </p>
@@ -63,8 +35,12 @@
                     <div class="col m2">
                         <p>
                             <label>
+<<<<<<< HEAD
                                 <input class="with-gap" name="family_chart" value="parallelCoord" type="radio",
                                        onclick="document.getElementById('pCrd').style.display='block';document.getElementById('pCld_lCrt').style.display='none'"/>
+=======
+                                <input class="with-gap" name="chartType" value="parCoord" type="radio"/>
+>>>>>>> f51d7a783674ad98683b2541b2e6f83ea0666636
                                 <span>Coordonnées parallèles</span>
                             </label>
                         </p>
@@ -72,7 +48,7 @@
                     <div class="col m2">
                         <p>
                             <label>
-                                <input class="with-gap" name="family_chart" value="" type="radio"/>
+                                <input class="with-gap" name="chartType" value="" type="radio"/>
                                 <span>Toto</span>
                             </label>
                         </p>
@@ -80,7 +56,7 @@
                     <div class="col m2">
                         <p>
                             <label>
-                                <input class="with-gap" name="family_chart" value="" type="radio"/>
+                                <input class="with-gap" name="chartType" value="" type="radio"/>
                                 <span>Titi</span>
                             </label>
                         </p>
@@ -88,12 +64,13 @@
                     <div class="col m2">
                         <p>
                             <label>
-                                <input class="with-gap" name="family_chart" value="" type="radio"/>
+                                <input class="with-gap" name="chartType" value="" type="radio"/>
                                 <span>Tutu</span>
                             </label>
                         </p>
                     </div>
                 </div>
+<<<<<<< HEAD
                 <div class="row" id="pCld_lCrt" >
                     <div class="row">
                         <fieldset>
@@ -122,9 +99,31 @@
                                         </label>
                                     </p>
                                 </div>
-                            </div>
-                        </fieldset>
+=======
+                <div class="row adminModels">
+                    <div class="input-field col m6">
+                        <i class="material-icons prefix">folder_open</i>
+                        <select name="model" multiple id="selectModel">
+                            <option value="" disabled>Modèles</option>
+                            {% for model in models %}
+                                <option value="{{ model }}">{{ model }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
+                </div>
+                <div class="row" id="adminAxes">
+                    <div class="col m5">
+                        <div class="axe_settings">
+                            <div class="input-field">
+                                <i class="material-icons prefix">insert_chart</i>
+                                <input type="text" name="axe_x" id="axe_x" class="autocomplete axe_name"
+                                       required>
+                                <label for="axe_x">Axe X</label>
+>>>>>>> f51d7a783674ad98683b2541b2e6f83ea0666636
+                            </div>
+                        </div>
+                    </div>
+<<<<<<< HEAD
                     <div class="row" >
                         <fieldset>
                             <legend>
@@ -152,10 +151,30 @@
                                         </label>
                                     </p>
                                 </div>
+=======
+                    <div class="col m5">
+                        <div class="axe_settings" id="2">
+                            <div class="input-field">
+                                <i class="material-icons prefix">insert_chart</i>
+                                <input type="text" name="axe_y" id="axe_y" class="autocomplete axe_name"
+                                       required>
+                                <label for="axe_y">Axe Y</label>
+>>>>>>> f51d7a783674ad98683b2541b2e6f83ea0666636
                             </div>
-                        </fieldset>
+                        </div>
+                    </div>
+                    <div class="col m2">
+                        <div class="input-field">
+                            <p>
+                                <label>
+                                    <input id="isLog_y" name="isLog_y" type="checkbox"/>
+                                    <span>Log 10</span>
+                                </label>
+                            </p>
+                        </div>
                     </div>
                 </div>
+<<<<<<< HEAD
                 <div id="pCrd" style="display: none">
                     <fieldset>
                         <legend>
@@ -197,13 +216,43 @@
                         </div>
                     </fieldset>
                 </div>
+=======
+                <div class="createBtn row center">
+                    <button class="btn waves-effect waves-light black" type="submit" name="action">Créer
+                        <i class="material-icons right">create</i>
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="col m6 center">
+            <div class="card-panel modal-trigger" id="card1" href="#modal1" data-position="1">
+                <a data-position="1" class="btn-floating btn-large waves-effect waves-light black"><i
+                        class="material-icons">add</i></a>
+>>>>>>> f51d7a783674ad98683b2541b2e6f83ea0666636
             </div>
-            <div class="modal-footer">
-                <button class="btn waves-effect waves-light black" type="submit" name="action">Créer
-                    <i class="material-icons right">done</i>
-                </button>
+            <svg id="svg1" class="svg"></svg>
+        </div>
+        <div class="col m6 center">
+            <div class="card-panel modal-trigger" id="card2" href="#modal1" data-position="2">
+                <a data-position="2" class="btn-floating btn-large waves-effect waves-light black "><i
+                        class="material-icons">add</i></a>
             </div>
-        </form>
+            <svg id="svg2" class="svg"></svg>
+        </div>
+        <div class="col m6 center">
+            <div class="card-panel modal-trigger" id="card3" href="#modal1" data-position="3">
+                <a data-position="3" class="btn-floating btn-large waves-effect waves-light black"><i
+                        class="material-icons">add</i></a>
+            </div>
+            <svg id="svg3" class="svg"></svg>
+        </div>
+        <div class="col m6 center">
+            <div class="card-panel modal-trigger" id="card4" href="#modal1" data-position="4">
+                <a data-position="4" class="btn-floating btn-large waves-effect waves-light black"><i
+                        class="material-icons">add</i></a>
+            </div>
+            <svg id="svg4" class="svg"></svg>
+        </div>
     </div>
     </body>
 {% endblock %}
