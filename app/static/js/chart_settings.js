@@ -4,7 +4,8 @@ function sendToast() {
 }
 
 function init() {
-    let nbAxes = 2;
+    let nbAxes = 2; // default axes count
+    let nbChart = 0; // default chart count
 
     // Select Materialize
     $(document).ready(function () {
@@ -105,7 +106,6 @@ function init() {
     $("#settings_form").submit(function (e) {
         let form = $(this);
         let url = form.attr('action');
-        $('.modal').modal('close');
         let o = {};
         $.each(form.serializeArray(), function () {
             if (o[this.name]) {
@@ -140,7 +140,6 @@ function init() {
                         let xmin = d3.min(xdata);
                         for (let i = 0; i < data['models'].length; i++) {
                             drawLinearChart(data['position'], data['models'][i], xmin, xmax, ymin, ymax);
-
                         }
 
                         //drawLinearChart(data['position'], data['models'][i]);
