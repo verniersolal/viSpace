@@ -54,9 +54,9 @@ function init() {
                     "                        <div class=\"axe_settings\">\n" +
                     "                            <div class=\"input-field\">\n" +
                     "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
-                    "                                <input type=\"text\" name=\"axe_1\" id=\"axe_x\" class=\"autocomplete axe_name\"\n" +
+                    "                                <input type=\"text\" name=\"axe_1\" id=\"axe_1\" class=\"autocomplete axe_name\"\n" +
                     "                                       required>\n" +
-                    "                                <label for=\"axe_x\">Axe n°1</label>\n" +
+                    "                                <label for=\"axe_1\">Axe n°1</label>\n" +
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                    </div>\n" +
@@ -64,9 +64,9 @@ function init() {
                     "                        <div class=\"axe_settings\" id=\"2\">\n" +
                     "                            <div class=\"input-field\">\n" +
                     "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
-                    "                                <input type=\"text\" name=\"axe_2\" id=\"axe_y\" class=\"autocomplete axe_name lastAxe\"\n" +
+                    "                                <input type=\"text\" name=\"axe_2\" id=\"axe_2\" class=\"autocomplete axe_name\"\n" +
                     "                                       required>\n" +
-                    "                                <label for=\"axe_y\">Axe n°2</label>\n" +
+                    "                                <label for=\"axe_2\">Axe n°2</label>\n" +
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                    </div>\n" +
@@ -84,23 +84,24 @@ function init() {
         }
     });
 
+
     $("#adminAxes").change(function () {
         let axesDiv = $(this);
-        $('.lastAxe').change(function () {
+        console.log("waitging change for axe" + nbAxes);
+        if ($("input[name='axe_"+nbAxes+"']").val() !== "") {
             nbAxes++;
             console.log("append" + nbAxes);
-            $(this).removeClass('lastAxe');
             axesDiv.append(" <div class=\"col m5\">\n" +
                 "                        <div class=\"axe_settings\" id=\"" + nbAxes + "\">\n" +
                 "                            <div class=\"input-field\">\n" +
                 "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
-                "                                <input type=\"text\" name=\"axe_" + nbAxes + "\" id=\"axe_" + nbAxes + "\" class=\"autocomplete axe_name lastAxe\"\n" +
+                "                                <input type=\"text\" name=\"axe_" + nbAxes + "\" id=\"axe_" + nbAxes + "\" class=\"autocomplete axe_name\"\n" +
                 "                                       >\n" +
                 "                                <label for=\"axe_" + nbAxes + "\">Axe n°" + nbAxes + "</label>\n" +
                 "                            </div>\n" +
                 "                        </div>\n" +
-                "                    </div>")
-        });
+                "                    </div>");
+        }
     });
 
     $("#settings_form").submit(function (e) {
@@ -132,8 +133,8 @@ function init() {
 
                 let xdata = [];
                 let ydata = [];
-                for(let i=0; i< data['models'].length; i++){
-                    for(let j =0; j< data['models'][i]['x_data'].length; j++) {
+                for (let i = 0; i < data['models'].length; i++) {
+                    for (let j = 0; j < data['models'][i]['x_data'].length; j++) {
                         xdata.push(data['models'][i]['x_data'][j]);
                         ydata.push(data['models'][i]['y_data'][j]);
                     }
@@ -143,7 +144,7 @@ function init() {
                 let xmax = d3.max(xdata);
                 let xmin = d3.min(xdata);
                 nbChart++;
-                console.log("nbChart : "+ nbChart);
+                console.log("nbChart : " + nbChart);
                 switch (data['chartType']) {
                     case 'linearChart':
                         for (let i = 0; i < data['models'].length; i++) {
@@ -159,13 +160,14 @@ function init() {
                 //drawLinearChart(data['position'], data['models'][i]);
 
                 $('#card' + nbChart + '.card-panel').hide();
-                $('#svg' +nbChart).show();
+                $('#svg' + nbChart).show();
             }
         });
         e.preventDefault(); // avoid to execute the actual submit of the form.
     });
-    $('#selectTable').change(function () {
-        let model = $('#selectTable').val()[0];
+
+    $('#selectModel').change(function () {
+        let model = $('#selectModel').val()[0];
         let axeElement = $('.axe_name');
         console.log(axeElement);
         $.ajax({
@@ -173,7 +175,6 @@ function init() {
             type: 'GET',
             dataType: 'json',
             success: function (params) {
-
                 let data = {};
                 for (let i = 0; i < params.length; i++) {
                     data[params[i]] = null;
