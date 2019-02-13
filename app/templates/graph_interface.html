@@ -1,16 +1,16 @@
 {% extends "layout.html" %}
 {% block body %}
-<body onload="init();">
-<div class="row graph-interface">
-    <h3 class="center">Vos graphiques</h3>
-    <div class="adminGraphique col offset-m1 col m5">
-        <form method="POST" action="{{ url_for('get_parameters') }}"id="settings_form">
-            <div class="row">
-                <div class="adminGraphType">
+    <body onload="init();">
+    <div class="row graph-interface">
+        <h3 class="center">Vos graphiques</h3>
+        <div class="container createGraph">
+            <form method="POST" action="{{ url_for('get_parameters') }}" id="settings_form">
+                <div class="row adminGraphType">
                     <div class="col m2">
                         <p>
                             <label>
-                                <input class="with-gap" name="family_chart" value="linearChart" type="radio" checked/>
+                                <input class="with-gap" name="family_chart" value="linearChart" type="radio"
+                                       checked/>
                                 <span>Graphique linéaire</span>
                             </label>
                         </p>
@@ -56,137 +56,102 @@
                         </p>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div id="adminAxes" class="black-text bottom-sheet col m5">
-                    <div class="row">
-                        <fieldset>
-                            <legend>
-                                <strong>
-                                    Axe X
-                                </strong>
-                            </legend>
-                            <div class="axe_settings">
-                                <div class="input-field col m8">
-                                    <i class="material-icons prefix">insert_chart</i>
-                                    <input type="text" name="axe_x" id="axe_x" class="autocomplete axe_name" required>
-                                    <label for="axe_x">Axe X</label>
-                                </div>
-                                <div class="input-field col m4">
-                                    <p>
-                                        <label>
-                                            <input id="isLog_x" name="isLog_x" type="checkbox"/>
-                                            <span>Log 10</span>
-                                        </label>
-                                    </p>
-                                </div>
-                            </div>
-                        </fieldset>
+                <div class="row adminModels">
+                    <div class="col m6">
+                        <select>
+                            <option value="" disabled selected>Position du graphique</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
                     </div>
-                    <div class="row">
-                        <fieldset>
-                            <legend>
-                                <strong>
-                                    Axe Y
-                                </strong>
-                            </legend>
-                            <div class="axe_settings" id="2">
-                                <div class="input-field col m8">
-                                    <i class="material-icons prefix">insert_chart</i>
-                                    <input type="text" name="axe_y" id="axe_y" class="autocomplete axe_name" required>
-                                    <label for="axe_y">Axe Y</label>
-                                </div>
-                                <div class="input-field col m4">
-                                    <p>
-                                        <label>
-                                            <input id="isLog_y" name="isLog_y" type="checkbox"/>
-                                            <span>Log 10</span>
-                                        </label>
-                                    </p>
-                                </div>
-                            </div>
-                        </fieldset>
+                    <div class="col m6">
+                        <select name="model" multiple id="selectTable">
+                            <option value="" disabled selected>Modèles</option>
+                            {% for model in models %}
+                                <option value="{{ model }}">{{ model }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
-                <table class="col m7">
-                    <thead>
-                    <tr>
-                        <th>Position du Graphique</th>
-                        <th>Modèle</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>
-                            <select>
-                                <option value="" selected>Position</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select name="model" multiple id="selectTable">
-                                {% for model in models %}
-                                <option value="{{model}}">{{ model }}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-                <div class="right">
+                <div class="row adminAxes">
+                    <div class="col m5">
+                        <div class="axe_settings">
+                            <div class="input-field">
+                                <i class="material-icons prefix">insert_chart</i>
+                                <input type="text" name="axe_x" id="axe_x" class="autocomplete axe_name"
+                                       required>
+                                <label for="axe_x">Axe X</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col m5">
+                        <div class="axe_settings" id="2">
+                            <div class="input-field">
+                                <i class="material-icons prefix">insert_chart</i>
+                                <input type="text" name="axe_y" id="axe_y" class="autocomplete axe_name"
+                                       required>
+                                <label for="axe_y">Axe Y</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col m2">
+                        <div class="input-field">
+                            <p>
+                                <label>
+                                    <input id="isLog_y" name="isLog_y" type="checkbox"/>
+                                    <span>Log 10</span>
+                                </label>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="createBtn row center">
                     <button class="btn waves-effect waves-light black" type="submit" name="action">Créer
                         <i class="material-icons right">done</i>
                     </button>
                 </div>
+            </form>
+        </div>
+
+        <div class="row"></div>
+        <div class="col m6 center">
+            <div class="card-panel modal-trigger" id="card1" href="#modal1" data-position="1">
+                <a data-position="1" class="btn-floating btn-large waves-effect waves-light black"><i
+                        class="material-icons">add</i></a>
             </div>
-        </form>
+            <svg id="svg1" class="svg"></svg>
+        </div>
+        <div class="col m6 center">
+            <div class="card-panel modal-trigger" id="card2" href="#modal1" data-position="2">
+                <a data-position="2" class="btn-floating btn-large waves-effect waves-light black "><i
+                        class="material-icons">add</i></a>
+            </div>
+            <svg id="svg2" class="svg"></svg>
+        </div>
+        <div class="col m6 center">
+            <div class="card-panel modal-trigger" id="card3" href="#modal1" data-position="3">
+                <a data-position="3" class="btn-floating btn-large waves-effect waves-light black"><i
+                        class="material-icons">add</i></a>
+            </div>
+            <svg id="svg3" class="svg"></svg>
+        </div>
+        <div class="col m6 center">
+            <div class="card-panel modal-trigger" id="card4" href="#modal1" data-position="4">
+                <a data-position="4" class="btn-floating btn-large waves-effect waves-light black"><i
+                        class="material-icons">add</i></a>
+            </div>
+            <svg id="svg4" class="svg"></svg>
+        </div>
     </div>
-</div>
-
-
-<div class="row"></div>
-<div class="col m6 center">
-    <div class="card-panel modal-trigger" id="card1" href="#modal1" data-position="1">
-        <a data-position="1" class="btn-floating btn-large waves-effect waves-light black"><i
-                class="material-icons">add</i></a>
-    </div>
-    <svg id="svg1" class="svg"></svg>
-</div>
-<div class="col m6 center">
-    <div class="card-panel modal-trigger" id="card2" href="#modal1" data-position="2">
-        <a data-position="2" class="btn-floating btn-large waves-effect waves-light black "><i
-                class="material-icons">add</i></a>
-    </div>
-    <svg id="svg2" class="svg"></svg>
-</div>
-<div class="col m6 center">
-    <div class="card-panel modal-trigger" id="card3" href="#modal1" data-position="3">
-        <a data-position="3" class="btn-floating btn-large waves-effect waves-light black"><i
-                class="material-icons">add</i></a>
-    </div>
-    <svg id="svg3" class="svg"></svg>
-</div>
-<div class="col m6 center">
-    <div class="card-panel modal-trigger" id="card4" href="#modal1" data-position="4">
-        <a data-position="4" class="btn-floating btn-large waves-effect waves-light black"><i
-                class="material-icons">add</i></a>
-    </div>
-    <svg id="svg4" class="svg"></svg>
-</div>
-
-<!-- Modal Structure -->
-
-
-</body>
+    </body>
 {% endblock %}
 {% block scripts %}
-{{ super() }}
-<script src="{{ url_for('static', filename='js/chart_settings.js') }}"></script>
-{% if converted %}
-<script>sendToast()</script>
-{% endif %}
-<script src="{{ url_for('static', filename='js/visualisation-script.js') }}"></script>
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/chart_settings.js') }}"></script>
+    {% if converted %}
+        <script>sendToast()</script>
+    {% endif %}
+    <script src="{{ url_for('static', filename='js/visualisation-script.js') }}"></script>
 {% endblock %}
