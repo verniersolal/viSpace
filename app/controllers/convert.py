@@ -71,46 +71,41 @@ def get_models():
     return json.dumps(result)
 
 
-@app.route('/models/<model>')
-def get_parameters_by_model(model):
-    parameters = collection.find_one({"prefixe": model})
-    if not parameters:
-        return "No parameters found"
-    keys = parameters['params'].keys()
+@app.route('/models/parameters', methods=['POST'])
+def get_parameters_by_model():
     result = []
-    # We change our results to an array who is more simple to pass in JS
-    for key in keys:
-        result.append(key)
-    return json.dumps(result)
-
+    for model in request.get_json()['model']:
+        parameters = collection.find_one({"prefixe": model})
+        if not parameters:
+            return "No parameters found"
+        keys = parameters['params'].keys()
+        # We change our results to an array who is more simple to pass in JS
+        for key in keys:
+            result.append(key)
+    # Here we check if parameter is in all models we want visualize
+    final = [x for x in result if result.count(x) == len(request.get_json()['model'])]
+    return json.dumps(list(set(final)))
 
 @app.route('/axe_data', methods=['POST'])
 def get_parameters():
-    if request.form['chartType']=="coordParallel":
+    if request.form['chartType']=="parCoord":
         get_parameters_for_parallel_coord(request.form)
     else:
         # Il faut chercher les deux paramètres x et y des models à construire
-        print(request.form)
         results = []
         isLog = True if 'isLog' in request.form else False
-
-        for model in request.form.getlist('model[]'):
-            print(model)
-            mod = collection.find_one({"prefixe": model})
+        if 'model[]' in request.form:
+            for model in request.form.getlist('model[]'):
+                mod = collection.find_one({"prefixe": model})
+                results.append(dict({"x_data": mod['params'][request.form['axe_x']], "y_data": mod['params'][request.form['axe_y']]}))
+            final = dict({"models": results, "chartType": request.form['chartType'], "isLog": isLog})
+            return json.dumps(final)
+        else:
+            mod = collection.find_one({"prefixe": request.form['model']})
             results.append(dict({"x_data": mod['params'][request.form['axe_x']], "y_data": mod['params'][request.form['axe_y']]}))
-        print(results)
-        final = dict({"models": results, "chartType": request.form['chartType'], "isLog": isLog})
-        print(final)
-        return json.dumps(final)
+            final = dict({"models": results, "chartType": request.form['chartType'], "isLog": isLog})
+            return json.dumps(final)
 # Pour les coordonnées parallèles il nous faut un tableau d'axes (axe 1 , axe 2 , ...) et un tableau de modèles (modèle 1 modèle 2 ...)
 def get_parameters_for_parallel_coord(data):
 
-    models = []
-    tmp = [[]]
-    for model in data.getlist('model[]'):
-        mod = collection.find_one({"prefixe": model})
-        models.append(mod)
-        i = 0
-        for axe in data.getlist('axes[]'):
-            tmp[model].append(dict({"data_"+ i: mod['params'][axe]}))
-            i = i+1
+    print(data)

@@ -2,6 +2,28 @@ function sendToast() {
     // Toast Materialize
     M.toast({html: 'Fichiers correctement importés !', classes: 'rounded', displayLength: 5000});
 }
+function autocompletion() {
+    console.log("toto");
+    let model = $('#selectTable').val();
+    let axeElement = $('.axe_name');
+    $.ajax({
+        url: '/models/parameters',
+        type: 'POST',
+        dataType: 'json',
+        contentType: 'application/json',
+        data: JSON.stringify({"model": model}),
+        success: function (params) {
+            let data = {};
+            for (let i = 0; i < params.length; i++) {
+                data[params[i]] = null;
+            }
+            axeElement.autocomplete({
+                data: data,
+                limit: 5
+            });
+        }
+    });
+}
 
 function init() {
     let nbAxes = 2; // default axes count
@@ -11,7 +33,6 @@ function init() {
     $(document).ready(function () {
         $('select').formSelect();
     });
-
     $("input[name='chartType']").change(function () {
         let chartType = $(this).attr('value');
         let axesDiv = $('#adminAxes');
@@ -42,7 +63,7 @@ function init() {
                     "                        <div class=\"input-field\">\n" +
                     "                            <p>\n" +
                     "                                <label>\n" +
-                    "                                    <input id=\"isLog_y\" name=\"isLog_y\" type=\"checkbox\"/>\n" +
+                    "                                    <input id=\"isLog\" name=\"isLog\" type=\"checkbox\"/>\n" +
                     "                                    <span>Log 10</span>\n" +
                     "                                </label>\n" +
                     "                            </p>\n" +
@@ -74,7 +95,7 @@ function init() {
                     "                        <div class=\"input-field\">\n" +
                     "                            <p>\n" +
                     "                                <label>\n" +
-                    "                                    <input id=\"isLog_y\" name=\"isLog_y\" type=\"checkbox\"/>\n" +
+                    "                                    <input id=\"isLog\" name=\"isLog\" type=\"checkbox\"/>\n" +
                     "                                    <span>Log 10</span>\n" +
                     "                                </label>\n" +
                     "                            </p>\n" +
@@ -117,7 +138,6 @@ function init() {
                 o[this.name] = this.value || '';
             }
         });
-        console.log(o);
         $.ajax({
             type: "POST",
             url: url,
@@ -143,7 +163,6 @@ function init() {
                 let xmax = d3.max(xdata);
                 let xmin = d3.min(xdata);
                 nbChart++;
-                console.log("nbChart : "+ nbChart);
                 switch (data['chartType']) {
                     case 'linearChart':
                         for (let i = 0; i < data['models'].length; i++) {
@@ -164,27 +183,6 @@ function init() {
         });
         e.preventDefault(); // avoid to execute the actual submit of the form.
     });
-    $('#selectTable').change(function () {
-        let model = $('#selectTable').val()[0];
-        let axeElement = $('.axe_name');
-        console.log(axeElement);
-        $.ajax({
-            url: '/models/' + model,
-            type: 'GET',
-            dataType: 'json',
-            success: function (params) {
-
-                let data = {};
-                for (let i = 0; i < params.length; i++) {
-                    data[params[i]] = null;
-                }
-                axeElement.autocomplete({
-                    data: data,
-                    limit: 5
-                });
-            }
-        });
-    })
-
-
+    $('#selectTable').change(autocompletion);
+    $('.with-gap').change(autocompletion);// This event is for keep autocomplete for all chartType
 }
