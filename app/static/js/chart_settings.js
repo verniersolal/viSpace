@@ -87,11 +87,10 @@ function init() {
 
     $("#adminAxes").change(function () {
         let axesDiv = $(this);
-        console.log("waitging change for axe" + nbAxes);
         let lastInputValue = $("input[name='axe_" + nbAxes + "']").val();
         if (lastInputValue && lastInputValue !== "") {
             nbAxes++;
-            console.log("append" + nbAxes);
+
             axesDiv.append(" <div class=\"col m5\">\n" +
                 "                        <div class=\"axe_settings\" id=\"" + nbAxes + "\">\n" +
                 "                            <div class=\"input-field\">\n" +
@@ -119,7 +118,6 @@ function init() {
                 o[this.name] = this.value || '';
             }
         });
-        console.log(o);
         $.ajax({
             type: "POST",
             url: url,
@@ -145,7 +143,6 @@ function init() {
                 let xmax = d3.max(xdata);
                 let xmin = d3.min(xdata);
                 nbChart++;
-                console.log("nbChart : " + nbChart);
                 switch (data['chartType']) {
                     case 'linearChart':
                         for (let i = 0; i < data['models'].length; i++) {
@@ -170,7 +167,6 @@ function init() {
     $('#selectModel').change(function () {
         let model = $('#selectModel').val()[0];
         let axeElement = $('.axe_name');
-        console.log(axeElement);
         $.ajax({
             url: '/models/' + model,
             type: 'GET',
