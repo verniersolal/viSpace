@@ -4,51 +4,187 @@ function sendToast() {
 }
 
 function init() {
-    // Modal Materialize
-    $(document).ready(function () {
-        $('#modal1').modal();
-    });
+    let nbAxes = 2; // default axes count
+    let nbChart = 0; // default chart count
 
     // Select Materialize
     $(document).ready(function () {
         $('select').formSelect();
     });
 
-    $('.modal-trigger').click(function () {
-        var position = parseInt($(this).attr('data-position'));
-        $('<input>').attr({
-            type: 'hidden',
-            value: position,
-            id: 'position',
-            name: 'position'
-        }).appendTo('#settings_form');
-        $.ajax({
-            url: '/models',
-            type: 'GET',
-            dataType: 'json',
-            success: function (models, status) {
-                var data = {};
-                for (var i = 0; i < models.length; i++) {
-                    data[models[i]] = null;
-                }
-                $('.model_name').autocomplete({
-                    data: data,
-                    limit: 5
-                });
-            }
-        });
+    $("input[name='chartType']").change(function () {
+        let chartType = $(this).attr('value');
+        let axesDiv = $('#adminAxes');
+        switch (chartType) {
+            case "linearChart":
+            case "pointCloud":
+                axesDiv.empty().append("        <div class=\"col m5\">\n" +
+                    "                        <div class=\"axe_settings\">\n" +
+                    "                            <div class=\"input-field\">\n" +
+                    "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
+                    "                                <input type=\"text\" name=\"axe_x\" id=\"axe_x\" class=\"autocomplete axe_name\"\n" +
+                    "                                       required>\n" +
+                    "                                <label for=\"axe_x\">Axe X</label>\n" +
+                    "                            </div>\n" +
+                    "                        </div>\n" +
+                    "                    </div>\n" +
+                    "                    <div class=\"col m5\">\n" +
+                    "                        <div class=\"axe_settings\" id=\"2\">\n" +
+                    "                            <div class=\"input-field\">\n" +
+                    "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
+                    "                                <input type=\"text\" name=\"axe_y\" id=\"axe_y\" class=\"autocomplete axe_name\"\n" +
+                    "                                       required>\n" +
+                    "                                <label for=\"axe_y\">Axe Y</label>\n" +
+                    "                            </div>\n" +
+                    "                        </div>\n" +
+                    "                    </div>\n" +
+                    "                    <div class=\"col m2\">\n" +
+                    "                        <div class=\"input-field\">\n" +
+                    "                            <p>\n" +
+                    "                                <label>\n" +
+                    "                                    <input id=\"isLog_y\" name=\"isLog_y\" type=\"checkbox\"/>\n" +
+                    "                                    <span>Log 10</span>\n" +
+                    "                                </label>\n" +
+                    "                            </p>\n" +
+                    "                        </div>\n" +
+                    "                    </div>");
+                break;
+            case "parCoord":
+                axesDiv.empty().append(" <div class=\"col m5\">\n" +
+                    "                        <div class=\"axe_settings\">\n" +
+                    "                            <div class=\"input-field\">\n" +
+                    "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
+                    "                                <input type=\"text\" name=\"axe_1\" id=\"axe_1\" class=\"autocomplete axe_name\"\n" +
+                    "                                       required>\n" +
+                    "                                <label for=\"axe_1\">Axe n°1</label>\n" +
+                    "                            </div>\n" +
+                    "                        </div>\n" +
+                    "                    </div>\n" +
+                    "                    <div class=\"col m5\">\n" +
+                    "                        <div class=\"axe_settings\" id=\"2\">\n" +
+                    "                            <div class=\"input-field\">\n" +
+                    "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
+                    "                                <input type=\"text\" name=\"axe_2\" id=\"axe_2\" class=\"autocomplete axe_name\"\n" +
+                    "                                       required>\n" +
+                    "                                <label for=\"axe_2\">Axe n°2</label>\n" +
+                    "                            </div>\n" +
+                    "                        </div>\n" +
+                    "                    </div>\n" +
+                    "                    <div class=\"col m2\">\n" +
+                    "                        <div class=\"input-field\">\n" +
+                    "                            <p>\n" +
+                    "                                <label>\n" +
+                    "                                    <input id=\"isLog_y\" name=\"isLog_y\" type=\"checkbox\"/>\n" +
+                    "                                    <span>Log 10</span>\n" +
+                    "                                </label>\n" +
+                    "                            </p>\n" +
+                    "                        </div>\n" +
+                    "                    </div>");
+                break;
+        }
     });
 
-    $(".model_name").change(function () {
-        var model = $(this).val();
-        var axeElement = $(this).parent().parent().find('.axe_name');
+
+    $("#adminAxes").change(function () {
+        let axesDiv = $(this);
+        console.log("waitging change for axe" + nbAxes);
+        let lastInputValue = $("input[name='axe_" + nbAxes + "']").val();
+        if (lastInputValue && lastInputValue !== "") {
+            nbAxes++;
+            console.log("append" + nbAxes);
+            axesDiv.append(" <div class=\"col m5\">\n" +
+                "                        <div class=\"axe_settings\" id=\"" + nbAxes + "\">\n" +
+                "                            <div class=\"input-field\">\n" +
+                "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
+                "                                <input type=\"text\" name=\"axe_" + nbAxes + "\" id=\"axe_" + nbAxes + "\" class=\"autocomplete axe_name\"\n" +
+                "                                       >\n" +
+                "                                <label for=\"axe_" + nbAxes + "\">Axe n°" + nbAxes + "</label>\n" +
+                "                            </div>\n" +
+                "                        </div>\n" +
+                "                    </div>");
+        }
+    });
+
+    $("#settings_form").submit(function (e) {
+        let form = $(this);
+        let url = form.attr('action');
+        let o = {};
+        $.each(form.serializeArray(), function () {
+            if (o[this.name]) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        console.log(o);
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: o, // serializes the form's elements.
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data.hasOwnProperty('error')) {
+                }
+                $('#position').remove();
+                $('#settings_form').trigger('reset');
+
+
+                let xdata = [];
+                let ydata = [];
+                for (let i = 0; i < data['models'].length; i++) {
+                    for (let j = 0; j < data['models'][i]['x_data'].length; j++) {
+                        xdata.push(data['models'][i]['x_data'][j]);
+                        ydata.push(data['models'][i]['y_data'][j]);
+                    }
+                }
+                let ymin = d3.min(ydata);
+                let ymax = d3.max(ydata);
+                let xmax = d3.max(xdata);
+                let xmin = d3.min(xdata);
+                nbChart++;
+                console.log("nbChart : " + nbChart);
+                switch (data['chartType']) {
+                    case 'linearChart':
+                        for (let i = 0; i < data['models'].length; i++) {
+                            drawLinearChart(nbChart, data['models'][i], xmin, xmax, ymin, ymax);
+                        }
+                        break;
+                    case 'pointCloud':
+<<<<<<< HEAD
+                        drawPointCloud(data);
+                        break;
+                    case 'parallelCoord':
+                        drawparallelCoordinar(data);
+=======
+                        for (let i = 0; i < data['models'].length; i++) {
+                            drawPointCloud(nbChart, data['models'][i], xmin, xmax, ymin, ymax);
+                        }
+                        break;
+>>>>>>> f51d7a783674ad98683b2541b2e6f83ea0666636
+                }
+                //drawLinearChart(data['position'], data['models'][i]);
+
+                $('#card' + nbChart + '.card-panel').hide();
+                $('#svg' + nbChart).show();
+            }
+        });
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+    });
+
+    $('#selectModel').change(function () {
+        let model = $('#selectModel').val()[0];
+        let axeElement = $('.axe_name');
+        console.log(axeElement);
         $.ajax({
             url: '/models/' + model,
             type: 'GET',
             dataType: 'json',
-            success: function (params, status) {
-                var data = {};
-                for (var i = 0; i < params.length; i++) {
+            success: function (params) {
+                let data = {};
+                for (let i = 0; i < params.length; i++) {
                     data[params[i]] = null;
                 }
                 axeElement.autocomplete({
@@ -57,37 +193,7 @@ function init() {
                 });
             }
         });
-    });
-
-    $("#settings_form").submit(function (e) {
-        var form = $(this);
-        var url = form.attr('action');
-        $('.modal').modal('close');
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: form.serialize(), // serializes the form's elements.
-            success: function (data) {
-                data = JSON.parse(data);
-                if (data.hasOwnProperty('error')) {
-                    console.log(data);
-                }
-                $('#position').remove();
-                $('#settings_form').trigger('reset');
-
-                switch (data['family_chart']) {
-                    case 'linearChart':
-                        drawLinearChart(data);
-                        break;
-                    case 'pointCloud':
-                        drawPointCloud(data);
-                }
-                $('#card' + data['position'] + '.card-panel').hide();
-                $('#svg' + data['position']).show();
-            }
-        });
-        e.preventDefault(); // avoid to execute the actual submit of the form.
-    });
+    })
 
 
 }

@@ -2,13 +2,6 @@ html, body {
     height: 100%;
 }
 
-/*LOGO*/
-. logo {
-    height: 100%;
-    display: inline-block;
-    margin-top: -1%;
-}
-
 .logo > img {
     vertical-align: middle;
     height: 100px;
@@ -59,12 +52,6 @@ nav {
     border: 2px solid #ffc107;
 }
 
-/* Fieldset color*/
-#modal1 fieldset {
-    border-color: black;
-    border-style: solid;
-}
-
 #uploadFieldset {
     border-color: white;
     border-style: groove;
@@ -83,6 +70,14 @@ nav {
 
 .input-field input:focus + label {
     color: #ffc107 !important;
+}
+
+.input-field > label {
+    color: black;
+}
+
+.input-field .prefix {
+    color: black;
 }
 
 /*Autocomplete color*/
@@ -120,4 +115,17 @@ legend {
     width: 100%;
     background: rgba(36, 38, 39, 0.8);
     border-radius: 10px;
+}
+
+label {
+    color: black;
+}
+
+.createGraph {
+    background-color: whitesmoke;
+    border-radius: 10px;
+}
+
+.createBtn > button {
+    margin: inherit;
 }
