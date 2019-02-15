@@ -153,17 +153,11 @@ function init() {
                         }
                         break;
                     case 'pointCloud':
-<<<<<<< HEAD
-                        drawPointCloud(data);
-                        break;
-                    case 'parallelCoord':
-                        drawparallelCoordinar(data);
-=======
                         for (let i = 0; i < data['models'].length; i++) {
                             drawPointCloud(nbChart, data['models'][i], xmin, xmax, ymin, ymax);
                         }
                         break;
->>>>>>> f51d7a783674ad98683b2541b2e6f83ea0666636
+
                 }
                 //drawLinearChart(data['position'], data['models'][i]);
 

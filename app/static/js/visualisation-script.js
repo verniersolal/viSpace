@@ -20,7 +20,6 @@ function drawparallelCoordinar(data){
 console.log(data2);
 var pc2 = d3.parcoords()("#example2");
 
-<<<<<<< HEAD
 pc2
   .data(data2)
   .color("#000")
@@ -30,15 +29,9 @@ pc2
   .reorderable();
 
 }
-function drawLinearChart(data) {
-    let svg = d3.select('#svg' + data['position']);
-    var boundingBox = $('#card' + data['position']).get(0).getBoundingClientRect();
-    console.log("init bounding box", boundingBox);
-=======
 function drawLinearChart(position, data, xmin, xmax, ymin, ymax) {
     let svg = d3.select('#svg' + position);
     var boundingBox = $('#card' + position).get(0).getBoundingClientRect();
->>>>>>> f51d7a783674ad98683b2541b2e6f83ea0666636
     let gContainer = svg.append('g');
     gContainer.attr('id', 'gContainer' +position);
     let gAxisX = gContainer.append('g');
