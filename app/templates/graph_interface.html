@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 {% block body %}
     <body onload="init();">
-    <div class="row graph-interface">
+    <div class="row graph-interface container">
         <h3 class="center">Vos graphiques</h3>
-        <div class="container createGraph">
+        <div class="createGraph">
             <form autocomplete="off" method="POST" action="{{ url_for('get_parameters') }}" id="settings_form">
                 <div class="row adminGraphType">
                     <div class="col m2">
