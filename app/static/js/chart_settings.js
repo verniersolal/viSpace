@@ -2,6 +2,7 @@ function sendToast() {
     // Toast Materialize
     M.toast({html: 'Fichiers correctement importés !', classes: 'rounded', displayLength: 5000});
 }
+
 function autocompletion() {
     console.log("toto");
     let model = $('#selectModel').val();
@@ -28,6 +29,7 @@ function autocompletion() {
 function init() {
     let nbAxes = 2; // default axes count
     let nbChart = 0; // default chart count
+    $("nav").remove();
 
     // Select Materialize
     $(document).ready(function () {
@@ -167,7 +169,7 @@ function init() {
                 let xmax = d3.max(xdata);
                 let xmin = d3.min(xdata);
                 nbChart++;
-                console.log("nbChart : "+ nbChart);
+                console.log("nbChart : " + nbChart);
                 switch (data['chartType']) {
                     case 'linearChart':
                         for (let i = 0; i < data['models'].length; i++) {
@@ -181,9 +183,10 @@ function init() {
                         break;
                 }
                 //drawLinearChart(data['position'], data['models'][i]);
-
                 $('#card' + nbChart + '.card-panel').hide();
                 $('#svg' + nbChart).show();
+                document.getElementById("svg1").scrollIntoView({behavior: 'smooth', block: 'start'})
+
             }
         });
         e.preventDefault(); // avoid to execute the actual submit of the form.
