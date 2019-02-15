@@ -185,7 +185,7 @@ function init() {
                 //drawLinearChart(data['position'], data['models'][i]);
                 $('#card' + nbChart + '.card-panel').hide();
                 $('#svg' + nbChart).show();
-                document.getElementById("svg1").scrollIntoView({behavior: 'smooth', block: 'start'})
+                document.getElementById("svg"+nbChart).scrollIntoView({behavior: 'smooth', block: 'start'})
 
             }
         });
