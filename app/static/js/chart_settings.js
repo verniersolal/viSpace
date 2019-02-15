@@ -102,6 +102,7 @@ function init() {
                     "                            </p>\n" +
                     "                        </div>\n" +
                     "                    </div>");
+                console.log("titi");
                 break;
         }
     });
@@ -122,6 +123,8 @@ function init() {
                 "                            </div>\n" +
                 "                        </div>\n" +
                 "                    </div>");
+            autocompletion();
+
         }
     });
 
