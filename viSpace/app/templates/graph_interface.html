@@ -1,0 +1,217 @@
+{% extends "layout.html" %}
+{% block body %}
+    <body onload="init();">
+    <div class="container">
+        <div class="row graph-interface">
+            <h3 class="center">Vos graphiques</h3>
+            <div class="row"></div>
+            <div class="col m6 center">
+                <div class="card-panel modal-trigger" id="card1" href="#modal1" data-position="1">
+                    <a data-position="1" class="btn-floating btn-large waves-effect waves-light black"><i
+                            class="material-icons">add</i></a>
+                </div>
+                <svg id="svg1" class="svg"></svg>
+            </div>
+            <div class="col m6 center">
+                <div class="card-panel modal-trigger" id="card2" href="#modal1" data-position="2">
+                    <a data-position="2" class="btn-floating btn-large waves-effect waves-light black "><i
+                            class="material-icons">add</i></a>
+                </div>
+                <svg id="svg2" class="svg"></svg>
+            </div>
+            <div class="col m6 center">
+                <div class="card-panel modal-trigger" id="card3" href="#modal1" data-position="3">
+                    <a data-position="3" class="btn-floating btn-large waves-effect waves-light black"><i
+                            class="material-icons">add</i></a>
+                </div>
+                <svg id="svg3" class="svg"></svg>
+            </div>
+            <div class="col m6 center">
+                <div class="card-panel modal-trigger" id="card4" href="#modal1" data-position="4">
+                    <a data-position="4" class="btn-floating btn-large waves-effect waves-light black"><i
+                            class="material-icons">add</i></a>
+                </div>
+                <svg id="svg4" class="svg"></svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal black-text bottom-sheet">
+        <form id="settings_form" action="{{ url_for('get_parameters') }}" autocomplete="off" method="post">
+            <div class="modal-content">
+                <h4>Configuration du graphique</h4>
+                <div class="row">
+                    <div class="col m2">
+                        <p>
+                            <label>
+                                <input class="with-gap" name="family_chart" value="linearChart" type="radio" checked
+                                onclick="document.getElementById('pCld_pCrt').style.display='block';document.getElementById('pCrd').style.display='none'"/>
+                                <span>Graphique linéaire</span>
+                            </label>
+                        </p>
+                    </div>
+                    <div class="col m2">
+                        <p>
+                            <label>
+                                <input class="with-gap" name="family_chart" value="pointCloud" type="radio"
+                                       onclick="document.getElementById('pCld_lCrt').style.display='block';document.getElementById('pCrd').style.display='none'"/>
+                                <span>Nuage de points</span>
+                            </label>
+                        </p>
+                    </div>
+                    <div class="col m2">
+                        <p>
+                            <label>
+                                <input class="with-gap" name="family_chart" value="parallelCoord" type="radio",
+                                       onclick="document.getElementById('pCrd').style.display='block';document.getElementById('pCld_lCrt').style.display='none'"/>
+                                <span>Coordonnées parallèles</span>
+                            </label>
+                        </p>
+                    </div>
+                    <div class="col m2">
+                        <p>
+                            <label>
+                                <input class="with-gap" name="family_chart" value="" type="radio"/>
+                                <span>Toto</span>
+                            </label>
+                        </p>
+                    </div>
+                    <div class="col m2">
+                        <p>
+                            <label>
+                                <input class="with-gap" name="family_chart" value="" type="radio"/>
+                                <span>Titi</span>
+                            </label>
+                        </p>
+                    </div>
+                    <div class="col m2">
+                        <p>
+                            <label>
+                                <input class="with-gap" name="family_chart" value="" type="radio"/>
+                                <span>Tutu</span>
+                            </label>
+                        </p>
+                    </div>
+                </div>
+                <div class="row" id="pCld_lCrt" >
+                    <div class="row">
+                        <fieldset>
+                            <legend>
+                                <strong>
+                                    Axe X
+                                </strong>
+                            </legend>
+                            <div class="axe_settings">
+                                <div class="input-field col m4">
+                                    <i class="material-icons prefix">insert_drive_file</i>
+                                    <input type="text" name="model_x" id="model_x" class="autocomplete model_name"
+                                           required>
+                                    <label for="model_x">Modèle pour l'axe X</label>
+                                </div>
+                                <div class="input-field col m4">
+                                    <i class="material-icons prefix">insert_chart</i>
+                                    <input type="text" name="axe_x" id="axe_x" class="autocomplete axe_name" required>
+                                    <label for="axe_x">Axe X</label>
+                                </div>
+                                <div class="input-field col m4">
+                                    <p>
+                                        <label>
+                                            <input id="isLog_x" name="isLog_x" type="checkbox"/>
+                                            <span>Log 10</span>
+                                        </label>
+                                    </p>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="row" >
+                        <fieldset>
+                            <legend>
+                                <strong>
+                                    Axe Y
+                                </strong>
+                            </legend>
+                            <div class="axe_settings" id="2">
+                                <div class="input-field col m4">
+                                    <i class="material-icons prefix">insert_drive_file</i>
+                                    <input type="text" name="model_y" id="model_y" class="autocomplete model_name"
+                                           required>
+                                    <label for="model_y">Modèle pour l'axe Y</label>
+                                </div>
+                                <div class="input-field col m4">
+                                    <i class="material-icons prefix">insert_chart</i>
+                                    <input type="text" name="axe_y" id="axe_y" class="autocomplete axe_name" required>
+                                    <label for="axe_y">Axe Y</label>
+                                </div>
+                                <div class="input-field col m4">
+                                    <p>
+                                        <label>
+                                            <input id="isLog_y" name="isLog_y" type="checkbox"/>
+                                            <span>Log 10</span>
+                                        </label>
+                                    </p>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div id="pCrd" style="display: none">
+                    <fieldset>
+                        <legend>
+                            <strong>
+                                Axes
+                            </strong>
+                        </legend>
+                        <div class="axe_settings" id="pCrd_axe1">
+                            <div class="input-field col m4">
+                                <i class="material-icons prefix">insert_drive_file</i>
+                                <input type="text" name="model_axe_pCrd1" id="model_axe_pCrd1" class="autocomplete model_name"
+                                       required>
+                                <label for="model_axe_pCrd1">Modèle pour l'axe 1</label>
+                            </div>
+                        </div>
+                        <div class="axe_settings" id="pCrd_axe2">
+                            <div class="input-field col m4">
+                                <i class="material-icons prefix">insert_drive_file</i>
+                                <input type="text" name="model_axe_pCrd2" id="model_axe_pCrd2" class="autocomplete model_name"
+                                       required>
+                                <label for="model_axe_pCrd2">Modèle pour l'axe 2</label>
+                            </div>
+                        </div>
+                        <div class="axe_settings" id="pCrd_axe3">
+                            <div class="input-field col m4">
+                                <i class="material-icons prefix">insert_drive_file</i>
+                                <input type="text" name="model_axe_pCrd3" id="model_axe_pCrd3" class="autocomplete model_name"
+                                       required>
+                                <label for="model_axe_pCrd3">Modèle pour l'axe 3</label>
+                            </div>
+                        </div>
+                        <div class="axe_settings" id="pCrd_axe4">
+                            <div class="input-field col m4">
+                                <i class="material-icons prefix">insert_drive_file</i>
+                                <input type="text" name="model_axe_pCrd4" id="model_axe_pCrd4" class="autocomplete model_name"
+                                       required>
+                                <label for="model_axe_pCrd4">Modèle pour l'axe 4</label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn waves-effect waves-light black" type="submit" name="action">Créer
+                    <i class="material-icons right">done</i>
+                </button>
+            </div>
+        </form>
+    </div>
+    </body>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/chart_settings.js') }}"></script>
+    {% if converted %}
+        <script>sendToast()</script>
+    {% endif %}
+    <script src="{{ url_for('static', filename='js/visualisation-script.js') }}"></script>
+{% endblock %}

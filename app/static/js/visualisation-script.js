@@ -34,7 +34,32 @@ function createSvg(nbChart) {
     //     graphDiv.append(svgDefault);
     // }
 }
+function drawparallelCoordinar(data){
+   var data2 = d3.range(0,2*Math.PI,Math.PI/40)
+  .map(function(x) {
+    return {
+      "-x": -x,
+      x: x,
+      "sin(x)": Math.sin(x),
+      "cos(x)": Math.cos(x),
+      "atan(x)": Math.atan(x),
+      "exp(x)": Math.exp(x),
+      "square(x)": x*x,
+      "sqrt(x)": Math.sqrt(x),
+    };
+  });
+console.log(data2);
+var pc2 = d3.parcoords()("#example2");
 
+pc2
+  .data(data2)
+  .color("#000")
+  .alpha(0.2)
+  .margin({ top: 24, left: 0, bottom: 12, right: 0 })
+  .render()
+  .reorderable();
+
+}
 function drawLinearChart(position, data, xmin, xmax, ymin, ymax) {
     createSvg(position);
     let svg = d3.select('#svg' + position);

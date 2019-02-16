@@ -181,6 +181,7 @@ function init() {
                             drawPointCloud(nbChart, data['models'][i], xmin, xmax, ymin, ymax);
                         }
                         break;
+
                 }
                 //drawLinearChart(data['position'], data['models'][i]);
                 $('#card' + nbChart + '.card-panel').hide();
