@@ -89,7 +89,7 @@ def get_parameters_by_model():
 @app.route('/axe_data', methods=['POST'])
 def get_parameters():
     if request.form['chartType']=="parCoord":
-        get_parameters_for_parallel_coord(request.form)
+        return get_parameters_for_parallel_coord(request.form)
     else:
         # Il faut chercher les deux paramètres x et y des models à construire
         results = []
@@ -107,5 +107,15 @@ def get_parameters():
             return json.dumps(final)
 # Pour les coordonnées parallèles il nous faut un tableau d'axes (axe 1 , axe 2 , ...) et un tableau de modèles (modèle 1 modèle 2 ...)
 def get_parameters_for_parallel_coord(data):
+    test = []
 
-    print(data)
+    mod = collection.find_one({"prefixe": data['model']})
+    j = list(t for t in range(len(data.getlist('axes[]'))) if data.getlist('axes[]')[t] is not "")
+    for i in range(len(mod['params'][data.getlist('axes[]')[j[0]]])):
+        test.append(dict({axe: mod['params'][axe][i] for axe in data.getlist('axes[]') if axe is not ""}))
+    result = {}
+    result["models"] = data['model']
+    result["axes"] =  list(t for t in data.getlist('axes[]') if t is not "")
+    result["data"] = test
+    print(result)
+    return json.dumps(result)
