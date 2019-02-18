@@ -6,10 +6,6 @@ function createSvg(nbChart) {
     // TODO : pouvoir mettre 4 graphes sur l'ecran
     let graphDiv = $('#displayGraph');
     let svg1 = "<div id=\"graph" + nbChart + "\"class=\"col m12\">\n" +
-        "            <div class=\"card-panel\" id=\"card" + nbChart + "\" data-position=\"" + nbChart + "\">\n" +
-        "                <a data-position=\"" + nbChart + "\" class=\"btn-floating btn-large waves-effect waves-light black\"><i\n" +
-        "                        class=\"material-icons\">add</i></a>\n" +
-        "            </div>\n" +
         "            <svg id=\"svg" + nbChart + "\" class=\"svg\"></svg>\n" +
         "        </div>";
     graphDiv.append(svg1);
@@ -36,9 +32,8 @@ function createSvg(nbChart) {
 }
 
 function drawLinearChart(position, data, xmin, xmax, ymin, ymax) {
-    createSvg(position);
     let svg = d3.select('#svg' + position);
-    let boundingBox = $('#card' + position).get(0).getBoundingClientRect();
+    let boundingBox = $('#svg' + position).get(0).getBoundingClientRect();
     let gContainer = svg.append('g');
     gContainer.attr('id', 'gContainer' + position);
     let gAxisX = gContainer.append('g');
@@ -97,7 +92,7 @@ function getScale(min, max, isVertical, isLog, boundingBox) {
 
 function drawPointCloud(position, data, xmin, xmax, ymin, ymax) {
     let svg = d3.select('#svg' + position);
-    let boundingBox = $('#card' + position).get(0).getBoundingClientRect();
+    let boundingBox = $('#svg' + position).get(0).getBoundingClientRect();
     console.log(boundingBox);
     let gContainer = svg.append('g');
     gContainer.attr('id', 'gContainer' + position);

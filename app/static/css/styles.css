@@ -1,7 +1,3 @@
-html, body {
-    height: 100%;
-}
-
 .logo > img {
     vertical-align: middle;
     height: 100px;
@@ -17,6 +13,7 @@ body {
     background-image: url("../img/bg.jpg");
     background-repeat: repeat-y;
     background-size: cover;
+    background-attachment: fixed;
     color: white;
 }
 
@@ -33,13 +30,9 @@ nav {
     margin-top: 10vh;
 }
 
+
 .file-path.validate {
     color: white !important;
-}
-
-/*GRAPH INTERFACE*/
-.graph-interface {
-    margin-top: 10vh;
 }
 
 /*radio button color*/
@@ -50,12 +43,6 @@ nav {
 [type="radio"]:checked + span:after, [type="radio"].with-gap:checked + span:before,
 [type="radio"].with-gap:checked + span:after {
     border: 2px solid #ffc107;
-}
-
-/* Fieldset color*/
-#modal1 fieldset {
-    border-color: black;
-    border-style: solid;
 }
 
 #uploadFieldset {
@@ -87,9 +74,13 @@ nav {
 }
 
 /*Autocomplete color*/
-.dropdown-content li > a, .dropdown-content li > span {
-    color: #ffc107;
-    font-weight: bold;
+.autocomplete-content li > a, .autocomplete-content li > span {
+    color: #ffc107; !important;
+    font-weight: bold !important;
+}
+
+.select-dropdown li > a, .select-dropdown li > span {
+    color: black;
 }
 
 /*Modal max height*/
@@ -101,27 +92,16 @@ legend {
     font-size: 17px !important;
 }
 
-.card-panel {
-    padding: 13vh;
-    background: rgba(255, 255, 255, 0.3);
-    opacity: 0.8;
-    height: 45vh;
-    cursor: pointer;
-    border-radius: 10px;
-}
-
-.card-panel:hover {
-    background: rgba(255, 255, 255, 0.6);
-    opacity: 1;
-}
-
 .svg {
-    display: none;
     height: 45vh;
     width: 100%;
     background: rgba(255, 255, 255, 0.8);
     border-radius: 10px;
     color: black;
+}
+
+.svg:hover {
+    background: rgba(255, 255, 255, 1);
 }
 
 label {
@@ -131,6 +111,8 @@ label {
 .createGraph {
     background-color: whitesmoke;
     border-radius: 10px;
+    position: fixed;
+    height: 100%;
 }
 
 .createBtn > button {

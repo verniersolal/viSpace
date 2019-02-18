@@ -29,20 +29,19 @@ function autocompletion() {
 function init() {
     let nbAxes = 2; // default axes count
     let nbChart = 0; // default chart count
-    $("nav").remove();
 
     // Select Materialize
     $(document).ready(function () {
         $('select').formSelect();
     });
 
-    $("input[name='chartType']").change(function () {
-        let chartType = $(this).attr('value');
+    $("#selectChartType").change(function () {
+        let chartType = $(this).find(":selected").val();
         let axesDiv = $('#adminAxes');
         switch (chartType) {
             case "linearChart":
             case "pointCloud":
-                axesDiv.empty().append("        <div class=\"col m5\">\n" +
+                axesDiv.empty().append("        <div class=\"col m12\">\n" +
                     "                        <div class=\"axe_settings\">\n" +
                     "                            <div class=\"input-field\">\n" +
                     "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
@@ -52,7 +51,7 @@ function init() {
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                    </div>\n" +
-                    "                    <div class=\"col m5\">\n" +
+                    "                    <div class=\"col m12\">\n" +
                     "                        <div class=\"axe_settings\" id=\"2\">\n" +
                     "                            <div class=\"input-field\">\n" +
                     "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
@@ -62,7 +61,7 @@ function init() {
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                    </div>\n" +
-                    "                    <div class=\"col m2\">\n" +
+                    "                    <div class=\"col m12 center\">\n" +
                     "                        <div class=\"input-field\">\n" +
                     "                            <p>\n" +
                     "                                <label>\n" +
@@ -74,7 +73,7 @@ function init() {
                     "                    </div>");
                 break;
             case "parCoord":
-                axesDiv.empty().append(" <div class=\"col m5\">\n" +
+                axesDiv.empty().append(" <div class=\"col m12\">\n" +
                     "                        <div class=\"axe_settings\">\n" +
                     "                            <div class=\"input-field\">\n" +
                     "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
@@ -84,7 +83,7 @@ function init() {
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                    </div>\n" +
-                    "                    <div class=\"col m5\">\n" +
+                    "                    <div class=\"col m12\">\n" +
                     "                        <div class=\"axe_settings\" id=\"2\">\n" +
                     "                            <div class=\"input-field\">\n" +
                     "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
@@ -94,7 +93,7 @@ function init() {
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                    </div>\n" +
-                    "                    <div class=\"col m2\">\n" +
+                    "                    <div class=\"col m12 center\">\n" +
                     "                        <div class=\"input-field\">\n" +
                     "                            <p>\n" +
                     "                                <label>\n" +
@@ -115,7 +114,7 @@ function init() {
         if (lastInputValue && lastInputValue !== "") {
             nbAxes++;
 
-            axesDiv.append(" <div class=\"col m5\">\n" +
+            axesDiv.append(" <div class=\"col m12\">\n" +
                 "                        <div class=\"axe_settings\" id=\"" + nbAxes + "\">\n" +
                 "                            <div class=\"input-field\">\n" +
                 "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
@@ -169,7 +168,7 @@ function init() {
                 let xmax = d3.max(xdata);
                 let xmin = d3.min(xdata);
                 nbChart++;
-                console.log("nbChart : " + nbChart);
+                createSvg(nbChart);
                 switch (data['chartType']) {
                     case 'linearChart':
                         for (let i = 0; i < data['models'].length; i++) {
@@ -182,9 +181,6 @@ function init() {
                         }
                         break;
                 }
-                //drawLinearChart(data['position'], data['models'][i]);
-                $('#card' + nbChart + '.card-panel').hide();
-                $('#svg' + nbChart).show();
                 document.getElementById("svg"+nbChart).scrollIntoView({behavior: 'smooth', block: 'start'})
 
             }
