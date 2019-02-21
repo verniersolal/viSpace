@@ -23,7 +23,18 @@ function drawChart(data, nbChart, minAndMax) {
             drawPointCloud(nbChart, data, minAndMax);
             break;
     }
-
+}
+function drawparallelCoordinar(data) {
+    console.log("parallele");
+    $('.parcoords').css('width', 1000).css('height', 500);
+    var pc2 = d3.parcoords()("#parcoords");
+    pc2
+        .data(data)
+        .color("#000")
+        .alpha(0.2)
+        .margin({top: 24, left: 0, bottom: 12, right: 0})
+        .render()
+        .reorderable();
 }
 
 function drawOrthogonalAxis(gContainer, boundingBox, isLog, minAndMax) {
@@ -73,9 +84,7 @@ function drawLinearChart(nbChart, data, minAndMax) {
                 .attr("stroke", d3.schemeCategory10[index])
                 .attr("fill", "none")
                 .attr("stroke-width", 3);
-        }
-    );
-
+    });
     svg.append('text')
         .attr('x', 0)
         .attr('y', 0)

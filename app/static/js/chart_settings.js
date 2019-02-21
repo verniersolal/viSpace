@@ -104,7 +104,6 @@ function init() {
                     "                            </p>\n" +
                     "                        </div>\n" +
                     "                    </div>");
-                console.log("titi");
                 break;
         }
     });
@@ -119,7 +118,7 @@ function init() {
                 "                        <div class=\"axe_settings\" id=\"" + nbAxes + "\">\n" +
                 "                            <div class=\"input-field\">\n" +
                 "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
-                "                                <input type=\"text\" name=\"axe_" + nbAxes + "\" id=\"axe_" + nbAxes + "\" class=\"autocomplete axe_name\"\n" +
+                "                                <input type=\"text\" name=\"axes[]\" id=\"axe_" + nbAxes + "\" class=\"autocomplete axe_name\"\n" +
                 "                                       >\n" +
                 "                                <label for=\"axe_" + nbAxes + "\">Axe n°" + nbAxes + "</label>\n" +
                 "                            </div>\n" +
@@ -147,6 +146,10 @@ function init() {
         let form = $(this);
         let url = form.attr('action');
         let o = {};
+        var inputs = document.getElementsByClassName( 'axe_name' ),
+            names  = [].map.call(inputs, function( input ) {
+                return input.value;
+            });
         $.each(form.serializeArray(), function () {
             if (o[this.name]) {
                 if (!o[this.name].push) {
@@ -157,26 +160,32 @@ function init() {
                 o[this.name] = this.value || '';
             }
         });
+        o["axes"] = names;
         $.ajax({
             type: "POST",
             url: url,
             data: o, // serializes the form's elements.
             success: function (data) {
+
                 data = JSON.parse(data);
-                if (data.hasOwnProperty('error')) {
+                if (data['chartType'] === 'parCoords') {
+                    drawparallelCoordinar(data['data']);
+                    nbChart++;
+                } else {
+
+                    //nbChart++;
+                    $('#settings_form').trigger('reset');
+                    let xdata = concatModels(data['models'], 'x_data');
+                    let ydata = concatModels(data['models'], 'y_data');
+
+                    let minAndMax = getMinAndMax(xdata, ydata);
+                    nbChart++;
+                    drawChart(data, nbChart, minAndMax);
+
+
+                    document.getElementById("svg" + nbChart).scrollIntoView({behavior: 'smooth', block: 'start'})
+
                 }
-                $('#settings_form').trigger('reset');
-
-                let xdata = concatModels(data['models'], 'x_data');
-                let ydata = concatModels(data['models'], 'y_data');
-
-                let minAndMax = getMinAndMax(xdata,ydata);
-                nbChart++;
-                drawChart(data,nbChart,minAndMax);
-
-
-                document.getElementById("svg" + nbChart).scrollIntoView({behavior: 'smooth', block: 'start'})
-
             }
         });
         e.preventDefault(); // avoid to execute the actual submit of the form.
