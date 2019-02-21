@@ -23,18 +23,7 @@ function drawChart(data, nbChart, minAndMax) {
             drawPointCloud(nbChart, data, minAndMax);
             break;
     }
-}
-function drawparallelCoordinar(data) {
-    console.log("parallele");
-    $('.parcoords').css('width', 1000).css('height', 500);
-    var pc2 = d3.parcoords()("#parcoords");
-    pc2
-        .data(data)
-        .color("#000")
-        .alpha(0.2)
-        .margin({top: 24, left: 0, bottom: 12, right: 0})
-        .render()
-        .reorderable();
+
 }
 
 function drawOrthogonalAxis(gContainer, boundingBox, isLog, minAndMax) {
@@ -63,28 +52,41 @@ function drawLinearChart(nbChart, data, minAndMax) {
     drawOrthogonalAxis(gContainer, boundingBox, data['models']['isLog'], minAndMax);
 
     data['models'].forEach((data, index) => {
-            let xy = zipData(data['x_data'], data['y_data']);
-            console.log("index", index);
-            let scale_x = getScale(minAndMax.xmin, minAndMax.xmax, false, data['isLog'], boundingBox);
-            let scale_y = getScale(minAndMax.ymin, minAndMax.ymax, true, data['isLog'], boundingBox);
-            let lineValue = d3.line();
-            lineValue.x(function (d) {
-                return scale_x(parseFloat(d.x));
-            });
-            lineValue.y(function (d) {
-                return scale_y(parseFloat(d.y));
-            });
-            lineValue.curve(d3.curveMonotoneX);
-            gContainer
-                .append('g')
-                .append('path')
-                .attr("d", lineValue(xy))
-                .attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + ", 50)")
-                .attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")")
-                .attr("stroke", d3.schemeCategory10[index])
-                .attr("fill", "none")
-                .attr("stroke-width", 3);
+        let xy = zipData(data['x_data'], data['y_data']);
+        console.log("index", index);
+        let scale_x = getScale(minAndMax.xmin, minAndMax.xmax, false, data['isLog'], boundingBox);
+        let scale_y = getScale(minAndMax.ymin, minAndMax.ymax, true, data['isLog'], boundingBox);
+        let lineValue = d3.line();
+        lineValue.x(function (d) {
+            return scale_x(parseFloat(d.x));
+        });
+        lineValue.y(function (d) {
+            return scale_y(parseFloat(d.y));
+        });
+        lineValue.curve(d3.curveMonotoneX);
+        gContainer
+            .append('g')
+            .append('path')
+            .attr("d", lineValue(xy))
+            .attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + ", 50)")
+            .attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")")
+            .attr("stroke", d3.schemeCategory10[index])
+            .attr("fill", "none")
+            .attr("stroke-width", 3);
+        gContainer.append('g')
+            .append('rect')
+            .attr('x',parseFloat(0.02*boundingBox.width))
+            .attr('y', parseFloat(0.1*(index+1)*boundingBox.height))
+            .attr('width', 20)
+            .attr('height', 20)
+            .style("fill", d3.schemeCategory10[index]);
+        gContainer.append('text')
+            .attr("x", parseFloat(0.05*boundingBox.width))
+            .attr("y", parseFloat(0.1*(index+1.35)*boundingBox.height))
+            .attr('font-size', "15px")
+            .text("titi"+index);
     });
+
     svg.append('text')
         .attr('x', 0)
         .attr('y', 0)
