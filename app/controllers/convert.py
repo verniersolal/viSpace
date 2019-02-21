@@ -128,6 +128,7 @@ def get_parameters_for_parallel_coord(data):
     print(data)
     for i in range(len(mod['params'][data.getlist('axes[]')[j[0]]])):
         test.append(dict({axe: mod['params'][axe][i] for axe in data.getlist('axes[]') if axe is not ""}))
+
     result = {}
     result["models"] = data['model']
     result["axes"] =  list(t for t in data.getlist('axes[]') if t is not "")
