@@ -48,14 +48,13 @@ function drawLinearChart(nbChart, data, minAndMax) {
     let gContainer = svg
         .append('g')
         .attr('id', 'gContainer' + nbChart);
-
-    drawOrthogonalAxis(gContainer, boundingBox, data['models']['isLog'], minAndMax);
+    drawOrthogonalAxis(gContainer, boundingBox, data['isLog'], minAndMax);
 
     data['models'].forEach((model, index) => {
         let xy = zipData(model['x_data'], model['y_data']);
     console.log("index", index);
-    let scale_x = getScale(minAndMax.xmin, minAndMax.xmax, false, model['isLog'], boundingBox);
-    let scale_y = getScale(minAndMax.ymin, minAndMax.ymax, true, model['isLog'], boundingBox);
+    let scale_x = getScale(minAndMax.xmin, minAndMax.xmax, false, data['isLog'], boundingBox);
+    let scale_y = getScale(minAndMax.ymin, minAndMax.ymax, true, data['isLog'], boundingBox);
     let lineValue = d3v5.line();
     lineValue.x(function (d) {
         return scale_x(parseFloat(d.x));
@@ -104,7 +103,9 @@ function drawLinearChart(nbChart, data, minAndMax) {
 }
 
 function getScale(min, max, isVertical, isLog, boundingBox) {
-    let scaleAxe = isLog ? d3v5.scaleLog() : d3v5.scaleLinear();
+    console.log(isLog);
+    let scaleAxe = isLog===true ? d3v5.scaleLog() : d3v5.scaleLinear();
+    console.log(scaleAxe);
     scaleAxe.domain([min, max]);
     isVertical ? scaleAxe.range([parseFloat(0.77 * boundingBox.height), 0]) : scaleAxe.range([0, parseFloat(0.65*boundingBox.width)]);
 
