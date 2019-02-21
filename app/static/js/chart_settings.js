@@ -41,7 +41,8 @@ function init() {
         switch (chartType) {
             case "linearChart":
             case "pointCloud":
-                axesDiv.empty().append("        <div class=\"col m12\">\n" +
+                axesDiv.empty().append("        " +
+                    "                   <div class=\"col m12\">\n" +
                     "                        <div class=\"axe_settings\">\n" +
                     "                            <div class=\"input-field\">\n" +
                     "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
@@ -129,6 +130,19 @@ function init() {
         }
     });
 
+    function concatModels(models, key) {
+        return models.map(d => d[key]).reduce((current, next) => current.concat(next));
+    }
+
+    function getMinAndMax(xdata, ydata) {
+        return {
+            ymin: d3.min(ydata),
+            ymax: d3.max(ydata),
+            xmax: d3.max(xdata),
+            xmin: d3.min(xdata)
+        }
+    }
+
     $("#settings_form").submit(function (e) {
         let form = $(this);
         let url = form.attr('action');
@@ -151,37 +165,17 @@ function init() {
                 data = JSON.parse(data);
                 if (data.hasOwnProperty('error')) {
                 }
-                $('#position').remove();
                 $('#settings_form').trigger('reset');
 
+                let xdata = concatModels(data['models'], 'x_data');
+                let ydata = concatModels(data['models'], 'y_data');
 
-                let xdata = [];
-                let ydata = [];
-                for (let i = 0; i < data['models'].length; i++) {
-                    for (let j = 0; j < data['models'][i]['x_data'].length; j++) {
-                        xdata.push(data['models'][i]['x_data'][j]);
-                        ydata.push(data['models'][i]['y_data'][j]);
-                    }
-                }
-                let ymin = d3.min(ydata);
-                let ymax = d3.max(ydata);
-                let xmax = d3.max(xdata);
-                let xmin = d3.min(xdata);
+                let minAndMax = getMinAndMax(xdata,ydata);
                 nbChart++;
-                createSvg(nbChart);
-                switch (data['chartType']) {
-                    case 'linearChart':
-                        for (let i = 0; i < data['models'].length; i++) {
-                            drawLinearChart(nbChart, data['models'][i], xmin, xmax, ymin, ymax);
-                        }
-                        break;
-                    case 'pointCloud':
-                        for (let i = 0; i < data['models'].length; i++) {
-                            drawPointCloud(nbChart, data['models'][i], xmin, xmax, ymin, ymax);
-                        }
-                        break;
-                }
-                document.getElementById("svg"+nbChart).scrollIntoView({behavior: 'smooth', block: 'start'})
+                drawChart(data,nbChart,minAndMax);
+
+
+                document.getElementById("svg" + nbChart).scrollIntoView({behavior: 'smooth', block: 'start'})
 
             }
         });

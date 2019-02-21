@@ -3,69 +3,79 @@ function drawAxe(min, max, isVertical, isLog, boundingBox) {
 }
 
 function createSvg(nbChart) {
-    // TODO : pouvoir mettre 4 graphes sur l'ecran
-    let graphDiv = $('#displayGraph');
-    let svg1 = "<div id=\"graph" + nbChart + "\"class=\"col m12\">\n" +
-        "            <svg id=\"svg" + nbChart + "\" class=\"svg\"></svg>\n" +
-        "        </div>";
-    graphDiv.append(svg1);
-    // if (nbChart % 2 !== 0) {
-    //     let svg1 = "<div id=\"graph" + nbChart + "\"class=\"col m12\">\n" +
-    //         "            <div class=\"card-panel\" id=\"card" + nbChart + "\" data-position=\"" + nbChart + "\">\n" +
-    //         "                <a data-position=\"" + nbChart + "\" class=\"btn-floating btn-large waves-effect waves-light black\"><i\n" +
-    //         "                        class=\"material-icons\">add</i></a>\n" +
-    //         "            </div>\n" +
-    //         "            <svg id=\"svg" + nbChart + "\" class=\"svg\"></svg>\n" +
-    //         "        </div>";
-    //     graphDiv.append(svg1);
-    // } else {
-    //     $('#graph' + (nbChart - 1)).removeClass("col m12").addClass("col m6");
-    //     let svgDefault = "<div id=\"graph + " + nbChart + "\" class=\"col m6\">\n" +
-    //         "            <div class=\"card-panel\" id=\"card" + nbChart + "\" data-position=\"" + nbChart + "\">\n" +
-    //         "                <a data-position=\"" + nbChart + "\" class=\"btn-floating btn-large waves-effect waves-light black\"><i\n" +
-    //         "                        class=\"material-icons\">add</i></a>\n" +
-    //         "            </div>\n" +
-    //         "            <svg id=\"svg" + nbChart + "\" class=\"svg\"></svg>\n" +
-    //         "        </div>";
-    //     graphDiv.append(svgDefault);
-    // }
+    let graphDiv = d3.select("#displayGraph");
+    graphDiv
+        .append('div')
+        .attr('id', 'graph' + nbChart)
+        .classed('col m12', true)
+        .append('svg')
+        .attr('id', 'svg' + nbChart)
+        .classed('svg', true);
 }
 
-function drawLinearChart(position, data, xmin, xmax, ymin, ymax) {
-    let svg = d3.select('#svg' + position);
-    let boundingBox = $('#svg' + position).get(0).getBoundingClientRect();
-    let gContainer = svg.append('g');
-    gContainer.attr('id', 'gContainer' + position);
-    let gAxisX = gContainer.append('g');
-    gAxisX.attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + "," + parseFloat(0.8 * boundingBox.height) + ")");
-    let gAxisY = gContainer.append('g');
-    gAxisY.attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")");
-    gAxisX.call(drawAxe(xmin, xmax, false, data['isLog'], boundingBox));
-    gAxisY.call(drawAxe(ymin, ymax, true, data['isLog'], boundingBox));
-    let color = parseInt(Math.random() * 10);
-    let xy = [];
-    for (let i = 0; i < data["x_data"].length; i++) {
-        xy.push({x: data['x_data'][i], y: data['y_data'][i]});
+function drawChart(data, nbChart, minAndMax) {
+    createSvg(nbChart);
+    switch (data['chartType']) {
+        case 'linearChart':
+            drawLinearChart(nbChart, data, minAndMax);
+            break;
+        case 'pointCloud':
+            drawPointCloud(nbChart, data, minAndMax);
+            break;
     }
-    let scale_x = getScale(xmin, xmax, false, data['isLog'], boundingBox);
-    let scale_y = getScale(ymin, ymax, true, data['isLog'], boundingBox);
-    let lineValue = d3.line();
-    lineValue.x(function (d) {
-        return scale_x(parseFloat(d.x));
-    });
-    lineValue.y(function (d) {
-        return scale_y(parseFloat(d.y));
-    });
-    lineValue.curve(d3.curveMonotoneX);
-    let gLine = gContainer.append('g');
 
-    let line = gLine.append('path');
-    line.attr("d", lineValue(xy));
-    line.attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + ", 50)");
-    line.attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")");
-    line.attr("stroke", d3.schemeCategory10[color]);
-    line.attr("fill", "none");
-    line.attr("stroke-width", 3);
+}
+
+function drawOrthogonalAxis(gContainer, boundingBox, isLog, minAndMax) {
+    let gAxisX = gContainer
+        .append('g')
+        .attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + "," + parseFloat(0.8 * boundingBox.height) + ")");
+    let gAxisY = gContainer
+        .append('g')
+        .attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")");
+
+    gAxisX.call(drawAxe(minAndMax.xmin, minAndMax.xmax, false, isLog, boundingBox));
+    gAxisY.call(drawAxe(minAndMax.ymin, minAndMax.ymax, true, isLog, boundingBox));
+}
+
+function zipData(x, y) {
+    return x.map((e, i) => ({x: e, y: y[i]}));
+}
+
+function drawLinearChart(nbChart, data, minAndMax) {
+    let svg = d3.select('#svg' + nbChart);
+    let boundingBox = svg.node().getBoundingClientRect();
+    let gContainer = svg
+        .append('g')
+        .attr('id', 'gContainer' + nbChart);
+
+    drawOrthogonalAxis(gContainer, boundingBox, data['models']['isLog'], minAndMax);
+
+    data['models'].forEach((data, index) => {
+            let xy = zipData(data['x_data'], data['y_data']);
+            console.log("index", index);
+            let scale_x = getScale(minAndMax.xmin, minAndMax.xmax, false, data['isLog'], boundingBox);
+            let scale_y = getScale(minAndMax.ymin, minAndMax.ymax, true, data['isLog'], boundingBox);
+            let lineValue = d3.line();
+            lineValue.x(function (d) {
+                return scale_x(parseFloat(d.x));
+            });
+            lineValue.y(function (d) {
+                return scale_y(parseFloat(d.y));
+            });
+            lineValue.curve(d3.curveMonotoneX);
+            gContainer
+                .append('g')
+                .append('path')
+                .attr("d", lineValue(xy))
+                .attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + ", 50)")
+                .attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")")
+                .attr("stroke", d3.schemeCategory10[index])
+                .attr("fill", "none")
+                .attr("stroke-width", 3);
+        }
+    );
+
     svg.append('text')
         .attr('x', 0)
         .attr('y', 0)
@@ -90,29 +100,29 @@ function getScale(min, max, isVertical, isLog, boundingBox) {
     return scaleAxe;
 }
 
-function drawPointCloud(position, data, xmin, xmax, ymin, ymax) {
-    let svg = d3.select('#svg' + position);
-    let boundingBox = $('#svg' + position).get(0).getBoundingClientRect();
-    console.log(boundingBox);
-    let gContainer = svg.append('g');
-    gContainer.attr('id', 'gContainer' + position);
-    let gAxisX = gContainer.append('g');
-    gAxisX.attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + "," + parseFloat(0.8 * boundingBox.height) + ")");
-    let gAxisY = gContainer.append('g');
-    gAxisY.attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")");
-    console.log(boundingBox);
-    gAxisX.call(drawAxe(xmin, xmax, false, data['isLog'], boundingBox));
-    gAxisY.call(drawAxe(ymin, ymax, true, data['isLog'], boundingBox));
-    let color = parseInt(Math.random() * 10);
-    let scale_x = getScale(xmin, xmax, false, data['isLog'], boundingBox);
-    let scale_y = getScale(ymin, ymax, true, data['isLog'], boundingBox);
+function drawPointCloud(nbChart, data, minAndMax) {
+    let svg = d3.select('#svg' + nbChart);
+    let boundingBox = svg.node().getBoundingClientRect();
+    let gContainer = svg
+        .append('g')
+        .attr('id', 'gContainer' + nbChart);
+
+    drawOrthogonalAxis(gContainer, boundingBox, data['models']['isLog'], minAndMax);
+
+    let scale_x = getScale(minAndMax.xmin, minAndMax.xmax, false, data['isLog'], boundingBox);
+    let scale_y = getScale(minAndMax.ymin, minAndMax.ymax, true, data['isLog'], boundingBox);
     let gcircle = gContainer.append("g");
+    data['models'].forEach((data, index) => {
+        let xy = zipData(data['x_data'], data['y_data']);
+        console.log(xy);
+
+    });
     for (let i = 0; i < data['x_data'].length; i++) {
         let circle = gcircle.append("circle");
         circle.attr("cx", scale_x(data['x_data'][i]))
             .attr("cy", scale_y(data['y_data'][i]))
             .attr("r", 2)
-            .attr("fill", d3.schemeCategory10[color])
+            .attr("fill", d3.schemeCategory10[nbChart])
             .attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + ", 50)")
             .attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")");
     }
