@@ -1,9 +1,9 @@
 function drawAxe(min, max, isVertical, isLog, boundingBox) {
-    return (isVertical ? d3.axisLeft(getScale(min, max, isVertical, isLog, boundingBox)).ticks(5) : d3.axisBottom(getScale(min, max, isVertical, isLog, boundingBox)).ticks(5));
+    return (isVertical ? d3v5.axisLeft(getScale(min, max, isVertical, isLog, boundingBox)).ticks(5) : d3v5.axisBottom(getScale(min, max, isVertical, isLog, boundingBox)).ticks(5));
 }
 
 function createSvg(nbChart) {
-    let graphDiv = d3.select("#displayGraph");
+    let graphDiv = d3v5.select("#displayGraph");
     graphDiv
         .append('div')
         .attr('id', 'graph' + nbChart)
@@ -43,7 +43,7 @@ function zipData(x, y) {
 }
 
 function drawLinearChart(nbChart, data, minAndMax) {
-    let svg = d3.select('#svg' + nbChart);
+    let svg = d3v5.select('#svg' + nbChart);
     let boundingBox = svg.node().getBoundingClientRect();
     let gContainer = svg
         .append('g')
@@ -56,21 +56,21 @@ function drawLinearChart(nbChart, data, minAndMax) {
             console.log("index", index);
             let scale_x = getScale(minAndMax.xmin, minAndMax.xmax, false, data['isLog'], boundingBox);
             let scale_y = getScale(minAndMax.ymin, minAndMax.ymax, true, data['isLog'], boundingBox);
-            let lineValue = d3.line();
+            let lineValue = d3v5.line();
             lineValue.x(function (d) {
                 return scale_x(parseFloat(d.x));
             });
             lineValue.y(function (d) {
                 return scale_y(parseFloat(d.y));
             });
-            lineValue.curve(d3.curveMonotoneX);
+            lineValue.curve(d3v5.curveMonotoneX);
             gContainer
                 .append('g')
                 .append('path')
                 .attr("d", lineValue(xy))
                 .attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + ", 50)")
                 .attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")")
-                .attr("stroke", d3.schemeCategory10[index])
+                .attr("stroke", d3v5.schemeCategory10[index])
                 .attr("fill", "none")
                 .attr("stroke-width", 3);
         }
@@ -93,7 +93,7 @@ function drawLinearChart(nbChart, data, minAndMax) {
 }
 
 function getScale(min, max, isVertical, isLog, boundingBox) {
-    let scaleAxe = isLog ? d3.scaleLog() : d3.scaleLinear();
+    let scaleAxe = isLog ? d3v5.scaleLog() : d3v5.scaleLinear();
     scaleAxe.domain([min, max]);
     isVertical ? scaleAxe.range([parseFloat(0.77 * boundingBox.height), 0]) : scaleAxe.range([0, parseFloat(0.8 * boundingBox.width)]);
 
@@ -101,7 +101,7 @@ function getScale(min, max, isVertical, isLog, boundingBox) {
 }
 
 function drawPointCloud(nbChart, data, minAndMax) {
-    let svg = d3.select('#svg' + nbChart);
+    let svg = d3v5.select('#svg' + nbChart);
     let boundingBox = svg.node().getBoundingClientRect();
     let gContainer = svg
         .append('g')
@@ -122,7 +122,7 @@ function drawPointCloud(nbChart, data, minAndMax) {
         circle.attr("cx", scale_x(data['x_data'][i]))
             .attr("cy", scale_y(data['y_data'][i]))
             .attr("r", 2)
-            .attr("fill", d3.schemeCategory10[nbChart])
+            .attr("fill", d3v5.schemeCategory10[nbChart])
             .attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + ", 50)")
             .attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")");
     }

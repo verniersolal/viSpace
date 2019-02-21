@@ -136,10 +136,10 @@ function init() {
 
     function getMinAndMax(xdata, ydata) {
         return {
-            ymin: d3.min(ydata),
-            ymax: d3.max(ydata),
-            xmax: d3.max(xdata),
-            xmin: d3.min(xdata)
+            ymin: d3v5.min(ydata),
+            ymax: d3v5.max(ydata),
+            xmax: d3v5.max(xdata),
+            xmin: d3v5.min(xdata)
         }
     }
 
