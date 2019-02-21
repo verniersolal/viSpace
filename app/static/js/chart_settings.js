@@ -29,20 +29,20 @@ function autocompletion() {
 function init() {
     let nbAxes = 2; // default axes count
     let nbChart = 0; // default chart count
-    $("nav").remove();
 
     // Select Materialize
     $(document).ready(function () {
         $('select').formSelect();
     });
 
-    $("input[name='chartType']").change(function () {
-        let chartType = $(this).attr('value');
+    $("#selectChartType").change(function () {
+        let chartType = $(this).find(":selected").val();
         let axesDiv = $('#adminAxes');
         switch (chartType) {
             case "linearChart":
             case "pointCloud":
-                axesDiv.empty().append("        <div class=\"col m5\">\n" +
+                axesDiv.empty().append("        " +
+                    "                   <div class=\"col m12\">\n" +
                     "                        <div class=\"axe_settings\">\n" +
                     "                            <div class=\"input-field\">\n" +
                     "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
@@ -52,7 +52,7 @@ function init() {
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                    </div>\n" +
-                    "                    <div class=\"col m5\">\n" +
+                    "                    <div class=\"col m12\">\n" +
                     "                        <div class=\"axe_settings\" id=\"2\">\n" +
                     "                            <div class=\"input-field\">\n" +
                     "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
@@ -62,7 +62,7 @@ function init() {
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                    </div>\n" +
-                    "                    <div class=\"col m2\">\n" +
+                    "                    <div class=\"col m12 center\">\n" +
                     "                        <div class=\"input-field\">\n" +
                     "                            <p>\n" +
                     "                                <label>\n" +
@@ -74,7 +74,7 @@ function init() {
                     "                    </div>");
                 break;
             case "parCoord":
-                axesDiv.empty().append(" <div class=\"col m5\">\n" +
+                axesDiv.empty().append(" <div class=\"col m12\">\n" +
                     "                        <div class=\"axe_settings\">\n" +
                     "                            <div class=\"input-field\">\n" +
                     "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
@@ -84,7 +84,7 @@ function init() {
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                    </div>\n" +
-                    "                    <div class=\"col m5\">\n" +
+                    "                    <div class=\"col m12\">\n" +
                     "                        <div class=\"axe_settings\" id=\"2\">\n" +
                     "                            <div class=\"input-field\">\n" +
                     "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
@@ -94,7 +94,7 @@ function init() {
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                    </div>\n" +
-                    "                    <div class=\"col m2\">\n" +
+                    "                    <div class=\"col m12 center\">\n" +
                     "                        <div class=\"input-field\">\n" +
                     "                            <p>\n" +
                     "                                <label>\n" +
@@ -115,7 +115,7 @@ function init() {
         if (lastInputValue && lastInputValue !== "") {
             nbAxes++;
 
-            axesDiv.append(" <div class=\"col m5\">\n" +
+            axesDiv.append(" <div class=\"col m12\">\n" +
                 "                        <div class=\"axe_settings\" id=\"" + nbAxes + "\">\n" +
                 "                            <div class=\"input-field\">\n" +
                 "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
@@ -129,6 +129,19 @@ function init() {
 
         }
     });
+
+    function concatModels(models, key) {
+        return models.map(d => d[key]).reduce((current, next) => current.concat(next));
+    }
+
+    function getMinAndMax(xdata, ydata) {
+        return {
+            ymin: d3.min(ydata),
+            ymax: d3.max(ydata),
+            xmax: d3.max(xdata),
+            xmin: d3.min(xdata)
+        }
+    }
 
     $("#settings_form").submit(function (e) {
         let form = $(this);
@@ -152,41 +165,17 @@ function init() {
                 data = JSON.parse(data);
                 if (data.hasOwnProperty('error')) {
                 }
-                $('#position').remove();
                 $('#settings_form').trigger('reset');
 
+                let xdata = concatModels(data['models'], 'x_data');
+                let ydata = concatModels(data['models'], 'y_data');
 
-                let xdata = [];
-                let ydata = [];
-                for (let i = 0; i < data['models'].length; i++) {
-                    for (let j = 0; j < data['models'][i]['x_data'].length; j++) {
-                        xdata.push(data['models'][i]['x_data'][j]);
-                        ydata.push(data['models'][i]['y_data'][j]);
-                    }
-                }
-                let ymin = d3.min(ydata);
-                let ymax = d3.max(ydata);
-                let xmax = d3.max(xdata);
-                let xmin = d3.min(xdata);
+                let minAndMax = getMinAndMax(xdata,ydata);
                 nbChart++;
-                console.log("nbChart : " + nbChart);
-                switch (data['chartType']) {
-                    case 'linearChart':
-                        for (let i = 0; i < data['models'].length; i++) {
-                            drawLinearChart(nbChart, data['models'][i], xmin, xmax, ymin, ymax);
-                        }
-                        break;
-                    case 'pointCloud':
-                        for (let i = 0; i < data['models'].length; i++) {
-                            drawPointCloud(nbChart, data['models'][i], xmin, xmax, ymin, ymax);
-                        }
-                        break;
+                drawChart(data,nbChart,minAndMax);
 
-                }
-                //drawLinearChart(data['position'], data['models'][i]);
-                $('#card' + nbChart + '.card-panel').hide();
-                $('#svg' + nbChart).show();
-                document.getElementById("svg"+nbChart).scrollIntoView({behavior: 'smooth', block: 'start'})
+
+                document.getElementById("svg" + nbChart).scrollIntoView({behavior: 'smooth', block: 'start'})
 
             }
         });
