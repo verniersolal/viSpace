@@ -157,16 +157,24 @@ function drawPointCloud(nbChart, data, minAndMax) {
 }
 
 function drawparallelCoordinar(data, nbchart) {
+
     let graphDiv = d3v5.select("#displayGraph");
     graphDiv
         .append('div')
         .attr('class','parcoords svg col m12')
         .attr('id', 'cp'+nbchart);
-    var pc2 = d3v3.parcoords()("#cp"+nbchart);
-    pc2
-        .data(data)
-        .color("red")
-        .alpha(0.2)
-        .render()
-        .reorderable();
+    console.log(data);
+    var colors = d3v3.scale.category20b()
+        .range(['#66c2a5', '#fc8d62', '#8da0cb', '#e78ac3', '#a6d854', '#ffd92f']);
+     var pc2 = d3v3.parcoords()("#cp"+nbchart);
+
+        pc2
+            .data(data['data'])
+            .hideAxis(["name"])
+            .color(function(d){return colors(d.famille);})
+            .alpha(0.25)
+            .mode("queue")
+            .render()
+            .brushMode("1D-axes")
+            .reorderable();
 }

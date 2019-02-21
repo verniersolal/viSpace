@@ -122,17 +122,22 @@ def get_parameters():
 # Pour les coordonnées parallèles il nous faut un tableau d'axes (axe 1 , axe 2 , ...) et un tableau de modèles (modèle 1 modèle 2 ...)
 def get_parameters_for_parallel_coord(data):
     test = []
-
-    mod = collection.find_one({"prefixe": data['model']})
-    j = list(t for t in range(len(data.getlist('axes[]'))) if data.getlist('axes[]')[t] is not "")
-    print(data)
-    for i in range(len(mod['params'][data.getlist('axes[]')[j[0]]])):
-        test.append(dict({axe: mod['params'][axe][i] for axe in data.getlist('axes[]') if axe is not ""}))
-
     result = {}
-    result["models"] = data['model']
+    final = []
+    z= 0
+    if 'model[]' in data:
+        for model in data.getlist('model[]'):
+
+            mod = collection.find_one({"prefixe": model})
+
+            j = list(t for t in range(len(data.getlist('axes[]'))) if data.getlist('axes[]')[t] is not "")
+            for i in range(len(mod['params'][data.getlist('axes[]')[j[0]]])):
+                test.append(dict({ axe: mod['params'][axe][i] for axe in data.getlist('axes[]') if axe is not ""}))
+                test[z].update({"famille": model})
+                z = z+1
+    result["models"] = data.getlist('model[]')
     result["axes"] =  list(t for t in data.getlist('axes[]') if t is not "")
-    result["data"] = test
     result["chartType"] = 'parCoords'
+    result['data'] = test
     print(result)
     return json.dumps(result)

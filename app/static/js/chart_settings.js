@@ -170,7 +170,7 @@ function init() {
                 data = JSON.parse(data);
                 if (data['chartType'] === 'parCoords') {
                     nbChart++;
-                    drawparallelCoordinar(data['data'], nbChart);
+                    drawparallelCoordinar(data, nbChart);
                     $('#settings_form').trigger('reset');
 
                     document.getElementById("cp" + nbChart).scrollIntoView({behavior: 'smooth', block: 'start'})
