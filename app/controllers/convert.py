@@ -98,12 +98,26 @@ def get_parameters():
             for model in request.form.getlist('model[]'):
                 mod = collection.find_one({"prefixe": model})
                 results.append(dict({"x_data": mod['params'][request.form['axe_x']], "y_data": mod['params'][request.form['axe_y']]}))
-            final = dict({"models": results, "chartType": request.form['chartType'], "isLog": isLog})
+            final = dict({
+                "models": results,
+                "chartType": request.form['chartType'],
+                "isLog": isLog,
+                "model_name": request.form.getlist('model[]'),
+                "axe_x": request.form['axe_x'],
+                "axe_y": request.form['axe_y']
+            })
             return json.dumps(final)
         else:
             mod = collection.find_one({"prefixe": request.form['model']})
             results.append(dict({"x_data": mod['params'][request.form['axe_x']], "y_data": mod['params'][request.form['axe_y']]}))
-            final = dict({"models": results, "chartType": request.form['chartType'], "isLog": isLog})
+            final = dict({
+                "models": results,
+                "chartType": request.form['chartType'],
+                "isLog": isLog,
+                "model_name": request.form['model'],
+                "axe_x": request.form['axe_x'],
+                "axe_y": request.form['axe_y']
+            })
             return json.dumps(final)
 # Pour les coordonnées parallèles il nous faut un tableau d'axes (axe 1 , axe 2 , ...) et un tableau de modèles (modèle 1 modèle 2 ...)
 def get_parameters_for_parallel_coord(data):
@@ -111,11 +125,13 @@ def get_parameters_for_parallel_coord(data):
 
     mod = collection.find_one({"prefixe": data['model']})
     j = list(t for t in range(len(data.getlist('axes[]'))) if data.getlist('axes[]')[t] is not "")
+    print(data)
     for i in range(len(mod['params'][data.getlist('axes[]')[j[0]]])):
         test.append(dict({axe: mod['params'][axe][i] for axe in data.getlist('axes[]') if axe is not ""}))
     result = {}
     result["models"] = data['model']
     result["axes"] =  list(t for t in data.getlist('axes[]') if t is not "")
     result["data"] = test
+    result["chartType"] = 'parCoords'
     print(result)
     return json.dumps(result)

@@ -91,14 +91,14 @@ function drawLinearChart(nbChart, data, minAndMax) {
         .attr('transform', 'translate(' + parseFloat(boundingBox.width * 0.033) + ',' + parseFloat(boundingBox.height / 2) + ') rotate(-90)')
         .style("text-anchor", "middle")
         .attr('fill', 'black')
-        .text("titi");
+        .text(data['axe_y']);
 
     svg.append('text')
         .attr('x', parseFloat(boundingBox.width / 2))
         .attr('y', boundingBox.height * 0.95)
         .style("text-anchor", "middle")
         .attr('fill', 'black ')
-        .text("toto");
+        .text(data['axe_x']);
 }
 
 function getScale(min, max, isVertical, isLog, boundingBox) {
@@ -121,32 +121,34 @@ function drawPointCloud(nbChart, data, minAndMax) {
     let scale_x = getScale(minAndMax.xmin, minAndMax.xmax, false, data['isLog'], boundingBox);
     let scale_y = getScale(minAndMax.ymin, minAndMax.ymax, true, data['isLog'], boundingBox);
     let gcircle = gContainer.append("g");
+    let value_x = function(d){return d.x};
+    let value_y = function(d){return d.y};
     data['models'].forEach((data, index) => {
         let xy = zipData(data['x_data'], data['y_data']);
-        console.log(xy);
-
-    });
-    for (let i = 0; i < data['x_data'].length; i++) {
-        let circle = gcircle.append("circle");
-        circle.attr("cx", scale_x(data['x_data'][i]))
-            .attr("cy", scale_y(data['y_data'][i]))
-            .attr("r", 2)
-            .attr("fill", d3.schemeCategory10[nbChart])
+        gcircle.selectAll(".dot")
+            .data(xy)
+            .enter().append('circle')
+            .attr('class', 'dot')
+            .attr('r', 2)
+            .attr('cx', function(d){ return scale_x(value_x(d))})
+            .attr('cy', function(d){ return scale_y(value_y(d))})
+            .attr("fill", d3.schemeCategory10[index])
             .attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + ", 50)")
             .attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")");
-    }
+
+    });
     svg.append('text')
         .attr('x', 0)
         .attr('y', 0)
         .attr('transform', 'translate(' + parseFloat(boundingBox.width * 0.033) + ',' + parseFloat(boundingBox.height / 2) + ') rotate(-90)')
         .style("text-anchor", "middle")
         .attr('fill', 'black')
-        .text("titi");
+        .text(data['axe_y']);
 
     svg.append('text')
         .attr('x', parseFloat(boundingBox.width / 2))
         .attr('y', boundingBox.height * 0.95)
         .style("text-anchor", "middle")
         .attr('fill', 'black')
-        .text("toto");
+        .text(data['axe_x']);
 }

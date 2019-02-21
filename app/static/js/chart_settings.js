@@ -172,7 +172,7 @@ function init() {
                     drawparallelCoordinar(data['data']);
                     nbChart++;
                 } else {
-
+                    console.log(data);
                     //nbChart++;
                     $('#settings_form').trigger('reset');
                     let xdata = concatModels(data['models'], 'x_data');
