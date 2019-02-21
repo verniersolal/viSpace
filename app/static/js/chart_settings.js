@@ -169,23 +169,29 @@ function init() {
 
                 data = JSON.parse(data);
                 if (data['chartType'] === 'parCoords') {
-                    drawparallelCoordinar(data['data']);
                     nbChart++;
+                    drawparallelCoordinar(data['data'], nbChart);
+                    $('#settings_form').trigger('reset');
+
+                    document.getElementById("cp" + nbChart).scrollIntoView({behavior: 'smooth', block: 'start'})
+
                 } else {
                     console.log(data);
                     //nbChart++;
-                    $('#settings_form').trigger('reset');
                     let xdata = concatModels(data['models'], 'x_data');
                     let ydata = concatModels(data['models'], 'y_data');
 
                     let minAndMax = getMinAndMax(xdata, ydata);
                     nbChart++;
                     drawChart(data, nbChart, minAndMax);
+                    $('#settings_form').trigger('reset');
 
 
                     document.getElementById("svg" + nbChart).scrollIntoView({behavior: 'smooth', block: 'start'})
 
                 }
+
+
             }
         });
         e.preventDefault(); // avoid to execute the actual submit of the form.

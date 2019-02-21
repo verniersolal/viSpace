@@ -156,13 +156,17 @@ function drawPointCloud(nbChart, data, minAndMax) {
         .text(data['axe_x']);
 }
 
-function drawparallelCoordinar(data) {
-    var pc2 = d3v3.parcoords()("#toto");
+function drawparallelCoordinar(data, nbchart) {
+    let graphDiv = d3v5.select("#displayGraph");
+    graphDiv
+        .append('div')
+        .attr('class','parcoords svg col m12')
+        .attr('id', 'cp'+nbchart);
+    var pc2 = d3v3.parcoords()("#cp"+nbchart);
     pc2
         .data(data)
         .color("red")
         .alpha(0.2)
-        .margin({top: 24, left: 0, bottom: 12, right: 0})
         .render()
         .reorderable();
 }
