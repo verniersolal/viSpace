@@ -92,52 +92,50 @@ def get_parameters():
         return get_parameters_for_parallel_coord(request.form)
     else:
         # Il faut chercher les deux paramètres x et y des models à construire
+        models = []
+        if 'model' in request.form:
+            models.append(request.form['model'])
+        else:
+            models = request.form.getlist('model[]')
+
         results = []
         isLog = True if 'isLog' in request.form else False
-        if 'model[]' in request.form:
-            for model in request.form.getlist('model[]'):
-                mod = collection.find_one({"prefixe": model})
-                results.append(dict({"x_data": mod['params'][request.form['axe_x']], "y_data": mod['params'][request.form['axe_y']]}))
-            final = dict({
-                "models": results,
-                "chartType": request.form['chartType'],
-                "isLog": isLog,
-                "model_name": request.form.getlist('model[]'),
-                "axe_x": request.form['axe_x'],
-                "axe_y": request.form['axe_y']
-            })
-            return json.dumps(final)
-        else:
-            mod = collection.find_one({"prefixe": request.form['model']})
+
+        for model in models:
+            mod = collection.find_one({"prefixe": model})
             results.append(dict({"x_data": mod['params'][request.form['axe_x']], "y_data": mod['params'][request.form['axe_y']]}))
-            final = dict({
-                "models": results,
-                "chartType": request.form['chartType'],
-                "isLog": isLog,
-                "model_name": request.form['model'],
-                "axe_x": request.form['axe_x'],
-                "axe_y": request.form['axe_y']
-            })
-            return json.dumps(final)
+        final = dict({
+            "models": results,
+            "chartType": request.form['chartType'],
+            "isLog": isLog,
+            "model_name": models,
+            "axe_x": request.form['axe_x'],
+            "axe_y": request.form['axe_y']
+        })
+        return json.dumps(final)
 # Pour les coordonnées parallèles il nous faut un tableau d'axes (axe 1 , axe 2 , ...) et un tableau de modèles (modèle 1 modèle 2 ...)
 def get_parameters_for_parallel_coord(data):
-    test = []
+    models = []
+    if 'model' in data:
+        models.append(data['model'])
+    else:
+        models = data.getlist('model[]')
+    axes_names = list(data.getlist('axes[]')[index] for index in range(len(data.getlist('axes[]'))) if data.getlist('axes[]')[index] is not "")
+    models_data = []
+    for model in models:
+        data_array = []
+        mod = collection.find_one({"prefixe": model})
+        for i in axes_names:
+            data_array.append(mod['params'][i])
+        zipped_values = list(zip(*data_array))
+        dict_of_parameters = []
+        for tuple_values in zipped_values:
+            dict_of_parameters.append(dict({parameter:tuple_values[index] for index,parameter in enumerate(axes_names)}))
+        models_data.append([dict(item, **{"famille": model}) for item in dict_of_parameters])
     result = {}
-    final = []
-    z= 0
-    if 'model[]' in data:
-        for model in data.getlist('model[]'):
 
-            mod = collection.find_one({"prefixe": model})
-
-            j = list(t for t in range(len(data.getlist('axes[]'))) if data.getlist('axes[]')[t] is not "")
-            for i in range(len(mod['params'][data.getlist('axes[]')[j[0]]])):
-                test.append(dict({ axe: mod['params'][axe][i] for axe in data.getlist('axes[]') if axe is not ""}))
-                test[z].update({"famille": model})
-                z = z+1
-    result["models"] = data.getlist('model[]')
-    result["axes"] =  list(t for t in data.getlist('axes[]') if t is not "")
+    result["data"] = [item for sublist in models_data for item in sublist]
+    result["models"] = models
+    result["axes"] =  axes_names
     result["chartType"] = 'parCoords'
-    result['data'] = test
-    print(result)
     return json.dumps(result)
