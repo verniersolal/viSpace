@@ -126,30 +126,40 @@ function drawPointCloud(nbChart, data, minAndMax) {
     let gcircle = gContainer.append("g");
     let value_x = function(d){return d.x};
     let value_y = function(d){return d.y};
-    data['models'].forEach((data, index) => {
-        let xy = zipData(data['x_data'], data['y_data']);
+    data['models'].forEach((datum, index) => {
+        let xy = zipData(datum['x_data'], datum['y_data']);
         gcircle.selectAll(".dot")
             .data(xy)
             .enter().append('circle')
-            .attr('class', 'dot')
-            .attr('r', 2)
+            .attr('r', 3)
             .attr('cx', function(d){ return scale_x(value_x(d))})
             .attr('cy', function(d){ return scale_y(value_y(d))})
             .attr("fill", d3v5.schemeCategory10[index])
-            .attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + ", 50)")
-            .attr("transform", "translate(" + parseFloat(0.15 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")");
-
+            .attr("transform", "translate(" + parseFloat(0.3 * boundingBox.width) + ", 50)")
+            .attr("transform", "translate(" + parseFloat(0.3 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")");
+        gContainer.append('text')
+            .attr("x", parseFloat(0.05*boundingBox.width))
+            .attr("y", parseFloat(0.1*(index+1.35)*boundingBox.height))
+            .attr('font-size', "15px")
+            .text(data['model_name'][index]);
+        gContainer.append('g')
+            .append('rect')
+            .attr('x',parseFloat(0.02*boundingBox.width))
+            .attr('y', parseFloat(0.1*(index+1)*boundingBox.height))
+            .attr('width', 20)
+            .attr('height', 20)
+            .style("fill", d3v5.schemeCategory10[index]);
     });
     svg.append('text')
         .attr('x', 0)
         .attr('y', 0)
-        .attr('transform', 'translate(' + parseFloat(boundingBox.width * 0.033) + ',' + parseFloat(boundingBox.height / 2) + ') rotate(-90)')
+        .attr('transform', 'translate(' + parseFloat(boundingBox.width * 0.25) + ',' + parseFloat(boundingBox.height / 2) + ') rotate(-90)')
         .style("text-anchor", "middle")
         .attr('fill', 'black')
         .text(data['axe_y']);
 
     svg.append('text')
-        .attr('x', parseFloat(boundingBox.width / 2))
+        .attr('x', parseFloat(boundingBox.width / 2) +100)
         .attr('y', boundingBox.height * 0.95)
         .style("text-anchor", "middle")
         .attr('fill', 'black')
@@ -174,7 +184,7 @@ function drawparallelCoordinar(data, nbchart) {
             .data(data['data'])
             .color(function(d){return colors(d.famille);})
             .alpha(0.25)
-            .mode("queue")
+            .mode('queue')
             .render()
             .reorderable();
 }

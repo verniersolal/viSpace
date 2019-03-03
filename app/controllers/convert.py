@@ -112,6 +112,7 @@ def get_parameters():
             "axe_x": request.form['axe_x'],
             "axe_y": request.form['axe_y']
         })
+        print(final['model_name'])
         return json.dumps(final)
 # Pour les coordonnées parallèles il nous faut un tableau d'axes (axe 1 , axe 2 , ...) et un tableau de modèles (modèle 1 modèle 2 ...)
 def get_parameters_for_parallel_coord(data):
@@ -120,7 +121,7 @@ def get_parameters_for_parallel_coord(data):
         models.append(data['model'])
     else:
         models = data.getlist('model[]')
-    axes_names = list(data.getlist('axes[]')[index] for index in range(len(data.getlist('axes[]'))) if data.getlist('axes[]')[index] is not "")
+    axes_names = list(set(data.getlist('axes[]')[index] for index in range(len(data.getlist('axes[]'))) if data.getlist('axes[]')[index] is not ""))
     models_data = []
     for model in models:
         data_array = []
@@ -133,7 +134,7 @@ def get_parameters_for_parallel_coord(data):
             dict_of_parameters.append(dict({parameter:tuple_values[index] for index,parameter in enumerate(axes_names)}))
         models_data.append([dict(item, **{"famille": model}) for item in dict_of_parameters])
     result = {}
-
+    result['log'] = data['isLog'] if 'isLog' in data else False
     result["data"] = [item for sublist in models_data for item in sublist]
     result["models"] = models
     result["axes"] =  axes_names
