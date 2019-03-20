@@ -11,7 +11,7 @@
         </nav>
     </div>
     <div class="row graph-interface">
-        <div class="createGraph col m2">
+        <div class="sideMenu col m2">
             <form autocomplete="off" method="POST" action="{{ url_for('get_parameters') }}" id="settings_form">
                 <div class="row adminGraphType">
                     <div class="input-field col m12">
@@ -74,7 +74,8 @@
                 </div>
             </form>
         </div>
-        <div id="displayGraph" class="col m8 offset-m2">
+        <div id="displayGraph" class="col m8 offset-m2"></div>
+        <div id="editMenu" class="col m2 offset-m10 center">
         </div>
 
     </div>
@@ -86,5 +87,6 @@
     {% if converted %}
         <script>sendToast()</script>
     {% endif %}
+    <script src="https://cdn.rawgit.com/eligrey/FileSaver.js/e9d941381475b5df8b7d7691013401e171014e89/FileSaver.min.js"></script>
     <script src="{{ url_for('static', filename='js/visualisation-script.js') }}"></script>
 {% endblock %}

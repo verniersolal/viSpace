@@ -1,7 +1,7 @@
-function max(data, param){
+function max(data, param) {
     var max = 0;
-    for(var i = 0; i < data.length; i++){
-        if (parseFloat(data[i][param]) >= parseFloat(max)){
+    for (var i = 0; i < data.length; i++) {
+        if (parseFloat(data[i][param]) >= parseFloat(max)) {
             max = data[i][param];
         }
     }
@@ -93,9 +93,9 @@ function draw(data) {
 }
 
 function enableImportBtn() {
-    var importBtn=document.getElementById("importBtn");
-    var fileInput=document.getElementById("fileInput");
-    fileInput.addEventListener("change",function () {
+    var importBtn = document.getElementById("importBtn");
+    var fileInput = document.getElementById("fileInput");
+    fileInput.addEventListener("change", function () {
         importBtn.classList.remove("disabled");
     });
 }
