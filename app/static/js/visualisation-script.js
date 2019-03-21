@@ -11,6 +11,8 @@ function createSvg(nbChart) {
         .append('svg')
         .attr('id', 'svg' + nbChart)
         .classed('svg', true);
+    let dim = d3v5.select("#svg" + nbChart).node().getBoundingClientRect();
+    $("#svg" + nbChart).attr('viewBox', '0 0 ' + dim.width + ' ' + dim.height);
 }
 
 function drawChart(data, nbChart, minAndMax) {
