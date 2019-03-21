@@ -29,17 +29,18 @@ function drawChart(data, nbChart, minAndMax) {
     });
 }
 
-function displayEditMenu(svgId) {
-
+function appendEditAxes(svgId) {
     let text_x = $("#text_axe_x_" + svgId).text();
     let text_y = $("#text_axe_y_" + svgId).text();
-    $("#editMenu").empty().append("  <div class=\"row\" id=\"adminAxes\">\n" +
+    $("#editMenu").append("<fieldset>" +
+        "<legend class='black-text'>Axes</legend>" +
+        " <div class=\"row\" id=\"adminAxes\">\n" +
         "                <div class=\"col m12\">\n" +
         "                    <div class=\"axe_settings\">\n" +
         "                        <div class=\"input-field\">\n" +
         "                            <i class=\"material-icons prefix\">insert_chart</i>\n" +
         "                            <input value=\"" + text_x + "\" type=\"text\" name=\"axe_x\" id=\"edit_axe_x\"\n" +
-        "                                   class=\"autocomplete axe_name\"\n" +
+        "                                   class=\"edit_input axe_name\"\n" +
         "                                   required>\n" +
         "                            <label class=\"active\" for=\"edit_axe_x\">Axe X</label>\n" +
         "                        </div>\n" +
@@ -50,25 +51,63 @@ function displayEditMenu(svgId) {
         "                        <div class=\"input-field\">\n" +
         "                            <i class=\"material-icons prefix\">insert_chart</i>\n" +
         "                            <input value=\"" + text_y + "\" type=\"text\" name=\"axe_y\" id=\"edit_axe_y\"\n" +
-        "                                   class=\"autocomplete axe_name\"\n" +
+        "                                   class=\"edit_input axe_name\"\n" +
         "                                   required>\n" +
         "                            <label class=\"active\" for=\"edit_axe_y\">Axe Y</label>\n" +
         "                        </div>\n" +
         "                    </div>\n" +
         "                </div>\n" +
-        "            </div>\n" +
-        "            <div class=\"row\">\n" +
-        "                <a id=\"save\" class=\"waves-effect waves-light btn green disabled\"><i class=\"material-icons right\">save</i>Enregistrer</a>\n" +
+        "            </div>" +
+        "</fieldset>");
+}
+
+function appendEditButtons() {
+    $('#editMenu').append("" +
+        "<div class='row'></div>" +
+        " <div class=\"row\">\n" +
+        "                <a id=\"save\" class=\"waves-effect waves-light btn green disabled\"><i\n" +
+        "                        class=\"material-icons right\">save</i>Enregistrer</a>\n" +
         "            </div>\n" +
         "            <div class=\"row\">\n" +
         "                <a id=\"export\" class=\"waves-effect waves-light btn green\"><i\n" +
         "                        class=\"material-icons right\">file_download</i>exporter</a>\n" +
-        "            </div>").addClass("sideMenu");
-    $(".axe_name").on('change', function (e) {
-        $("#save").removeClass("disabled").on("click", function () {
-            $("#text_axe_x_" + svgId).html($("#edit_axe_x").val());
-            $("#text_axe_y_" + svgId).html($("#edit_axe_y").val());
-            M.toast({html: 'Modifications sauvegardées ', classes: 'rounded', displayLength: 5000});
+        "            </div>");
+}
+
+function appendEditModels() {
+    $('#editMenu').append("  <fieldset>\n" +
+        "                <legend class=\"black-text\">Models</legend>\n" +
+        "                <div class=\"row\" id=\"editModels\">\n" +
+        "                </div>\n" +
+        "            </fieldset>");
+
+    $('.legend_text_model').each(function (index) {
+        $("#editModels").append("<div class=\"input-field\">\n" +
+            "                                <i class=\"material-icons prefix\" style=\"color:" + d3v5.schemeCategory10[index] + "\">folder</i>\n" +
+            "                                <input value=\"" + $(this).text() + "\" type=\"text\" name=\"edit_model_" + index + "\" id=\"edit_model_" + index + "\"\n" +
+            "                                       class=\"edit_input edit_model\"\n" +
+            "                                       required>\n" +
+            "                                <label class=\"active\" for=\"edit_model_" + index + "\">Model " + (index + 1) + "</label>\n" +
+            "                            </div>");
+    });
+}
+
+function displayEditMenu(svgId) {
+    $("#editMenu").empty().addClass("sideMenu");
+    appendEditAxes(svgId);
+    appendEditModels();
+    appendEditButtons();
+
+    $(".edit_input").on('change', function (e) {
+        $("#save").removeClass("disabled")
+    });
+    $('#save').on("click", function () {
+        M.toast({html: 'Modifications sauvegardées ', classes: 'rounded', displayLength: 5000});
+        $(this).addClass("disabled");
+        $("#text_axe_x_" + svgId).html($("#edit_axe_x").val());
+        $("#text_axe_y_" + svgId).html($("#edit_axe_y").val());
+        $('.edit_model').each(function (index) {
+            $('#legend_text_model_' + index).html($(this).val());
         });
     });
     d3.select('#export').on('click', function () {
@@ -208,7 +247,6 @@ function drawLinearChart(nbChart, data, minAndMax) {
 
     data['models'].forEach((model, index) => {
         let xy = zipData(model['x_data'], model['y_data']);
-        console.log("index", index);
         let scale_x = getScale(minAndMax.xmin, minAndMax.xmax, false, data['isLog'], boundingBox);
         let scale_y = getScale(minAndMax.ymin, minAndMax.ymax, true, data['isLog'], boundingBox);
         let lineValue = d3v5.line();
@@ -230,12 +268,16 @@ function drawLinearChart(nbChart, data, minAndMax) {
             .attr("stroke-width", 3);
         gContainer.append('g')
             .append('rect')
+            .attr("class", "legend_color_model")
+            .attr("id", "legend_color_model_" + index)
             .attr('x', parseFloat(0.02 * boundingBox.width))
             .attr('y', parseFloat(0.1 * (index + 1) * boundingBox.height))
             .attr('width', 20)
             .attr('height', 20)
             .style("fill", d3v5.schemeCategory10[index]);
         gContainer.append('text')
+            .attr("class", "legend_text_model")
+            .attr("id", "legend_text_model_" + index)
             .attr("x", parseFloat(0.05 * boundingBox.width))
             .attr("y", parseFloat(0.1 * (index + 1.35) * boundingBox.height))
             .attr('font-size', "15px")
@@ -305,12 +347,16 @@ function drawPointCloud(nbChart, data, minAndMax) {
             .attr("transform", "translate(" + parseFloat(0.3 * boundingBox.width) + ", 50)")
             .attr("transform", "translate(" + parseFloat(0.3 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")");
         gContainer.append('text')
+            .attr("class", "legend_text_model")
+            .attr("id", "legend_text_model_" + index)
             .attr("x", parseFloat(0.05 * boundingBox.width))
             .attr("y", parseFloat(0.1 * (index + 1.35) * boundingBox.height))
             .attr('font-size', "15px")
             .text(data['model_name'][index]);
         gContainer.append('g')
             .append('rect')
+            .attr("class", "legend_color_model")
+            .attr("id", "legend_color_model_" + index)
             .attr('x', parseFloat(0.02 * boundingBox.width))
             .attr('y', parseFloat(0.1 * (index + 1) * boundingBox.height))
             .attr('width', 20)

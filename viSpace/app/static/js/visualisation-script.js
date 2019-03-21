@@ -24,7 +24,6 @@ function drawparallelCoordinar(data){
 function drawLinearChart(data) {
     let svg = d3.select('#svg' + data['position']);
     var boundingBox = $('#card' + data['position']).get(0).getBoundingClientRect();
-    console.log("init bounding box", boundingBox);
     let gContainer = svg.append('g');
     gContainer.attr('id', 'gContainer' + data['position']);
     let gAxisX = gContainer.append('g');
@@ -60,7 +59,6 @@ function drawLinearChart(data) {
 }
 
 function getScale(data, isVertical, isLog, boundingBox) {
-    console.log(boundingBox);
     let scaleAxe = (isLog ? d3.scaleLog() : d3.scaleLinear());
     scaleAxe.domain([d3.min(data), d3.max(data)]);
     isVertical ? scaleAxe.range([parseFloat(0.77 * boundingBox.height), 0]) : scaleAxe.range([0, parseFloat(0.8 * boundingBox.width)]);
@@ -71,7 +69,6 @@ function getScale(data, isVertical, isLog, boundingBox) {
 function drawPointCloud(data) {
     let svg = d3.select('#svg' + data['position']);
     var boundingBox = $('#card' + data['position']).get(0).getBoundingClientRect();
-    console.log("init bounding box", boundingBox);
     let gContainer = svg.append('g');
     gContainer.attr('id', 'gContainer' + data['position']);
     let gAxisX = gContainer.append('g');

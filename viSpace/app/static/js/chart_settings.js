@@ -70,7 +70,6 @@ function init() {
             success: function (data) {
                 data = JSON.parse(data);
                 if (data.hasOwnProperty('error')) {
-                    console.log(data);
                 }
                 $('#position').remove();
                 $('#settings_form').trigger('reset');
