@@ -25,7 +25,7 @@ function drawChart(data, nbChart, minAndMax) {
     }
 
     $('#graph' + nbChart).click((event) => {
-        displayEditMenu(event.target.id);
+        displayEditMenu(event.target.id, nbChart);
     });
 }
 
@@ -74,14 +74,14 @@ function appendEditButtons() {
         "            </div>");
 }
 
-function appendEditModels() {
+function appendEditModels(nbChart) {
     $('#editMenu').append("  <fieldset>\n" +
         "                <legend class=\"black-text\">Models</legend>\n" +
         "                <div class=\"row\" id=\"editModels\">\n" +
         "                </div>\n" +
         "            </fieldset>");
 
-    $('.legend_text_model').each(function (index) {
+    $('.legend_text_model_' + nbChart).each(function (index) {
         $("#editModels").append("<div class=\"input-field\">\n" +
             "                                <i class=\"material-icons prefix\" style=\"color:" + d3v5.schemeCategory10[index] + "\">folder</i>\n" +
             "                                <input value=\"" + $(this).text() + "\" type=\"text\" name=\"edit_model_" + index + "\" id=\"edit_model_" + index + "\"\n" +
@@ -92,10 +92,10 @@ function appendEditModels() {
     });
 }
 
-function displayEditMenu(svgId) {
+function displayEditMenu(svgId, nbChart) {
     $("#editMenu").empty().addClass("sideMenu");
     appendEditAxes(svgId);
-    appendEditModels();
+    appendEditModels(nbChart);
     appendEditButtons();
 
     $(".edit_input").on('change', function (e) {
@@ -107,7 +107,7 @@ function displayEditMenu(svgId) {
         $("#text_axe_x_" + svgId).html($("#edit_axe_x").val());
         $("#text_axe_y_" + svgId).html($("#edit_axe_y").val());
         $('.edit_model').each(function (index) {
-            $('#legend_text_model_' + index).html($(this).val());
+            $('#' + svgId + '_legend_text_model_' + index).html($(this).val());
         });
     });
     d3.select('#export').on('click', function () {
@@ -268,16 +268,16 @@ function drawLinearChart(nbChart, data, minAndMax) {
             .attr("stroke-width", 3);
         gContainer.append('g')
             .append('rect')
-            .attr("class", "legend_color_model")
-            .attr("id", "legend_color_model_" + index)
+            .attr("class", "legend_color_model" + nbChart)
+            .attr("id", "svg" + nbChart + "_legend_color_model_" + index)
             .attr('x', parseFloat(0.02 * boundingBox.width))
             .attr('y', parseFloat(0.1 * (index + 1) * boundingBox.height))
             .attr('width', 20)
             .attr('height', 20)
             .style("fill", d3v5.schemeCategory10[index]);
         gContainer.append('text')
-            .attr("class", "legend_text_model")
-            .attr("id", "legend_text_model_" + index)
+            .attr("class", "legend_text_model_" + nbChart)
+            .attr("id", "svg" + nbChart + "_legend_text_model_" + index)
             .attr("x", parseFloat(0.05 * boundingBox.width))
             .attr("y", parseFloat(0.1 * (index + 1.35) * boundingBox.height))
             .attr('font-size', "15px")
@@ -347,16 +347,16 @@ function drawPointCloud(nbChart, data, minAndMax) {
             .attr("transform", "translate(" + parseFloat(0.3 * boundingBox.width) + ", 50)")
             .attr("transform", "translate(" + parseFloat(0.3 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")");
         gContainer.append('text')
-            .attr("class", "legend_text_model")
-            .attr("id", "legend_text_model_" + index)
+            .attr("class", "legend_text_model" + nbChart)
+            .attr("id", "svg" + nbChart + "_legend_text_model_" + index)
             .attr("x", parseFloat(0.05 * boundingBox.width))
             .attr("y", parseFloat(0.1 * (index + 1.35) * boundingBox.height))
             .attr('font-size', "15px")
             .text(data['model_name'][index]);
         gContainer.append('g')
             .append('rect')
-            .attr("class", "legend_color_model")
-            .attr("id", "legend_color_model_" + index)
+            .attr("class", "legend_color_model" + nbChart)
+            .attr("id", "svg" + nbChart + "_legend_color_model_" + index)
             .attr('x', parseFloat(0.02 * boundingBox.width))
             .attr('y', parseFloat(0.1 * (index + 1) * boundingBox.height))
             .attr('width', 20)
