@@ -11,6 +11,8 @@ function createSvg(nbChart) {
         .append('svg')
         .attr('id', 'svg' + nbChart)
         .classed('svg', true);
+    let dim = d3v5.select("#svg" + nbChart).node().getBoundingClientRect();
+    $("#svg" + nbChart).attr('viewBox', '0 0 ' + dim.width + ' ' + dim.height);
 }
 
 function drawChart(data, nbChart, minAndMax) {
@@ -25,21 +27,22 @@ function drawChart(data, nbChart, minAndMax) {
     }
 
     $('#graph' + nbChart).click((event) => {
-        displayEditMenu(event.target.id);
+        displayEditMenu(event.target.id, nbChart);
     });
 }
 
-function displayEditMenu(svgId) {
-
+function appendEditAxes(svgId) {
     let text_x = $("#text_axe_x_" + svgId).text();
     let text_y = $("#text_axe_y_" + svgId).text();
-    $("#editMenu").empty().append("  <div class=\"row\" id=\"adminAxes\">\n" +
+    $("#editMenu").append("<fieldset>" +
+        "<legend class='black-text'>Axes</legend>" +
+        " <div class=\"row\" id=\"adminAxes\">\n" +
         "                <div class=\"col m12\">\n" +
         "                    <div class=\"axe_settings\">\n" +
         "                        <div class=\"input-field\">\n" +
         "                            <i class=\"material-icons prefix\">insert_chart</i>\n" +
         "                            <input value=\"" + text_x + "\" type=\"text\" name=\"axe_x\" id=\"edit_axe_x\"\n" +
-        "                                   class=\"autocomplete axe_name\"\n" +
+        "                                   class=\"edit_input axe_name\"\n" +
         "                                   required>\n" +
         "                            <label class=\"active\" for=\"edit_axe_x\">Axe X</label>\n" +
         "                        </div>\n" +
@@ -50,25 +53,63 @@ function displayEditMenu(svgId) {
         "                        <div class=\"input-field\">\n" +
         "                            <i class=\"material-icons prefix\">insert_chart</i>\n" +
         "                            <input value=\"" + text_y + "\" type=\"text\" name=\"axe_y\" id=\"edit_axe_y\"\n" +
-        "                                   class=\"autocomplete axe_name\"\n" +
+        "                                   class=\"edit_input axe_name\"\n" +
         "                                   required>\n" +
         "                            <label class=\"active\" for=\"edit_axe_y\">Axe Y</label>\n" +
         "                        </div>\n" +
         "                    </div>\n" +
         "                </div>\n" +
-        "            </div>\n" +
-        "            <div class=\"row\">\n" +
-        "                <a id=\"save\" class=\"waves-effect waves-light btn green disabled\"><i class=\"material-icons right\">save</i>Enregistrer</a>\n" +
+        "            </div>" +
+        "</fieldset>");
+}
+
+function appendEditButtons() {
+    $('#editMenu').append("" +
+        "<div class='row'></div>" +
+        " <div class=\"row\">\n" +
+        "                <a id=\"save\" class=\"waves-effect waves-light btn green disabled\"><i\n" +
+        "                        class=\"material-icons right\">save</i>Enregistrer</a>\n" +
         "            </div>\n" +
         "            <div class=\"row\">\n" +
         "                <a id=\"export\" class=\"waves-effect waves-light btn green\"><i\n" +
         "                        class=\"material-icons right\">file_download</i>exporter</a>\n" +
-        "            </div>").addClass("sideMenu");
-    $(".axe_name").on('change', function (e) {
-        $("#save").removeClass("disabled").on("click", function () {
-            $("#text_axe_x_" + svgId).html($("#edit_axe_x").val());
-            $("#text_axe_y_" + svgId).html($("#edit_axe_y").val());
-            M.toast({html: 'Modifications sauvegardées ', classes: 'rounded', displayLength: 5000});
+        "            </div>");
+}
+
+function appendEditModels(nbChart) {
+    $('#editMenu').append("  <fieldset>\n" +
+        "                <legend class=\"black-text\">Models</legend>\n" +
+        "                <div class=\"row\" id=\"editModels\">\n" +
+        "                </div>\n" +
+        "            </fieldset>");
+
+    $('.legend_text_model_' + nbChart).each(function (index) {
+        $("#editModels").append("<div class=\"input-field\">\n" +
+            "                                <i class=\"material-icons prefix\" style=\"color:" + d3v5.schemeCategory10[index] + "\">folder</i>\n" +
+            "                                <input value=\"" + $(this).text() + "\" type=\"text\" name=\"edit_model_" + index + "\" id=\"edit_model_" + index + "\"\n" +
+            "                                       class=\"edit_input edit_model\"\n" +
+            "                                       required>\n" +
+            "                                <label class=\"active\" for=\"edit_model_" + index + "\">Model " + (index + 1) + "</label>\n" +
+            "                            </div>");
+    });
+}
+
+function displayEditMenu(svgId, nbChart) {
+    $("#editMenu").empty().addClass("sideMenu");
+    appendEditAxes(svgId);
+    appendEditModels(nbChart);
+    appendEditButtons();
+
+    $(".edit_input").on('change', function (e) {
+        $("#save").removeClass("disabled")
+    });
+    $('#save').on("click", function () {
+        M.toast({html: 'Modifications sauvegardées ', classes: 'rounded', displayLength: 5000});
+        $(this).addClass("disabled");
+        $("#text_axe_x_" + svgId).html($("#edit_axe_x").val());
+        $("#text_axe_y_" + svgId).html($("#edit_axe_y").val());
+        $('.edit_model').each(function (index) {
+            $('#' + svgId + '_legend_text_model_' + index).html($(this).val());
         });
     });
     d3.select('#export').on('click', function () {
@@ -205,11 +246,11 @@ function drawLinearChart(nbChart, data, minAndMax) {
         .append('g')
         .attr('id', 'gContainer' + nbChart);
     drawOrthogonalAxis(gContainer, boundingBox, data['isLog'], minAndMax);
-    let scale_x = getScale(minAndMax.xmin, minAndMax.xmax, false, data['isLog'], boundingBox);
-    let scale_y = getScale(minAndMax.ymin, minAndMax.ymax, true, data['isLog'], boundingBox);
+
     data['models'].forEach((model, index) => {
         let xy = zipData(model['x_data'], model['y_data']);
-
+        let scale_x = getScale(minAndMax.xmin, minAndMax.xmax, false, data['isLog'], boundingBox);
+        let scale_y = getScale(minAndMax.ymin, minAndMax.ymax, true, data['isLog'], boundingBox);
         let lineValue = d3v5.line();
         lineValue.x(function (d) {
             return scale_x(parseFloat(d.x));
@@ -237,6 +278,8 @@ function drawLinearChart(nbChart, data, minAndMax) {
             .attr('height', 20)
             .style("fill", d3v5.schemeCategory10[index]);
         gContainer.append('text')
+            .attr("class", "legend_text_model_" + nbChart)
+            .attr("id", "svg" + nbChart + "_legend_text_model_" + index)
             .attr("x", parseFloat(0.05 * boundingBox.width))
             .attr("y", parseFloat(0.1 * (index + 1.35) * boundingBox.height))
             .attr('font-size', "15px")
@@ -255,16 +298,17 @@ function drawLinearChart(nbChart, data, minAndMax) {
         .text(data['axe_y']);
 
     svg.append('text')
+        .attr('x', parseFloat((boundingBox.width / 2) + 100))
         .attr("id", "text_axe_x_svg" + nbChart)
-        .attr('x', parseFloat(boundingBox.width / 2) + 100)
+        .attr('x', parseFloat(boundingBox.width / 2))
         .attr('y', boundingBox.height * 0.95)
         .style("text-anchor", "middle")
         .attr('fill', 'black ')
         .text(data['axe_x']);
-
 }
 
 function getScale(min, max, isVertical, isLog, boundingBox) {
+    console.log(isLog);
     let scaleAxe = isLog === true ? d3v5.scaleLog() : d3v5.scaleLinear();
     scaleAxe.domain([min, max]);
     isVertical ? scaleAxe.range([parseFloat(0.77 * boundingBox.height), 0]) : scaleAxe.range([0, parseFloat(0.65 * boundingBox.width)]);
@@ -290,11 +334,9 @@ function drawPointCloud(nbChart, data, minAndMax) {
     let value_y = function (d) {
         return d.y
     };
-    let brush = d3v5.brush()
-        .extent([[boundingBox.width * 0.3, boundingBox.height * 0.03], [boundingBox.width, boundingBox.height * 0.8]]);
     data['models'].forEach((datum, index) => {
         let xy = zipData(datum['x_data'], datum['y_data']);
-        let circles = gcircle.selectAll(".dot")
+        gcircle.selectAll(".dot")
             .data(xy)
             .enter().append('circle')
             .attr('r', 3)
@@ -307,31 +349,23 @@ function drawPointCloud(nbChart, data, minAndMax) {
             .attr("fill", d3v5.schemeCategory10[index])
             .attr("transform", "translate(" + parseFloat(0.3 * boundingBox.width) + ", 50)")
             .attr("transform", "translate(" + parseFloat(0.3 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")");
-        circles.append("g").attr("class", "brush").call(brush.on("end", function(){
-            let extent = d3v5.event.selection;
-            if(!extent){
-                scale_x.domain([minAndMax.xmin, minAndMax.xmax])
-            }else{
-                scale_x.domain([scale_x.invert(extent[0]), scale_x.invert(extent[1])]);
-                circles.select(".brush").call(brush.move, null);
-            }
-
-        }));
         gContainer.append('text')
+            .attr("class", "legend_text_model" + nbChart)
+            .attr("id", "svg" + nbChart + "_legend_text_model_" + index)
             .attr("x", parseFloat(0.05 * boundingBox.width))
             .attr("y", parseFloat(0.1 * (index + 1.35) * boundingBox.height))
             .attr('font-size', "15px")
-            .text(data['model_name'][index])
-            .attr("fill", d3v5.schemeCategory10[index]);
+            .text(data['model_name'][index]);
         gContainer.append('g')
             .append('rect')
+            .attr("class", "legend_color_model" + nbChart)
+            .attr("id", "svg" + nbChart + "_legend_color_model_" + index)
             .attr('x', parseFloat(0.02 * boundingBox.width))
             .attr('y', parseFloat(0.1 * (index + 1) * boundingBox.height))
             .attr('width', 20)
             .attr('height', 20)
             .style("fill", d3v5.schemeCategory10[index]);
     });
-
     svg.append('text')
         .attr("id", "text_axe_y_svg" + nbChart)
         .attr('x', 0)
@@ -351,6 +385,7 @@ function drawPointCloud(nbChart, data, minAndMax) {
 }
 
 function drawparallelCoordinar(data, nbchart) {
+
     let graphDiv = d3v5.select("#displayGraph");
     graphDiv
         .append('div')

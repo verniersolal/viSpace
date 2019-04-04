@@ -4,7 +4,6 @@ function sendToast() {
 }
 
 function autocompletion() {
-    console.log("toto");
     let model = $('#selectModel').val();
     let axeElement = $('.axe_name');
     $.ajax({
@@ -176,7 +175,6 @@ function init() {
                     document.getElementById("cp" + nbChart).scrollIntoView({behavior: 'smooth', block: 'start'})
 
                 } else {
-                    console.log(data);
                     //nbChart++;
                     let xdata = concatModels(data['models'], 'x_data');
                     let ydata = concatModels(data['models'], 'y_data');

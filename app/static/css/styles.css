@@ -25,6 +25,10 @@ nav {
     box-shadow: none;
 }
 
+fieldset {
+    margin-top: 10px;
+}
+
 /*HOMEPAGE*/
 .homepage {
     margin-top: 10vh;
@@ -75,7 +79,8 @@ nav {
 
 /*Autocomplete color*/
 .autocomplete-content li > a, .autocomplete-content li > span {
-    color: #ffc107; !important;
+    color: #ffc107;
+!important;
     font-weight: bold !important;
 }
 

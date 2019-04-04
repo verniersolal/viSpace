@@ -10,11 +10,9 @@ function max(data, param) {
 
 function draw(data) {
     var svg = d3.select("#svg");
-    console.log(svg);
     svg.attr("width", 550);
     svg.attr("height", 550);
 
-    console.log(data[0]);
 
 
     var borderSVG = svg.append("rect");
