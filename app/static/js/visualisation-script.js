@@ -205,12 +205,11 @@ function drawLinearChart(nbChart, data, minAndMax) {
         .append('g')
         .attr('id', 'gContainer' + nbChart);
     drawOrthogonalAxis(gContainer, boundingBox, data['isLog'], minAndMax);
-
+    let scale_x = getScale(minAndMax.xmin, minAndMax.xmax, false, data['isLog'], boundingBox);
+    let scale_y = getScale(minAndMax.ymin, minAndMax.ymax, true, data['isLog'], boundingBox);
     data['models'].forEach((model, index) => {
         let xy = zipData(model['x_data'], model['y_data']);
-        console.log("index", index);
-        let scale_x = getScale(minAndMax.xmin, minAndMax.xmax, false, data['isLog'], boundingBox);
-        let scale_y = getScale(minAndMax.ymin, minAndMax.ymax, true, data['isLog'], boundingBox);
+
         let lineValue = d3v5.line();
         lineValue.x(function (d) {
             return scale_x(parseFloat(d.x));
@@ -218,6 +217,8 @@ function drawLinearChart(nbChart, data, minAndMax) {
         lineValue.y(function (d) {
             return scale_y(parseFloat(d.y));
         });
+
+
         lineValue.curve(d3v5.curveMonotoneX);
         gContainer
             .append('g')
@@ -239,7 +240,9 @@ function drawLinearChart(nbChart, data, minAndMax) {
             .attr("x", parseFloat(0.05 * boundingBox.width))
             .attr("y", parseFloat(0.1 * (index + 1.35) * boundingBox.height))
             .attr('font-size', "15px")
-            .text(data['model_name'][index]);
+            .text(data['model_name'][index])
+            .attr('fill', d3v5.schemeCategory10[index]);
+
     });
 
     svg.append('text')
@@ -252,19 +255,17 @@ function drawLinearChart(nbChart, data, minAndMax) {
         .text(data['axe_y']);
 
     svg.append('text')
-        .attr('x', parseFloat((boundingBox.width / 2) + 100))
         .attr("id", "text_axe_x_svg" + nbChart)
-        .attr('x', parseFloat(boundingBox.width / 2))
+        .attr('x', parseFloat(boundingBox.width / 2) + 100)
         .attr('y', boundingBox.height * 0.95)
         .style("text-anchor", "middle")
         .attr('fill', 'black ')
         .text(data['axe_x']);
+
 }
 
 function getScale(min, max, isVertical, isLog, boundingBox) {
-    console.log(isLog);
     let scaleAxe = isLog === true ? d3v5.scaleLog() : d3v5.scaleLinear();
-    console.log(scaleAxe);
     scaleAxe.domain([min, max]);
     isVertical ? scaleAxe.range([parseFloat(0.77 * boundingBox.height), 0]) : scaleAxe.range([0, parseFloat(0.65 * boundingBox.width)]);
 
@@ -289,9 +290,11 @@ function drawPointCloud(nbChart, data, minAndMax) {
     let value_y = function (d) {
         return d.y
     };
+    let brush = d3v5.brush()
+        .extent([[boundingBox.width * 0.3, boundingBox.height * 0.03], [boundingBox.width, boundingBox.height * 0.8]]);
     data['models'].forEach((datum, index) => {
         let xy = zipData(datum['x_data'], datum['y_data']);
-        gcircle.selectAll(".dot")
+        let circles = gcircle.selectAll(".dot")
             .data(xy)
             .enter().append('circle')
             .attr('r', 3)
@@ -304,11 +307,22 @@ function drawPointCloud(nbChart, data, minAndMax) {
             .attr("fill", d3v5.schemeCategory10[index])
             .attr("transform", "translate(" + parseFloat(0.3 * boundingBox.width) + ", 50)")
             .attr("transform", "translate(" + parseFloat(0.3 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")");
+        circles.append("g").attr("class", "brush").call(brush.on("end", function(){
+            let extent = d3v5.event.selection;
+            if(!extent){
+                scale_x.domain([minAndMax.xmin, minAndMax.xmax])
+            }else{
+                scale_x.domain([scale_x.invert(extent[0]), scale_x.invert(extent[1])]);
+                circles.select(".brush").call(brush.move, null);
+            }
+
+        }));
         gContainer.append('text')
             .attr("x", parseFloat(0.05 * boundingBox.width))
             .attr("y", parseFloat(0.1 * (index + 1.35) * boundingBox.height))
             .attr('font-size', "15px")
-            .text(data['model_name'][index]);
+            .text(data['model_name'][index])
+            .attr("fill", d3v5.schemeCategory10[index]);
         gContainer.append('g')
             .append('rect')
             .attr('x', parseFloat(0.02 * boundingBox.width))
@@ -317,6 +331,7 @@ function drawPointCloud(nbChart, data, minAndMax) {
             .attr('height', 20)
             .style("fill", d3v5.schemeCategory10[index]);
     });
+
     svg.append('text')
         .attr("id", "text_axe_y_svg" + nbChart)
         .attr('x', 0)
@@ -336,7 +351,6 @@ function drawPointCloud(nbChart, data, minAndMax) {
 }
 
 function drawparallelCoordinar(data, nbchart) {
-
     let graphDiv = d3v5.select("#displayGraph");
     graphDiv
         .append('div')
@@ -344,18 +358,27 @@ function drawparallelCoordinar(data, nbchart) {
         .append('div')
         .attr('class', 'parcoords svg')
         .attr('id', 'cp' + nbchart);
-    console.log(data);
     var colors = d3v3.scale.category20b()
         .range(['#66c2a5', '#fc8d62', '#8da0cb', '#e78ac3', '#a6d854', '#ffd92f']);
     var pc2 = d3v3.parcoords()("#cp" + nbchart);
+    let boundingBox = d3v3.select('#cp'+ nbchart).node().getBoundingClientRect();
 
     pc2
         .data(data['data'])
         .color(function (d) {
             return colors(d.famille);
         })
-        .alpha(0.25)
+        .alpha(0.5)
+        .width(boundingBox.width)
+        .height(boundingBox.height)
         .mode('queue')
         .render()
         .reorderable();
+    pc2.brushMode('1D-axes');
+    pc2.on("brush", function(d){
+
+    });
+    graphDiv.on('dblclick', function(){
+        pc2.brushReset();
+    })
 }
