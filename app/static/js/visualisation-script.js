@@ -104,7 +104,7 @@ function displayEditMenu(svgId, nbChart) {
         $("#save").removeClass("disabled")
     });
     $('#save').on("click", function () {
-        M.toast({html: 'Modifications sauvegardées ', classes: 'rounded', displayLength: 3000});
+        M.toast({html: 'Modifications sauvegardées ', classes: 'rounded', displayLength: 5000});
         $(this).addClass("disabled");
         $("#text_axe_x_" + svgId).html($("#edit_axe_x").val());
         $("#text_axe_y_" + svgId).html($("#edit_axe_y").val());
@@ -258,6 +258,8 @@ function drawLinearChart(nbChart, data, minAndMax) {
         lineValue.y(function (d) {
             return scale_y(parseFloat(d.y));
         });
+
+
         lineValue.curve(d3v5.curveMonotoneX);
         gContainer
             .append('g')
@@ -270,8 +272,6 @@ function drawLinearChart(nbChart, data, minAndMax) {
             .attr("stroke-width", 3);
         gContainer.append('g')
             .append('rect')
-            .attr("class", "legend_color_model" + nbChart)
-            .attr("id", "svg" + nbChart + "_legend_color_model_" + index)
             .attr('x', parseFloat(0.02 * boundingBox.width))
             .attr('y', parseFloat(0.1 * (index + 1) * boundingBox.height))
             .attr('width', 20)
@@ -283,8 +283,9 @@ function drawLinearChart(nbChart, data, minAndMax) {
             .attr("x", parseFloat(0.05 * boundingBox.width))
             .attr("y", parseFloat(0.1 * (index + 1.35) * boundingBox.height))
             .attr('font-size', "15px")
-            .attr('fill', d3v5.schemeCategory10[index])
-            .text(data['model_name'][index]);
+            .text(data['model_name'][index])
+            .attr('fill', d3v5.schemeCategory10[index]);
+
     });
 
     svg.append('text')
@@ -309,7 +310,6 @@ function drawLinearChart(nbChart, data, minAndMax) {
 function getScale(min, max, isVertical, isLog, boundingBox) {
     console.log(isLog);
     let scaleAxe = isLog === true ? d3v5.scaleLog() : d3v5.scaleLinear();
-    console.log(scaleAxe);
     scaleAxe.domain([min, max]);
     isVertical ? scaleAxe.range([parseFloat(0.77 * boundingBox.height), 0]) : scaleAxe.range([0, parseFloat(0.65 * boundingBox.width)]);
 
@@ -350,8 +350,7 @@ function drawPointCloud(nbChart, data, minAndMax) {
             .attr("transform", "translate(" + parseFloat(0.3 * boundingBox.width) + ", 50)")
             .attr("transform", "translate(" + parseFloat(0.3 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")");
         gContainer.append('text')
-            .attr("class", "legend_text_model_" + nbChart)
-            .attr('fill', d3v5.schemeCategory10[index])
+            .attr("class", "legend_text_model" + nbChart)
             .attr("id", "svg" + nbChart + "_legend_text_model_" + index)
             .attr("x", parseFloat(0.05 * boundingBox.width))
             .attr("y", parseFloat(0.1 * (index + 1.35) * boundingBox.height))
@@ -359,7 +358,7 @@ function drawPointCloud(nbChart, data, minAndMax) {
             .text(data['model_name'][index]);
         gContainer.append('g')
             .append('rect')
-            .attr("class", "legend_color_model_" + nbChart)
+            .attr("class", "legend_color_model" + nbChart)
             .attr("id", "svg" + nbChart + "_legend_color_model_" + index)
             .attr('x', parseFloat(0.02 * boundingBox.width))
             .attr('y', parseFloat(0.1 * (index + 1) * boundingBox.height))
@@ -394,18 +393,27 @@ function drawparallelCoordinar(data, nbchart) {
         .append('div')
         .attr('class', 'parcoords svg')
         .attr('id', 'cp' + nbchart);
-    console.log(data);
     var colors = d3v3.scale.category20b()
         .range(['#66c2a5', '#fc8d62', '#8da0cb', '#e78ac3', '#a6d854', '#ffd92f']);
     var pc2 = d3v3.parcoords()("#cp" + nbchart);
+    let boundingBox = d3v3.select('#cp'+ nbchart).node().getBoundingClientRect();
 
     pc2
         .data(data['data'])
         .color(function (d) {
             return colors(d.famille);
         })
-        .alpha(0.25)
+        .alpha(0.5)
+        .width(boundingBox.width)
+        .height(boundingBox.height)
         .mode('queue')
         .render()
         .reorderable();
+    pc2.brushMode('1D-axes');
+    pc2.on("brush", function(d){
+
+    });
+    graphDiv.on('dblclick', function(){
+        pc2.brushReset();
+    })
 }
