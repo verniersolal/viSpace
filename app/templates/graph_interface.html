@@ -17,8 +17,8 @@
                     <div class="input-field col m12">
                         <i class="material-icons prefix">multiline_chart</i>
                         <select name="chartType" id="selectChartType">
-                            <option value="" selected disabled>Type de Graphique</option>
-                            <option value="linearChart">Graphique linéaire</option>
+                            <option value="" disabled>Type de Graphique</option>
+                            <option value="linearChart" selected>Graphique linéaire</option>
                             <option value="pointCloud">Nuage de points</option>
                             <option value="parCoord">Coordonnées parallèles</option>
                         </select>
@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 <div class="row" id="adminAxes">
-                    <div class="col m12">
+                    <div class="col m9 l9 s12">
                         <div class="axe_settings">
                             <div class="input-field">
                                 <i class="material-icons prefix">insert_chart</i>
@@ -46,7 +46,17 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col m12">
+                     <div class="col m3 l3 s12">
+                        <div class="input-field">
+                            <p>
+                                <label>
+                                    <input id="isLogX" name="isLogX" type="checkbox"/>
+                                    <span>Log 10</span>
+                                </label>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col m9 l9 s12">
                         <div class="axe_settings" id="2">
                             <div class="input-field">
                                 <i class="material-icons prefix">insert_chart</i>
@@ -56,11 +66,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col m12 center">
+                     <div class="col m3 l3 s12">
                         <div class="input-field">
                             <p>
                                 <label>
-                                    <input id="isLog" name="isLog" type="checkbox"/>
+                                    <input id="isLogY" name="isLogY" type="checkbox"/>
                                     <span>Log 10</span>
                                 </label>
                             </p>

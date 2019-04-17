@@ -104,7 +104,7 @@ function displayEditMenu(svgId, nbChart) {
         $("#save").removeClass("disabled")
     });
     $('#save').on("click", function () {
-        M.toast({html: 'Modifications sauvegardées ', classes: 'rounded', displayLength: 5000});
+        M.toast({html: 'Modifications sauvegardées ', classes: 'rounded', displayLength: 3000});
         $(this).addClass("disabled");
         $("#text_axe_x_" + svgId).html($("#edit_axe_x").val());
         $("#text_axe_y_" + svgId).html($("#edit_axe_y").val());
@@ -283,6 +283,7 @@ function drawLinearChart(nbChart, data, minAndMax) {
             .attr("x", parseFloat(0.05 * boundingBox.width))
             .attr("y", parseFloat(0.1 * (index + 1.35) * boundingBox.height))
             .attr('font-size', "15px")
+            .attr('fill', d3v5.schemeCategory10[index])
             .text(data['model_name'][index]);
     });
 
@@ -349,7 +350,8 @@ function drawPointCloud(nbChart, data, minAndMax) {
             .attr("transform", "translate(" + parseFloat(0.3 * boundingBox.width) + ", 50)")
             .attr("transform", "translate(" + parseFloat(0.3 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")");
         gContainer.append('text')
-            .attr("class", "legend_text_model" + nbChart)
+            .attr("class", "legend_text_model_" + nbChart)
+            .attr('fill', d3v5.schemeCategory10[index])
             .attr("id", "svg" + nbChart + "_legend_text_model_" + index)
             .attr("x", parseFloat(0.05 * boundingBox.width))
             .attr("y", parseFloat(0.1 * (index + 1.35) * boundingBox.height))
@@ -357,7 +359,7 @@ function drawPointCloud(nbChart, data, minAndMax) {
             .text(data['model_name'][index]);
         gContainer.append('g')
             .append('rect')
-            .attr("class", "legend_color_model" + nbChart)
+            .attr("class", "legend_color_model_" + nbChart)
             .attr("id", "svg" + nbChart + "_legend_color_model_" + index)
             .attr('x', parseFloat(0.02 * boundingBox.width))
             .attr('y', parseFloat(0.1 * (index + 1) * boundingBox.height))

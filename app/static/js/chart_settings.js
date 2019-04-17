@@ -26,9 +26,8 @@ function autocompletion() {
 }
 
 function init() {
-    let nbAxes = 2; // default axes count
     let nbChart = 0; // default chart count
-
+    let nbAxes = 2; // default axes count
     // Select Materialize
     $(document).ready(function () {
         $('select').formSelect();
@@ -40,8 +39,9 @@ function init() {
         switch (chartType) {
             case "linearChart":
             case "pointCloud":
+                nbAxes = 2;
                 axesDiv.empty().append("        " +
-                    "                   <div class=\"col m12\">\n" +
+                    "                   <div class=\"col l9 m9 s12\">\n" +
                     "                        <div class=\"axe_settings\">\n" +
                     "                            <div class=\"input-field\">\n" +
                     "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
@@ -51,7 +51,17 @@ function init() {
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                    </div>\n" +
-                    "                    <div class=\"col m12\">\n" +
+                    "                    <div class=\"col l3 m3 s12\">\n" +
+                    "                        <div class=\"input-field\">\n" +
+                    "                            <p>\n" +
+                    "                                <label>\n" +
+                    "                                    <input id=\"isLogX\" name=\"isLogX\" type=\"checkbox\"/>\n" +
+                    "                                    <span>Log 10</span>\n" +
+                    "                                </label>\n" +
+                    "                            </p>\n" +
+                    "                        </div>\n" +
+                    "                    </div>\n" +
+                    "                    <div class=\"col l9 m9 s12\">\n" +
                     "                        <div class=\"axe_settings\" id=\"2\">\n" +
                     "                            <div class=\"input-field\">\n" +
                     "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
@@ -61,19 +71,22 @@ function init() {
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                    </div>\n" +
-                    "                    <div class=\"col m12 center\">\n" +
+                    "<div class=\"col l3 m3 s12\">\n" +
                     "                        <div class=\"input-field\">\n" +
                     "                            <p>\n" +
                     "                                <label>\n" +
-                    "                                    <input id=\"isLog\" name=\"isLog\" type=\"checkbox\"/>\n" +
+                    "                                    <input id=\"isLogY\" name=\"isLogY\" type=\"checkbox\"/>\n" +
                     "                                    <span>Log 10</span>\n" +
                     "                                </label>\n" +
                     "                            </p>\n" +
                     "                        </div>\n" +
-                    "                    </div>");
+                    "                    </div>"
+                )
+                ;
                 break;
             case "parCoord":
-                axesDiv.empty().append(" <div class=\"col m12\">\n" +
+                nbAxes = 2;
+                axesDiv.empty().append(" <div class=\"col m9 l9 s12\">\n" +
                     "                        <div class=\"axe_settings\">\n" +
                     "                            <div class=\"input-field\">\n" +
                     "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
@@ -83,7 +96,17 @@ function init() {
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                    </div>\n" +
-                    "                    <div class=\"col m12\">\n" +
+                    "                    <div class=\"col l3 m3 s12\">\n" +
+                    "                        <div class=\"input-field\">\n" +
+                    "                            <p>\n" +
+                    "                                <label>\n" +
+                    "                                    <input id=\"isLog1\" name=\"isLog1\" type=\"checkbox\"/>\n" +
+                    "                                    <span>Log 10</span>\n" +
+                    "                                </label>\n" +
+                    "                            </p>\n" +
+                    "                        </div>\n" +
+                    "                    </div>\n" +
+                    "                    <div class=\"col m9 l9 s12\">\n" +
                     "                        <div class=\"axe_settings\" id=\"2\">\n" +
                     "                            <div class=\"input-field\">\n" +
                     "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
@@ -93,11 +116,11 @@ function init() {
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                    </div>\n" +
-                    "                    <div class=\"col m12 center\">\n" +
+                    "                    <div class=\"col l3 m3 s12\">\n" +
                     "                        <div class=\"input-field\">\n" +
                     "                            <p>\n" +
                     "                                <label>\n" +
-                    "                                    <input id=\"isLog\" name=\"isLog\" type=\"checkbox\"/>\n" +
+                    "                                    <input id=\"isLog2\" name=\"isLog2\" type=\"checkbox\"/>\n" +
                     "                                    <span>Log 10</span>\n" +
                     "                                </label>\n" +
                     "                            </p>\n" +
@@ -108,19 +131,31 @@ function init() {
     });
 
     $("#adminAxes").change(function () {
+        console.log("axe changes");
         let axesDiv = $(this);
         let lastInputValue = $("input[name='axe_" + nbAxes + "']").val();
+        console.log("last input \n", lastInputValue);
         if (lastInputValue && lastInputValue !== "") {
             nbAxes++;
 
-            axesDiv.append(" <div class=\"col m12\">\n" +
+            axesDiv.append(" <div class=\"col m9 l9 s12\">\n" +
                 "                        <div class=\"axe_settings\" id=\"" + nbAxes + "\">\n" +
                 "                            <div class=\"input-field\">\n" +
                 "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
-                "                                <input type=\"text\" name=\"axes[]\" id=\"axe_" + nbAxes + "\" class=\"autocomplete axe_name\"\n" +
+                "                                <input type=\"text\" name=\"axe_" + nbAxes + "\" id=\"axe_" + nbAxes + "\" class=\"autocomplete axe_name\"\n" +
                 "                                       >\n" +
                 "                                <label for=\"axe_" + nbAxes + "\">Axe n°" + nbAxes + "</label>\n" +
                 "                            </div>\n" +
+                "                        </div>\n" +
+                "                    </div>" +
+                "                  <div class=\"col l3 m3 s12\">\n" +
+                "                        <div class=\"input-field\">\n" +
+                "                            <p>\n" +
+                "                                <label>\n" +
+                "                                    <input id=\"isLog" + nbAxes + "\" name=\"isLog" + nbAxes + "\" type=\"checkbox\"/>\n" +
+                "                                    <span>Log 10</span>\n" +
+                "                                </label>\n" +
+                "                            </p>\n" +
                 "                        </div>\n" +
                 "                    </div>");
             autocompletion();
@@ -145,8 +180,8 @@ function init() {
         let form = $(this);
         let url = form.attr('action');
         let o = {};
-        var inputs = document.getElementsByClassName( 'axe_name' ),
-            names  = [].map.call(inputs, function( input ) {
+        var inputs = document.getElementsByClassName('axe_name'),
+            names = [].map.call(inputs, function (input) {
                 return input.value;
             });
         $.each(form.serializeArray(), function () {
