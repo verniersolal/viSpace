@@ -103,7 +103,7 @@ def get_parameters():
 
         for model in models:
             mod = collection.find_one({"prefixe": model})
-            results.append(dict({"x_data": mod['params'][request.form['axe_x']], "y_data": mod['params'][request.form['axe_y']]}))
+            results.append(dict({"x_data": mod['params'][request.form['axe_x']], "y_data": mod['params'][request.form['axe_y']], "model": mod['params']['model']}))
         final = dict({
             "models": results,
             "chartType": request.form['chartType'],
@@ -123,6 +123,7 @@ def get_parameters_for_parallel_coord(data):
         models = data.getlist('model[]')
     axes_names = list(set(data.getlist('axes[]')[index] for index in range(len(data.getlist('axes[]'))) if data.getlist('axes[]')[index] is not ""))
     models_data = []
+    axes_names.append('model')
     for model in models:
         data_array = []
         mod = collection.find_one({"prefixe": model})

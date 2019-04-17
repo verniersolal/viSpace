@@ -265,6 +265,7 @@ function drawLinearChart(nbChart, data, minAndMax) {
             .append('g')
             .append('path')
             .attr("d", lineValue(xy))
+            .attr('class', 'line')
             .attr("transform", "translate(" + parseFloat(0.3 * boundingBox.width) + ", 50)")
             .attr("transform", "translate(" + parseFloat(0.3 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")")
             .attr("stroke", d3v5.schemeCategory10[index])
@@ -334,18 +335,22 @@ function drawPointCloud(nbChart, data, minAndMax) {
     let value_y = function (d) {
         return d.y
     };
+    console.log(data);
     data['models'].forEach((datum, index) => {
         let xy = zipData(datum['x_data'], datum['y_data']);
         gcircle.selectAll(".dot")
             .data(xy)
             .enter().append('circle')
-            .attr('r', 3)
+            .attr('r', 1.5)
+            .attr('data-model', datum['model'])
+            .attr('data-famille', data['model_name'][index])
             .attr('cx', function (d) {
                 return scale_x(value_x(d))
             })
             .attr('cy', function (d) {
                 return scale_y(value_y(d))
             })
+            .attr('id', function(d, i){ return i;})
             .attr("fill", d3v5.schemeCategory10[index])
             .attr("transform", "translate(" + parseFloat(0.3 * boundingBox.width) + ", 50)")
             .attr("transform", "translate(" + parseFloat(0.3 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")");
@@ -407,11 +412,15 @@ function drawparallelCoordinar(data, nbchart) {
         .width(boundingBox.width)
         .height(boundingBox.height)
         .mode('queue')
+        .hideAxis(['model', 'famille'])
         .render()
         .reorderable();
     pc2.brushMode('1D-axes');
     pc2.on("brush", function(d){
-
+        let points = d3.selectAll('circle');
+        for(var i = 0; i < points[0].length; i++){
+            points
+        }
     });
     graphDiv.on('dblclick', function(){
         pc2.brushReset();
