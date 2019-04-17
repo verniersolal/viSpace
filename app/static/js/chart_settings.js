@@ -41,7 +41,7 @@ function init() {
             case "pointCloud":
                 nbAxes = 2;
                 axesDiv.empty().append("        " +
-                    "                   <div class=\"col l9 m9 s12\">\n" +
+                    "                   <div class=\"col l8 m6 s12\">\n" +
                     "                        <div class=\"axe_settings\">\n" +
                     "                            <div class=\"input-field\">\n" +
                     "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
@@ -51,17 +51,14 @@ function init() {
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                    </div>\n" +
-                    "                    <div class=\"col l3 m3 s12\">\n" +
-                    "                        <div class=\"input-field\">\n" +
-                    "                            <p>\n" +
-                    "                                <label>\n" +
-                    "                                    <input id=\"isLogX\" name=\"isLogX\" type=\"checkbox\"/>\n" +
-                    "                                    <span>Log 10</span>\n" +
-                    "                                </label>\n" +
-                    "                            </p>\n" +
-                    "                        </div>\n" +
+                    " <div class=\"col m6 l4 s12 switch\">\n" +
+                    "                        <label>\n" +
+                    "                            Log 10\n" +
+                    "                            <input id=\"isLogX\" name=\"isLogX\" type=\"checkbox\"/>\n" +
+                    "                            <span class=\"lever\"></span>\n" +
+                    "                        </label>\n" +
                     "                    </div>\n" +
-                    "                    <div class=\"col l9 m9 s12\">\n" +
+                    "                    <div class=\"col l8 m6 s12\">\n" +
                     "                        <div class=\"axe_settings\" id=\"2\">\n" +
                     "                            <div class=\"input-field\">\n" +
                     "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
@@ -71,22 +68,19 @@ function init() {
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                    </div>\n" +
-                    "<div class=\"col l3 m3 s12\">\n" +
-                    "                        <div class=\"input-field\">\n" +
-                    "                            <p>\n" +
-                    "                                <label>\n" +
-                    "                                    <input id=\"isLogY\" name=\"isLogY\" type=\"checkbox\"/>\n" +
-                    "                                    <span>Log 10</span>\n" +
-                    "                                </label>\n" +
-                    "                            </p>\n" +
-                    "                        </div>\n" +
+                    "<div class=\"col m6 l4 s12 switch\">\n" +
+                    "                        <label>\n" +
+                    "                            Log 10\n" +
+                    "                            <input id=\"isLogY\" name=\"isLogY\" type=\"checkbox\"/>\n" +
+                    "                            <span class=\"lever\"></span>\n" +
+                    "                        </label>\n" +
                     "                    </div>"
                 )
                 ;
                 break;
             case "parCoord":
                 nbAxes = 2;
-                axesDiv.empty().append(" <div class=\"col m9 l9 s12\">\n" +
+                axesDiv.empty().append(" <div class=\"col m6 l8 s12\">\n" +
                     "                        <div class=\"axe_settings\">\n" +
                     "                            <div class=\"input-field\">\n" +
                     "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
@@ -96,17 +90,15 @@ function init() {
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                    </div>\n" +
-                    "                    <div class=\"col l3 m3 s12\">\n" +
-                    "                        <div class=\"input-field\">\n" +
-                    "                            <p>\n" +
-                    "                                <label>\n" +
-                    "                                    <input id=\"isLog1\" name=\"isLog1\" type=\"checkbox\"/>\n" +
-                    "                                    <span>Log 10</span>\n" +
-                    "                                </label>\n" +
-                    "                            </p>\n" +
-                    "                        </div>\n" +
+                    "                   <div class=\"col m6 l4 s12 switch\">\n" +
+                    "                        <label>\n" +
+                    "                            Log 10\n" +
+                    "                            <input id=\"isLog1\" name=\"isLog1\" type=\"checkbox\"/>\n" +
+                    "                            <span class=\"lever\"></span>\n" +
+                    "                        </label>\n" +
                     "                    </div>\n" +
-                    "                    <div class=\"col m9 l9 s12\">\n" +
+                    "                    </div>\n" +
+                    "                    <div class=\"col m6 l8 s12\">\n" +
                     "                        <div class=\"axe_settings\" id=\"2\">\n" +
                     "                            <div class=\"input-field\">\n" +
                     "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
@@ -116,15 +108,12 @@ function init() {
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                    </div>\n" +
-                    "                    <div class=\"col l3 m3 s12\">\n" +
-                    "                        <div class=\"input-field\">\n" +
-                    "                            <p>\n" +
-                    "                                <label>\n" +
-                    "                                    <input id=\"isLog2\" name=\"isLog2\" type=\"checkbox\"/>\n" +
-                    "                                    <span>Log 10</span>\n" +
-                    "                                </label>\n" +
-                    "                            </p>\n" +
-                    "                        </div>\n" +
+                    "                    <div class=\"col m6 l4 s12 switch\">\n" +
+                    "                        <label>\n" +
+                    "                            Log 10\n" +
+                    "                            <input id=\"isLog2\" name=\"isLog2\" type=\"checkbox\"/>\n" +
+                    "                            <span class=\"lever\"></span>\n" +
+                    "                        </label>\n" +
                     "                    </div>");
                 break;
         }
@@ -138,7 +127,7 @@ function init() {
         if (lastInputValue && lastInputValue !== "") {
             nbAxes++;
 
-            axesDiv.append(" <div class=\"col m9 l9 s12\">\n" +
+            axesDiv.append(" <div class=\"col m6 l8 s12\">\n" +
                 "                        <div class=\"axe_settings\" id=\"" + nbAxes + "\">\n" +
                 "                            <div class=\"input-field\">\n" +
                 "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
@@ -148,15 +137,12 @@ function init() {
                 "                            </div>\n" +
                 "                        </div>\n" +
                 "                    </div>" +
-                "                  <div class=\"col l3 m3 s12\">\n" +
-                "                        <div class=\"input-field\">\n" +
-                "                            <p>\n" +
-                "                                <label>\n" +
+                "                    <div class=\"col m6 l4 s12 switch\">\n" +
+                "                        <label>\n" +
+                "                            Log 10\n" +
                 "                                    <input id=\"isLog" + nbAxes + "\" name=\"isLog" + nbAxes + "\" type=\"checkbox\"/>\n" +
-                "                                    <span>Log 10</span>\n" +
-                "                                </label>\n" +
-                "                            </p>\n" +
-                "                        </div>\n" +
+                "                            <span class=\"lever\"></span>\n" +
+                "                        </label>\n" +
                 "                    </div>");
             autocompletion();
 
