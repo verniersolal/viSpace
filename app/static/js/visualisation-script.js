@@ -246,11 +246,11 @@ function drawLinearChart(nbChart, data, minAndMax) {
         .append('g')
         .attr('id', 'gContainer' + nbChart);
     drawOrthogonalAxis(gContainer, boundingBox, data['isLog'], minAndMax);
-
+    let scale_x = getScale(minAndMax.xmin, minAndMax.xmax, false, data['isLog'], boundingBox);
+    let scale_y = getScale(minAndMax.ymin, minAndMax.ymax, true, data['isLog'], boundingBox);
     data['models'].forEach((model, index) => {
         let xy = zipData(model['x_data'], model['y_data']);
-        let scale_x = getScale(minAndMax.xmin, minAndMax.xmax, false, data['isLog'], boundingBox);
-        let scale_y = getScale(minAndMax.ymin, minAndMax.ymax, true, data['isLog'], boundingBox);
+
         let lineValue = d3v5.line();
         lineValue.x(function (d) {
             return scale_x(parseFloat(d.x));
@@ -288,7 +288,6 @@ function drawLinearChart(nbChart, data, minAndMax) {
             .attr('fill', d3v5.schemeCategory10[index]);
 
     });
-
     svg.append('text')
         .attr("id", "text_axe_y_svg" + nbChart)
         .attr('x', 0)
@@ -309,7 +308,6 @@ function drawLinearChart(nbChart, data, minAndMax) {
 }
 
 function getScale(min, max, isVertical, isLog, boundingBox) {
-    console.log(isLog);
     let scaleAxe = isLog === true ? d3v5.scaleLog() : d3v5.scaleLinear();
     scaleAxe.domain([min, max]);
     isVertical ? scaleAxe.range([parseFloat(0.77 * boundingBox.height), 0]) : scaleAxe.range([0, parseFloat(0.65 * boundingBox.width)]);
@@ -335,14 +333,15 @@ function drawPointCloud(nbChart, data, minAndMax) {
     let value_y = function (d) {
         return d.y
     };
-    console.log(data);
     data['models'].forEach((datum, index) => {
         let xy = zipData(datum['x_data'], datum['y_data']);
-        gcircle.selectAll(".dot")
+        gcircle.selectAll("circle")
             .data(xy)
             .enter().append('circle')
             .attr('r', 1.5)
-            .attr('data-model', datum['model'])
+            .attr('data-model', function(d,i){
+                return datum['model'][i];
+            })
             .attr('data-famille', data['model_name'][index])
             .attr('cx', function (d) {
                 return scale_x(value_x(d))
@@ -389,7 +388,7 @@ function drawPointCloud(nbChart, data, minAndMax) {
         .text(data['axe_x']);
 }
 
-function drawparallelCoordinar(data, nbchart) {
+function drawparallelCoordinar(data, nbChart) {
 
     let graphDiv = d3v5.select("#displayGraph");
     graphDiv
@@ -397,11 +396,11 @@ function drawparallelCoordinar(data, nbchart) {
         .attr('class', 'col m12')
         .append('div')
         .attr('class', 'parcoords svg')
-        .attr('id', 'cp' + nbchart);
+        .attr('id', 'cp' + nbChart);
     var colors = d3v3.scale.category20b()
         .range(['#66c2a5', '#fc8d62', '#8da0cb', '#e78ac3', '#a6d854', '#ffd92f']);
-    var pc2 = d3v3.parcoords()("#cp" + nbchart);
-    let boundingBox = d3v3.select('#cp'+ nbchart).node().getBoundingClientRect();
+    var pc2 = d3v3.parcoords({nbChart: nbChart})("#cp" + nbChart);
+    let boundingBox = d3v3.select('#cp'+ nbChart).node().getBoundingClientRect();
 
     pc2
         .data(data['data'])
@@ -417,12 +416,42 @@ function drawparallelCoordinar(data, nbchart) {
         .reorderable();
     pc2.brushMode('1D-axes');
     pc2.on("brush", function(d){
+        console.log(d);
         let points = d3.selectAll('circle');
         for(var i = 0; i < points[0].length; i++){
-            points
+            for(var j = 0; j < d.length; j++) {
+                if ((points[0][i].getAttribute('data-model') === d[j].model) &&(points[0][i].getAttribute('data-famille') === d[j].famille)) {
+                    points[0][i].setAttribute('fill', 'yellow');
+                }
+            }
         }
     });
     graphDiv.on('dblclick', function(){
         pc2.brushReset();
+    });
+    let svg = d3v5.select('#svg' + nbChart);
+    let gContainer = svg.append('g');
+    data['models'].forEach(function( model, index){
+        gContainer.append('text')
+            .attr("class", "legend_text_model" + nbChart)
+            .attr("id", "svg" + nbChart + "_legend_text_model_" + index)
+            .attr("x", parseFloat(0.05 * boundingBox.width))
+            .attr("y", parseFloat(0.1 * (index + 1.35) * boundingBox.height))
+            .attr('font-size', "15px")
+            .text(model);
+        gContainer.append('g')
+            .append('rect')
+            .attr("class", "legend_color_model" + nbChart)
+            .attr("id", "svg" + nbChart + "_legend_color_model_" + index)
+            .attr('x', parseFloat(0.02 * boundingBox.width))
+            .attr('y', parseFloat(0.1 * (index + 1) * boundingBox.height))
+            .attr('width', 20)
+            .attr('height', 20)
+            .style("fill", d3v5.schemeCategory10[index]);
+    });
+
+    $('#svg'+nbChart).on('click', function(evt){
+        displayEditMenu(evt.target.id, nbChart);
     })
+
 }
