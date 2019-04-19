@@ -4,6 +4,7 @@ function sendToast() {
 }
 
 function autocompletion() {
+    console.log("autocompleting");
     let model = $('#selectModel').val();
     let axeElement = $('.axe_name');
     $.ajax({
@@ -41,7 +42,7 @@ function init() {
             case "pointCloud":
                 nbAxes = 2;
                 axesDiv.empty().append("        " +
-                    "                   <div class=\"col l9 m9 s12\">\n" +
+                    "                   <div class=\"col l8 m6 s12\">\n" +
                     "                        <div class=\"axe_settings\">\n" +
                     "                            <div class=\"input-field\">\n" +
                     "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
@@ -51,17 +52,14 @@ function init() {
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                    </div>\n" +
-                    "                    <div class=\"col l3 m3 s12\">\n" +
-                    "                        <div class=\"input-field\">\n" +
-                    "                            <p>\n" +
-                    "                                <label>\n" +
-                    "                                    <input id=\"isLogX\" name=\"isLogX\" type=\"checkbox\"/>\n" +
-                    "                                    <span>Log 10</span>\n" +
-                    "                                </label>\n" +
-                    "                            </p>\n" +
-                    "                        </div>\n" +
+                    " <div class=\"col m6 l4 s12 switch\">\n" +
+                    "                        <label>\n" +
+                    "                            Log 10\n" +
+                    "                            <input id=\"isLogX\" name=\"isLogX\" type=\"checkbox\"/>\n" +
+                    "                            <span class=\"lever\"></span>\n" +
+                    "                        </label>\n" +
                     "                    </div>\n" +
-                    "                    <div class=\"col l9 m9 s12\">\n" +
+                    "                    <div class=\"col l8 m6 s12\">\n" +
                     "                        <div class=\"axe_settings\" id=\"2\">\n" +
                     "                            <div class=\"input-field\">\n" +
                     "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
@@ -71,22 +69,19 @@ function init() {
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                    </div>\n" +
-                    "<div class=\"col l3 m3 s12\">\n" +
-                    "                        <div class=\"input-field\">\n" +
-                    "                            <p>\n" +
-                    "                                <label>\n" +
-                    "                                    <input id=\"isLogY\" name=\"isLogY\" type=\"checkbox\"/>\n" +
-                    "                                    <span>Log 10</span>\n" +
-                    "                                </label>\n" +
-                    "                            </p>\n" +
-                    "                        </div>\n" +
+                    "<div class=\"col m6 l4 s12 switch\">\n" +
+                    "                        <label>\n" +
+                    "                            Log 10\n" +
+                    "                            <input id=\"isLogY\" name=\"isLogY\" type=\"checkbox\"/>\n" +
+                    "                            <span class=\"lever\"></span>\n" +
+                    "                        </label>\n" +
                     "                    </div>"
                 )
                 ;
                 break;
             case "parCoord":
                 nbAxes = 2;
-                axesDiv.empty().append(" <div class=\"col m9 l9 s12\">\n" +
+                axesDiv.empty().append(" <div class=\"col m6 l8 s12\">\n" +
                     "                        <div class=\"axe_settings\">\n" +
                     "                            <div class=\"input-field\">\n" +
                     "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
@@ -96,72 +91,65 @@ function init() {
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                    </div>\n" +
-                    "                    <div class=\"col l3 m3 s12\">\n" +
-                    "                        <div class=\"input-field\">\n" +
-                    "                            <p>\n" +
-                    "                                <label>\n" +
-                    "                                    <input id=\"isLog1\" name=\"isLog1\" type=\"checkbox\"/>\n" +
-                    "                                    <span>Log 10</span>\n" +
-                    "                                </label>\n" +
-                    "                            </p>\n" +
-                    "                        </div>\n" +
+                    "                   <div class=\"col m6 l4 s12 switch\">\n" +
+                    "                        <label>\n" +
+                    "                            Log 10\n" +
+                    "                            <input id=\"isLog1\" name=\"isLog1\" type=\"checkbox\"/>\n" +
+                    "                            <span class=\"lever\"></span>\n" +
+                    "                        </label>\n" +
                     "                    </div>\n" +
-                    "                    <div class=\"col m9 l9 s12\">\n" +
+                    "                    </div>\n" +
+                    "                    <div class=\"col m6 l8 s12\">\n" +
                     "                        <div class=\"axe_settings\" id=\"2\">\n" +
                     "                            <div class=\"input-field\">\n" +
                     "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
-                    "                                <input type=\"text\" name=\"axe_2\" id=\"axe_2\" class=\"autocomplete axe_name\"\n" +
+                    "                                <input type=\"text\" name=\"axe_2\" id=\"axe_2\" class=\"autocomplete axe_name lastInput\"\n" +
                     "                                       required>\n" +
                     "                                <label for=\"axe_2\">Axe n°2</label>\n" +
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                    </div>\n" +
-                    "                    <div class=\"col l3 m3 s12\">\n" +
-                    "                        <div class=\"input-field\">\n" +
-                    "                            <p>\n" +
-                    "                                <label>\n" +
-                    "                                    <input id=\"isLog2\" name=\"isLog2\" type=\"checkbox\"/>\n" +
-                    "                                    <span>Log 10</span>\n" +
-                    "                                </label>\n" +
-                    "                            </p>\n" +
-                    "                        </div>\n" +
+                    "                    <div class=\"col m6 l4 s12 switch\">\n" +
+                    "                        <label>\n" +
+                    "                            Log 10\n" +
+                    "                            <input id=\"isLog2\" name=\"isLog2\" type=\"checkbox\"/>\n" +
+                    "                            <span class=\"lever\"></span>\n" +
+                    "                        </label>\n" +
                     "                    </div>");
                 break;
         }
     });
 
-    $("#adminAxes").change(function () {
-        console.log("axe changes");
-        let axesDiv = $(this);
+    $(document).on('change', '.lastInput', {}, function (e) {
+        let axesDiv = $('#adminAxes');
         let lastInputValue = $("input[name='axe_" + nbAxes + "']").val();
-        console.log("last input \n", lastInputValue);
+        console.log("last input value", lastInputValue);
         if (lastInputValue && lastInputValue !== "") {
             nbAxes++;
-
-            axesDiv.append(" <div class=\"col m9 l9 s12\">\n" +
+            $(this).removeClass('lastInput');
+            axesDiv.append(" <div class=\"col m6 l8 s12\">\n" +
                 "                        <div class=\"axe_settings\" id=\"" + nbAxes + "\">\n" +
                 "                            <div class=\"input-field\">\n" +
                 "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
-                "                                <input type=\"text\" name=\"axe_" + nbAxes + "\" id=\"axe_" + nbAxes + "\" class=\"autocomplete axe_name\"\n" +
+                "                                <input type=\"text\" name=\"axe_" + nbAxes + "\" id=\"axe_" + nbAxes + "\" class=\"autocomplete axe_name lastInput\"\n" +
                 "                                       >\n" +
                 "                                <label for=\"axe_" + nbAxes + "\">Axe n°" + nbAxes + "</label>\n" +
                 "                            </div>\n" +
                 "                        </div>\n" +
                 "                    </div>" +
-                "                  <div class=\"col l3 m3 s12\">\n" +
-                "                        <div class=\"input-field\">\n" +
-                "                            <p>\n" +
-                "                                <label>\n" +
+                "                    <div class=\"col m6 l4 s12 switch\">\n" +
+                "                        <label>\n" +
+                "                            Log 10\n" +
                 "                                    <input id=\"isLog" + nbAxes + "\" name=\"isLog" + nbAxes + "\" type=\"checkbox\"/>\n" +
-                "                                    <span>Log 10</span>\n" +
-                "                                </label>\n" +
-                "                            </p>\n" +
-                "                        </div>\n" +
+                "                            <span class=\"lever\"></span>\n" +
+                "                        </label>\n" +
                 "                    </div>");
-            autocompletion();
-
+            setTimeout(function () {
+                autocompletion();
+            }, 200);
         }
     });
+
 
     function concatModels(models, key) {
         return models.map(d => d[key]).reduce((current, next) => current.concat(next));
