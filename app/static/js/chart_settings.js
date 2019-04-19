@@ -4,6 +4,7 @@ function sendToast() {
 }
 
 function autocompletion() {
+    console.log("autocompleting");
     let model = $('#selectModel').val();
     let axeElement = $('.axe_name');
     $.ajax({
@@ -102,7 +103,7 @@ function init() {
                     "                        <div class=\"axe_settings\" id=\"2\">\n" +
                     "                            <div class=\"input-field\">\n" +
                     "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
-                    "                                <input type=\"text\" name=\"axe_2\" id=\"axe_2\" class=\"autocomplete axe_name\"\n" +
+                    "                                <input type=\"text\" name=\"axe_2\" id=\"axe_2\" class=\"autocomplete axe_name lastInput\"\n" +
                     "                                       required>\n" +
                     "                                <label for=\"axe_2\">Axe n°2</label>\n" +
                     "                            </div>\n" +
@@ -119,19 +120,18 @@ function init() {
         }
     });
 
-    $("#adminAxes").change(function () {
-        console.log("axe changes");
-        let axesDiv = $(this);
+    $(document).on('change', '.lastInput', {}, function (e) {
+        let axesDiv = $('#adminAxes');
         let lastInputValue = $("input[name='axe_" + nbAxes + "']").val();
-        console.log("last input \n", lastInputValue);
+        console.log("last input value", lastInputValue);
         if (lastInputValue && lastInputValue !== "") {
             nbAxes++;
-
+            $(this).removeClass('lastInput');
             axesDiv.append(" <div class=\"col m6 l8 s12\">\n" +
                 "                        <div class=\"axe_settings\" id=\"" + nbAxes + "\">\n" +
                 "                            <div class=\"input-field\">\n" +
                 "                                <i class=\"material-icons prefix\">insert_chart</i>\n" +
-                "                                <input type=\"text\" name=\"axe_" + nbAxes + "\" id=\"axe_" + nbAxes + "\" class=\"autocomplete axe_name\"\n" +
+                "                                <input type=\"text\" name=\"axe_" + nbAxes + "\" id=\"axe_" + nbAxes + "\" class=\"autocomplete axe_name lastInput\"\n" +
                 "                                       >\n" +
                 "                                <label for=\"axe_" + nbAxes + "\">Axe n°" + nbAxes + "</label>\n" +
                 "                            </div>\n" +
@@ -144,10 +144,12 @@ function init() {
                 "                            <span class=\"lever\"></span>\n" +
                 "                        </label>\n" +
                 "                    </div>");
-            autocompletion();
-
+            setTimeout(function () {
+                autocompletion();
+            }, 200);
         }
     });
+
 
     function concatModels(models, key) {
         return models.map(d => d[key]).reduce((current, next) => current.concat(next));
