@@ -309,7 +309,6 @@ function drawLinearChart(nbChart, data, minAndMax) {
 
 function getScale(min, max, isVertical, isLog, boundingBox) {
     let scaleAxe = isLog === true ? d3v5.scaleLog() : d3v5.scaleLinear();
-    console.log('scaleAxe : ',scaleAxe);
     scaleAxe.domain([min, max]);
     isVertical ? scaleAxe.range([parseFloat(0.77 * boundingBox.height), 0]) : scaleAxe.range([0, parseFloat(0.65 * boundingBox.width)]);
 
@@ -318,6 +317,7 @@ function getScale(min, max, isVertical, isLog, boundingBox) {
 
 function drawPointCloud(nbChart, data, minAndMax) {
     let svg = d3v5.select('#svg' + nbChart);
+    svg.attr("xmlns", "http://www.w3.org/2000/svg");
     let boundingBox = svg.node().getBoundingClientRect();
     let gContainer = svg
         .append('g')
@@ -387,6 +387,33 @@ function drawPointCloud(nbChart, data, minAndMax) {
         .style("text-anchor", "middle")
         .attr('fill', 'black')
         .text(data['axe_x']);
+    var canvas = d3.select("#graph"+nbChart).append("canvas")
+        .attr("width", boundingBox.width)
+        .attr("height", boundingBox.height)
+        .attr('class', 'pointCloudCanvas');
+    var context = canvas.node().getContext("2d");
+    var DOMURL = window.URL || window.webkitURL || window;
+
+    var svgString = domNodeToString(svg.node());
+
+    var image = new Image();
+    var svgBlob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
+    var url = DOMURL.createObjectURL(svgBlob);
+
+    image.onload = function() {
+        context.drawImage(image, 0, 0);
+        DOMURL.revokeObjectURL(url);
+    };
+
+    image.src = url;
+
+    // Get the string representation of a DOM node (removes the node)
+    function domNodeToString(domNode) {
+        var element = document.createElement("div");
+        element.appendChild(domNode);
+        return element.innerHTML;
+    }
+
 }
 
 function drawparallelCoordinar(data, nbChart) {
@@ -402,22 +429,19 @@ function drawparallelCoordinar(data, nbChart) {
         .range(['#66c2a5', '#fc8d62', '#8da0cb', '#e78ac3', '#a6d854', '#ffd92f']);
     var pc2 = d3v3.parcoords({nbChart: nbChart})("#cp" + nbChart);
     let boundingBox = d3v3.select('#cp'+ nbChart).node().getBoundingClientRect();
-    console.log(data);
-     let dimensions = {};
-     for(let i = 0; i < data["axes"].length;  i++) {
-         if (data['axes'][i] !== 'model') {
-             let min = d3v5.min(data['data'], function (d) {
-                 return d[data["axes"][i]];
-             });
-             let max = d3v5.max(data['data'], function (d) {
-                 return d[data["axes"][i]];
-             });
-             console.log(min);
-             dimensions[data["axes"][i]] = {"yscale": getScale(min, max, true, data['log'][i], boundingBox)}
+    let dimensions = {};
+    for(let i = 0; i < data["axes"].length;  i++) {
+        if (data['axes'][i] !== 'model') {
+            let min = d3v5.min(data['data'], function (d) {
+                return d[data["axes"][i]];
+            });
+            let max = d3v5.max(data['data'], function (d) {
+                return d[data["axes"][i]];
+            });
+            dimensions[data["axes"][i]] = {"yscale": getScale(min, max, true, data['log'][i], boundingBox)}
 
-         }
-     }
-     console.log(dimensions);
+        }
+    }
     pc2
         .data(data['data'])
         .dimensions(dimensions)
@@ -434,9 +458,8 @@ function drawparallelCoordinar(data, nbChart) {
         .reorderable();
 
     pc2.brushMode('1D-axes');
-;
+    ;
     pc2.on("brush", function(d){
-        console.log(d);
         let points = d3.selectAll('circle');
         for(var i = 0; i < points[0].length; i++){
             for(var j = 0; j < d.length; j++) {
@@ -471,9 +494,8 @@ function drawparallelCoordinar(data, nbChart) {
                     .attr('font-size', "15px")
                     .text(model)
             }).on('mouseout', function(evt){
-                console.log('titi');
-                $("#svg" + nbChart + "_legend_text_model_" + index).remove();
-            });
+            $("#svg" + nbChart + "_legend_text_model_" + index).remove();
+        });
     });
 
     $('#svg'+nbChart).on('click', function(evt){
