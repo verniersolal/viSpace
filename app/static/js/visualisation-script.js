@@ -404,11 +404,18 @@ function drawparallelCoordinar(data, nbChart) {
     let boundingBox = d3v3.select('#cp'+ nbChart).node().getBoundingClientRect();
     console.log(data);
      let dimensions = {};
-     for(let i = 0; i < data["axes"].length;  i++){
-         let min = d3v5.min(data['data'], function(d){ return d[data["axes"][i]];});
-         let max = d3v5.max(data['data'], function(d){ return d[data["axes"][i]];});
-         console.log(min);
-         dimensions[data["axes"][i]] = {"yscale": getScale(min, max, true, data['log'][i], boundingBox)}
+     for(let i = 0; i < data["axes"].length;  i++) {
+         if (data['axes'][i] !== 'model') {
+             let min = d3v5.min(data['data'], function (d) {
+                 return d[data["axes"][i]];
+             });
+             let max = d3v5.max(data['data'], function (d) {
+                 return d[data["axes"][i]];
+             });
+             console.log(min);
+             dimensions[data["axes"][i]] = {"yscale": getScale(min, max, true, data['log'][i], boundingBox)}
+
+         }
      }
      console.log(dimensions);
     pc2
@@ -418,10 +425,11 @@ function drawparallelCoordinar(data, nbChart) {
         .color(function (d) {
             return colors(d.famille);
         })
-        .alpha(0.5)
+        .alpha(0.1)
         .width(boundingBox.width)
         .height(boundingBox.height)
         .mode('queue')
+        .rate(60)
         .render()
         .reorderable();
 
