@@ -309,6 +309,7 @@ function drawLinearChart(nbChart, data, minAndMax) {
 
 function getScale(min, max, isVertical, isLog, boundingBox) {
     let scaleAxe = isLog === true ? d3v5.scaleLog() : d3v5.scaleLinear();
+    console.log('scaleAxe : ',scaleAxe);
     scaleAxe.domain([min, max]);
     isVertical ? scaleAxe.range([parseFloat(0.77 * boundingBox.height), 0]) : scaleAxe.range([0, parseFloat(0.65 * boundingBox.width)]);
 
@@ -401,9 +402,19 @@ function drawparallelCoordinar(data, nbChart) {
         .range(['#66c2a5', '#fc8d62', '#8da0cb', '#e78ac3', '#a6d854', '#ffd92f']);
     var pc2 = d3v3.parcoords({nbChart: nbChart})("#cp" + nbChart);
     let boundingBox = d3v3.select('#cp'+ nbChart).node().getBoundingClientRect();
-
+    console.log(data);
+     let dimensions = {};
+     for(let i = 0; i < data["axes"].length;  i++){
+         let min = d3v5.min(data['data'], function(d){ return d[data["axes"][i]];});
+         let max = d3v5.max(data['data'], function(d){ return d[data["axes"][i]];});
+         console.log(min);
+         dimensions[data["axes"][i]] = {"yscale": getScale(min, max, true, data['log'][i], boundingBox)}
+     }
+     console.log(dimensions);
     pc2
         .data(data['data'])
+        .dimensions(dimensions)
+        .hideAxis(['model', 'famille'])
         .color(function (d) {
             return colors(d.famille);
         })
@@ -411,10 +422,11 @@ function drawparallelCoordinar(data, nbChart) {
         .width(boundingBox.width)
         .height(boundingBox.height)
         .mode('queue')
-        .hideAxis(['model', 'famille'])
         .render()
         .reorderable();
+
     pc2.brushMode('1D-axes');
+;
     pc2.on("brush", function(d){
         console.log(d);
         let points = d3.selectAll('circle');
@@ -432,13 +444,6 @@ function drawparallelCoordinar(data, nbChart) {
     let svg = d3v5.select('#svg' + nbChart);
     let gContainer = svg.append('g');
     data['models'].forEach(function( model, index){
-        gContainer.append('text')
-            .attr("class", "legend_text_model" + nbChart)
-            .attr("id", "svg" + nbChart + "_legend_text_model_" + index)
-            .attr("x", parseFloat(0.05 * boundingBox.width))
-            .attr("y", parseFloat(0.1 * (index + 1.35) * boundingBox.height))
-            .attr('font-size', "15px")
-            .text(model);
         gContainer.append('g')
             .append('rect')
             .attr("class", "legend_color_model" + nbChart)
@@ -447,7 +452,20 @@ function drawparallelCoordinar(data, nbChart) {
             .attr('y', parseFloat(0.1 * (index + 1) * boundingBox.height))
             .attr('width', 20)
             .attr('height', 20)
-            .style("fill", d3v5.schemeCategory10[index]);
+            .style("fill", colors(model))
+            .on('mouseover', function(evt){
+
+                gContainer.append('text')
+                    .attr("class", "legend_text_model" + nbChart)
+                    .attr("id", "svg" + nbChart + "_legend_text_model_" + index)
+                    .attr("x", parseFloat(0.05 * boundingBox.width))
+                    .attr("y", parseFloat(0.1 * (index + 1.35) * boundingBox.height))
+                    .attr('font-size', "15px")
+                    .text(model)
+            }).on('mouseout', function(evt){
+                console.log('titi');
+                $("#svg" + nbChart + "_legend_text_model_" + index).remove();
+            });
     });
 
     $('#svg'+nbChart).on('click', function(evt){
