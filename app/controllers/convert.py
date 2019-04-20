@@ -89,7 +89,7 @@ def get_parameters_by_model():
 
 @app.route('/axe_data', methods=['POST'])
 def get_parameters():
-    if request.form['chartType']=="parCoord":
+    if request.form['chartType'] == "parCoord":
         return get_parameters_for_parallel_coord(request.form)
     else:
         # Il faut chercher les deux paramètres x et y des models à construire
@@ -100,7 +100,9 @@ def get_parameters():
             models = request.form.getlist('model[]')
 
         results = []
-        isLog = True if 'isLog' in request.form else False
+        print(request.form)
+        isLogX = True if 'isLogX' in request.form else False
+        isLogY = True if 'isLogY' in request.form else False
 
         for model in models:
             mod = collection.find_one({"prefixe": model})
@@ -111,7 +113,8 @@ def get_parameters():
         final = dict({
             "models": results,
             "chartType": request.form['chartType'],
-            "isLog": isLog,
+            "isLogX": isLogX,
+            "isLogY": isLogY,
             "model_name": models,
             "axe_x": request.form['axe_x'],
             "axe_y": request.form['axe_y']
@@ -123,7 +126,6 @@ def get_parameters():
 # et un tableau de modèles (modèle 1 modèle 2 ...)
 def get_parameters_for_parallel_coord(data):
     models = []
-    print(data)
     if 'model' in data:
         models.append(data['model'])
     else:
@@ -151,7 +153,6 @@ def get_parameters_for_parallel_coord(data):
     result["data"] = [item for sublist in models_data for item in sublist]
     result["models"] = models
     result["axes"] = axes_names
-    print(axes_names)
     result['log'] = logs
     result["chartType"] = 'parCoords'
     return json.dumps(result)

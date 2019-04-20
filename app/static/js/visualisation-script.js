@@ -20,9 +20,13 @@ function drawChart(data, nbChart, minAndMax) {
     switch (data['chartType']) {
         case 'linearChart':
             drawLinearChart(nbChart, data, minAndMax);
+            document.getElementById("svg" + nbChart).scrollIntoView({behavior: 'smooth', block: 'start'})
+
             break;
         case 'pointCloud':
             drawPointCloud(nbChart, data, minAndMax);
+            document.getElementById("canvas"+nbChart).scrollIntoView({behavior: 'smooth', block: 'start'})
+
             break;
     }
 
@@ -223,16 +227,17 @@ function svgString2Image(svgString, width, height, format, callback) {
     image.src = imgsrc;
 }
 
-function drawOrthogonalAxis(gContainer, boundingBox, isLog, minAndMax) {
+function drawOrthogonalAxis(gContainer, boundingBox, isLogX, isLogY, minAndMax) {
     let gAxisX = gContainer
         .append('g')
         .attr("transform", "translate(" + parseFloat(0.3 * boundingBox.width) + "," + parseFloat(0.8 * boundingBox.height) + ")");
     let gAxisY = gContainer
         .append('g')
         .attr("transform", "translate(" + parseFloat(0.3 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")");
-
-    gAxisX.call(drawAxe(minAndMax.xmin, minAndMax.xmax, false, isLog, boundingBox));
-    gAxisY.call(drawAxe(minAndMax.ymin, minAndMax.ymax, true, isLog, boundingBox));
+    console.log(isLogX);
+    console.log(isLogY);
+    gAxisX.call(drawAxe(minAndMax.xmin, minAndMax.xmax, false, isLogX, boundingBox));
+    gAxisY.call(drawAxe(minAndMax.ymin, minAndMax.ymax, true, isLogY, boundingBox));
 }
 
 function zipData(x, y) {
@@ -308,7 +313,13 @@ function drawLinearChart(nbChart, data, minAndMax) {
 }
 
 function getScale(min, max, isVertical, isLog, boundingBox) {
-    let scaleAxe = isLog === true ? d3v5.scaleLog() : d3v5.scaleLinear();
+    let scaleAxe = null;
+    if (isLog){
+        console.log('riri');
+        scaleAxe = d3v5.scaleLog();
+    }else{
+        scaleAxe =  d3v5.scaleLinear();
+    }
     scaleAxe.domain([min, max]);
     isVertical ? scaleAxe.range([parseFloat(0.77 * boundingBox.height), 0]) : scaleAxe.range([0, parseFloat(0.65 * boundingBox.width)]);
 
@@ -323,10 +334,9 @@ function drawPointCloud(nbChart, data, minAndMax) {
         .append('g')
         .attr('id', 'gContainer' + nbChart);
 
-    drawOrthogonalAxis(gContainer, boundingBox, data['models']['isLog'], minAndMax);
-
-    let scale_x = getScale(minAndMax.xmin, minAndMax.xmax, false, data['isLog'], boundingBox);
-    let scale_y = getScale(minAndMax.ymin, minAndMax.ymax, true, data['isLog'], boundingBox);
+    drawOrthogonalAxis(gContainer, boundingBox, data['isLogX'], data['isLogY'], minAndMax);
+    let scale_x = getScale(minAndMax.xmin, minAndMax.xmax, false, data['isLogX'], boundingBox);
+    let scale_y = getScale(minAndMax.ymin, minAndMax.ymax, true, data['isLogY'], boundingBox);
     let gcircle = gContainer.append("g");
     let value_x = function (d) {
         return d.x
@@ -335,8 +345,9 @@ function drawPointCloud(nbChart, data, minAndMax) {
         return d.y
     };
     data['models'].forEach((datum, index) => {
+        console.log(datum);
         let xy = zipData(datum['x_data'], datum['y_data']);
-        gcircle.selectAll("circle")
+        gcircle.selectAll(".dot")
             .data(xy)
             .enter().append('circle')
             .attr('r', 1.5)
@@ -390,7 +401,8 @@ function drawPointCloud(nbChart, data, minAndMax) {
     var canvas = d3.select("#graph"+nbChart).append("canvas")
         .attr("width", boundingBox.width)
         .attr("height", boundingBox.height)
-        .attr('class', 'pointCloudCanvas');
+        .attr('class', 'pointCloudCanvas')
+        .attr('id', 'canvas'+ nbChart);
     var context = canvas.node().getContext("2d");
     var DOMURL = window.URL || window.webkitURL || window;
 
