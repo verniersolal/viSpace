@@ -250,7 +250,7 @@ function drawLinearChart(nbChart, data, minAndMax) {
     let gContainer = svg
         .append('g')
         .attr('id', 'gContainer' + nbChart);
-    drawOrthogonalAxis(gContainer, boundingBox, data['isLog'], minAndMax);
+    drawOrthogonalAxis(gContainer, boundingBox, data['isLogX'], data['isLogY'], minAndMax);
     let scale_x = getScale(minAndMax.xmin, minAndMax.xmax, false, data['isLog'], boundingBox);
     let scale_y = getScale(minAndMax.ymin, minAndMax.ymax, true, data['isLog'], boundingBox);
     data['models'].forEach((model, index) => {
@@ -425,7 +425,6 @@ function drawPointCloud(nbChart, data, minAndMax) {
         element.appendChild(domNode);
         return element.innerHTML;
     }
-
 }
 
 function drawparallelCoordinar(data, nbChart) {
