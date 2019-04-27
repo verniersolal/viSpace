@@ -94,11 +94,21 @@ function appendEditModels(nbChart) {
     });
 }
 
+function appendPCALink() {
+    $('#editMenu').append("" +
+        "<div class='row'></div>" +
+        " <div class=\"row\">\n" +
+        "                <a target='_blank' href='https://factoshinyvispace.shinyapps.io/FactoPCAapp2/' class=\"waves-effect waves-light btn blue\"><i\n" +
+        "                        class=\"material-icons right\">open_in_new</i>ACP</a>\n" +
+        "            </div>");
+}
+
 function displayEditMenu(svgId, nbChart) {
     $("#editMenu").empty().addClass("sideMenu");
     appendEditAxes(svgId);
     appendEditModels(nbChart);
     appendEditButtons();
+    appendPCALink();
 
     $(".edit_input").on('change', function (e) {
         $("#save").removeClass("disabled")
@@ -350,7 +360,9 @@ function drawPointCloud(nbChart, data, minAndMax) {
             .attr('cy', function (d) {
                 return scale_y(value_y(d))
             })
-            .attr('id', function(d, i){ return i;})
+            .attr('id', function (d, i) {
+                return i;
+            })
             .attr("fill", d3v5.schemeCategory10[index])
             .attr("transform", "translate(" + parseFloat(0.3 * boundingBox.width) + ", 50)")
             .attr("transform", "translate(" + parseFloat(0.3 * boundingBox.width) + "," + parseFloat(0.03 * boundingBox.height) + ")");
@@ -401,7 +413,7 @@ function drawparallelCoordinar(data, nbchart) {
     var colors = d3v3.scale.category20b()
         .range(['#66c2a5', '#fc8d62', '#8da0cb', '#e78ac3', '#a6d854', '#ffd92f']);
     var pc2 = d3v3.parcoords()("#cp" + nbchart);
-    let boundingBox = d3v3.select('#cp'+ nbchart).node().getBoundingClientRect();
+    let boundingBox = d3v3.select('#cp' + nbchart).node().getBoundingClientRect();
 
     pc2
         .data(data['data'])
@@ -416,13 +428,13 @@ function drawparallelCoordinar(data, nbchart) {
         .render()
         .reorderable();
     pc2.brushMode('1D-axes');
-    pc2.on("brush", function(d){
+    pc2.on("brush", function (d) {
         let points = d3.selectAll('circle');
-        for(var i = 0; i < points[0].length; i++){
+        for (var i = 0; i < points[0].length; i++) {
             points
         }
     });
-    graphDiv.on('dblclick', function(){
+    graphDiv.on('dblclick', function () {
         pc2.brushReset();
     })
 }
