@@ -208,8 +208,6 @@ function init() {
                     $('#settings_form').trigger('reset');
 
 
-                    document.getElementById("svg" + nbChart).scrollIntoView({behavior: 'smooth', block: 'start'})
-
                 }
 
 

@@ -60,6 +60,7 @@ var pc = function(selection) {
     .append("svg")
       .attr("width", __.width)
       .attr("height", __.height)
+      .attr('id', 'svg'+config.nbChart)
       .style("font", "14px sans-serif")
       .style("position", "absolute")
 

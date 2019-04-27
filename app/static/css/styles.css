@@ -97,7 +97,7 @@ legend {
     font-size: 17px !important;
 }
 
-.svg {
+.svg, .pointCloudCanvas {
     height: 45vh;
     width: 100%;
     background: rgba(255, 255, 255, 0.8);
@@ -106,7 +106,7 @@ legend {
     margin-bottom: 2vh;
 }
 
-.svg:hover {
+.svg:hover, .pointCloudCanvas:hover {
     background: rgba(255, 255, 255, 1);
 }
 
