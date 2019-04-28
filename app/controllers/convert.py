@@ -5,7 +5,8 @@ collection = mongo.db.file
 import gzip
 import os
 import json
-
+import pandas as pd
+import re
 UPLOAD_FOLDER = 'data/'
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -67,7 +68,8 @@ def get_models():
     result = []
     models = collection.find({}, {'prefixe': 1})
     for model in models:
-        result.append(model['prefixe'])
+        if model['prefixe'] != 'observation':
+            result.append(model['prefixe'])
     return json.dumps(result)
 
 
@@ -156,3 +158,64 @@ def get_parameters_for_parallel_coord(data):
     result['log'] = logs
     result["chartType"] = 'parCoords'
     return json.dumps(result)
+
+
+@app.route('/import-observations', methods=['GET', 'POST'])
+def import_observations():
+    file = request.files['file']
+    print(request.files['file'].filename)
+    file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
+
+    parameters = []
+    data = []
+    with open(UPLOAD_FOLDER + file.filename, 'r') as f:
+        lines = f.readlines()
+        for index, line in enumerate(lines):
+            if index == 0:
+                parameters.extend(re.split(r'\s+', line))
+            else:
+                data.append(re.split(r'\s+', line))
+    parameters[0] = parameters[0] + parameters[1]
+    parameters[1] = ''
+    parameters = list(filter(None, parameters))
+    data = list(map(lambda x: list(filter(None, x)), data))
+    df = pd.DataFrame(data, columns=parameters)
+    test = df.to_json(orient='records')
+    print(json.loads(test))
+    test = json.loads(test)
+    collection.update_one({"prefixe": 'observation'}, {"$set": {"params": test}}, upsert=True)
+
+    return redirect(url_for('upload_file'))
+
+
+@app.route('/get-observations/<x_axe>&<y_axe>', methods=['GET'])
+def get_observations(x_axe, y_axe):
+    # in this method we want take the obs coords of several parameters
+    # which are Teff, geff, L in hr case
+    # so we need to check if x and y axes are in observations and returns that like a json object
+    # And draw error in graph
+    observations = collection.find_one({'prefixe': 'observation'})['params']
+    available_parameters = ['Teff', 'geff', 'L']
+    print('before available')
+    print('x_axe: ', x_axe, ' y_axe : ', y_axe)
+    if x_axe in available_parameters and y_axe in available_parameters:
+        if x_axe == 'Teff':
+            x_axe_obs = 'Teff_jg'
+        if y_axe == 'Teff':
+            y_axe_obs = 'Teff_jg'
+        if x_axe == 'geff':
+            x_axe_obs = 'log_g_jg'
+        if y_axe == 'geff':
+            y_axe_obs = 'log_g_jg'
+        if x_axe == 'L':
+            x_axe_obs = 'L_adopted'
+        if y_axe == 'L':
+            y_axe_obs = 'L_adopted'
+        print('in available')
+        print(observations)
+        needed_parameters = list(map(lambda x: {x_axe: x[x_axe_obs], y_axe: x[y_axe_obs]}, observations))
+        return json.dumps(needed_parameters)
+    else:
+        return {'message': 'Not good parameters'}
+
+

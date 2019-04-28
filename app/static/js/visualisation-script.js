@@ -67,7 +67,7 @@ function appendEditAxes(svgId) {
         "</fieldset>");
 }
 
-function appendEditButtons() {
+function appendEditButtons(){
     $('#editMenu').append("" +
         "<div class='row'></div>" +
         " <div class=\"row\">\n" +
@@ -97,12 +97,30 @@ function appendEditModels(nbChart) {
             "                            </div>");
     });
 }
+function appendImportObs(nbChart){
+    $('#editMenu').append('<button id="placeObs" type="submit"> Placer vos observations</button>');
+    $('#placeObs').on('click', (evt) =>{
+        let x_axe = $('#text_axe_x_svg'+nbChart).text();
+        let y_axe = $('#text_axe_y_svg'+nbChart).text();
+        $.ajax({
+            type:'GET',
+            url:'/get-observations/'+x_axe+'&'+y_axe,
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function(data){
+                console.log($('#svg'+nbChart));
+            }
+        })
+    })
+}
 
 function displayEditMenu(svgId, nbChart) {
     $("#editMenu").empty().addClass("sideMenu");
     appendEditAxes(svgId);
     appendEditModels(nbChart);
+    appendImportObs(nbChart);
     appendEditButtons();
+
 
     $(".edit_input").on('change', function (e) {
         $("#save").removeClass("disabled")

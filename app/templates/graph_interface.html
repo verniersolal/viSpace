@@ -77,6 +77,37 @@
                     </button>
                 </div>
             </form>
+            <hr>
+            <div class="row" id="obsDiv">
+                <div class="col m12">
+                    <form id="obsForm" method="POST"  enctype=multipart/form-data action="{{ url_for('import_observations') }}">
+                        <fieldset id="uploadObs">
+                            <legend>
+                                <strong>
+                                    Sélectionner vos observations
+                                </strong>
+                            </legend>
+                            <div class="file-field input-field">
+                                <div class="btn waves-effect waves-light white black-text">
+                                    <i class="material-icons right">attach_file</i>
+                                    <span>Parcourir</span>
+                                    <input type="file" name="file" multiple="" required>
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input id="fileInput" class="file-path validate" name="filename" type="text"
+                                           placeholder="Vous pouvez faire glisser votre fichier">
+                                </div>
+                            </div>
+                        </fieldset>
+                        <div class="col m12">
+                            <button id="importObs" class="btn waves-effect waves-light white black-text center" type="submit">
+                                <i class="material-icons right">file_upload</i>
+                                Importer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
         <div id="displayGraph" class="col m8 offset-m2"></div>
         <div id="editMenu" class="col m2 offset-m10 center"></div>

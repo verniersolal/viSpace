@@ -53,12 +53,18 @@ fieldset {
     border-color: white;
     border-style: groove;
 }
-
+#uploadObs {
+    color: black;
+    border-color: black;
+    border-style: groove;
+}
 /* Input color*/
 .input-field .prefix.active {
     color: #ffc107;
 }
-
+#editMenu {
+    overflow: hidden;
+}
 /* label underline focus color */
 .input-field input:focus {
     border-bottom: 1px solid #ffc107 !important;
