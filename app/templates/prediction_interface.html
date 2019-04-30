@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+{% block body %}
+    <body>
+    <div class="row">
+        <div class="sideMenu prediction col m2">
+            <form autocomplete="off" method="POST" id="prediction_form" name="predictionForm">
+                <div class="row adminPrediction">
+                    <div class="input-field col m12">
+                        <i class="material-icons prefix">multiline_chart</i>
+                        <select name="parameters" multiple id="parameters" class="predictInput">
+                            {% for key in keys %}
+                                <option value="{{ key }}">{{ key }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="row adminPrediction">
+                    <div class="input-field col m12">
+                        <i class="material-icons prefix">folder_open</i>
+                        <select class="predictInput" name="predictModel" multiple id="models">
+                            {% for model in models %}
+                                <option value="{{ model }}">{{ model }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="createBtn row center">
+                    <button class="btn waves-effect waves-light black" type="submit" name="action">Créer
+                        <i class="material-icons right">create</i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col offset-m3 m7 tableContainer">
+            <table id="tablePredict" class="centered responsive-table">
+            </table>
+        </div>
+        <div class="tooltip">
+            <h3 class="center">Chargement...</h3>
+            <div class="preloader-background small">
+                <div class="spinner-layer spinner-blue">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </body>
+{% endblock %}

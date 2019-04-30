@@ -530,5 +530,4 @@ function drawparallelCoordinar(data, nbChart) {
     $('#svg'+nbChart).on('click', function(evt){
         displayEditMenu(evt.target.id, nbChart);
     })
-
 }

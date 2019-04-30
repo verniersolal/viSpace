@@ -138,3 +138,39 @@ label {
 .switch label input[type=checkbox]:checked + .lever:after {
     background-color: #ffc107;
 }
+
+#tablePredict {
+    background-color: white;
+    color: black;
+}
+.prediction {
+    height: 50%;
+}
+
+#hrTable{
+
+    border:         none;
+    border-left:    1px solid hsla(200, 10%, 50%,100);
+    height:         100vh;
+    width:          1px;
+}
+.tooltip{
+    background-color: white;
+    width: 40vh;
+    height: 38vh;
+    z-index: 999;
+    position: absolute;
+    top: 20%;
+    left: 41%;
+    visibility: hidden;
+    color: black;
+}
+.spinner-layer {
+    position: absolute;
+    width: 25%;
+    height: 25%;
+    top: 65%;
+    left: 35%;
+    opacity: 0;
+    border-color: #26a69a;
+}

@@ -7,6 +7,8 @@ import os
 import json
 import pandas as pd
 import re
+import math
+import numpy as np
 UPLOAD_FOLDER = 'data/'
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -219,3 +221,112 @@ def get_observations(x_axe, y_axe):
         return {'message': 'Not good parameters'}
 
 
+@app.route('/prediction', methods=['GET'])
+def predict_rendering():
+
+    return render_template('prediction_interface.html', keys=get_obs_params(), models=get_models_name(), method='GET')
+
+
+def getHrParams():
+    pass
+
+
+def get_obs_params():
+    return collection.find_one({'prefixe': 'observation'})['params'][0].keys()
+
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    request_data = json.loads(list(request.form)[0])
+    observations = list(map(lambda x: x['value'], list(filter(lambda x: x['name'] == 'parameters', request_data))))
+    errors = list(map(lambda x: 'e'+x, observations))
+    model_data = {}
+    model_data['M'] = []
+    model_data['R'] = []
+    model_data['t'] = []
+    models = list(map(lambda x: x['value'], list(filter(lambda x: x['name'] == 'predictModel', request_data))))
+    for model in models:  # pour chaque model dans la base de données
+        model_parameters = collection.find_one({'prefixe': model})['params']  # parametres du model model
+        for obs in observations:  # pour chaque observation
+            if obs in model_parameters.keys():
+                if obs in model_data.keys():
+                    model_data[obs].extend(model_parameters[obs])
+                else:
+                    model_data[obs] = model_parameters[obs]
+        model_data['M'].extend(model_parameters['M'])
+        model_data['R'].extend(model_parameters['R'])
+        model_data['t'].extend(model_parameters['t'])
+    obs_in_db = collection.find_one({'prefixe': 'observation'})['params']
+    obs = list(map(lambda o: list(map(lambda l: {l: o[l]}, list(filter(lambda x: x in observations or x in errors, o)))), obs_in_db))
+    result_obs = []
+    for ob in obs:
+        tmp = {}
+        for i in ob:
+            tmp.update(i)
+        result_obs.append(tmp)
+    df_obs = pd.DataFrame(result_obs)
+    hr = pd.DataFrame.from_dict(model_data)
+    obs = df_obs.sample(3)
+    logList = []
+    maxi = []
+    for index in obs.index:
+        logV = []
+        for value in range(len(hr)):
+            dist = []
+            prod = []
+            for column in obs.columns:
+                if column in hr.columns:
+                    dist.append(((float(obs[column][index]) - float(hr[column][value]))
+                                 / float(obs["e" + column][index])) ** 2)
+                    prod.append(1 / (math.sqrt(2 * math.pi) * float(obs["e" + column][index])))
+            logV.append(np.prod(prod) * np.exp(-(sum(dist)) / 2))
+        logList.append(logV)
+        maxi.append(max(logV))
+    indexes = []
+    for k in range(len(obs)):
+        indexes.append([index for index, value in enumerate(logList[k]) if value >= 0.95 * maxi[k]])
+    M = []
+    R = []
+    T = []
+    m = []
+    r = []
+    t = []
+    for log_index in indexes:
+        m = []
+        r = []
+        t = []
+        for ind in log_index:
+            m.append(hr['M'][ind])
+            r.append(hr['R'][ind])
+            t.append(hr['t'][ind])
+        M.append(m)
+        R.append(r)
+        T.append(t)
+    Mestim = 0
+    Restim = 0
+    Testim = 0
+    LM = []
+    LR = []
+    LT = []
+    for o in range(len(M)):
+        for e in range(len(M[o])):
+            Mestim = np.mean(M[o][e])
+            Restim = np.mean(R[o][e])
+            Testim = np.mean(T[o][e])
+        LM.append(Mestim)
+        LR.append(Restim)
+        LT.append(Testim)
+    obs['M'] = LM
+    obs['R'] = LR
+    obs['t'] = LT
+    resp = obs.to_json(orient='records')
+    return resp
+
+
+def get_models_name():
+    result = []
+    models = collection.find({}, {'prefixe': 1})
+    for model in models:
+        if model['prefixe'] != 'observation':
+            result.append(model['prefixe'])
+    return result
