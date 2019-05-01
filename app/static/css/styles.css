@@ -139,9 +139,10 @@ label {
     background-color: #ffc107;
 }
 
-#tablePredict {
+#tablePredict, #tablePredict2 {
     background-color: white;
     color: black;
+    min-height: 0px;
 }
 .prediction {
     height: 50%;
@@ -164,6 +165,7 @@ label {
     left: 41%;
     visibility: hidden;
     color: black;
+    border: 3px #ffc107 solid;
 }
 .spinner-layer {
     position: absolute;
@@ -173,4 +175,30 @@ label {
     left: 35%;
     opacity: 0;
     border-color: #26a69a;
+}
+caption{
+    color: whitesmoke;
+    font-size: 40px;
+}
+/*Creates table with scrollable tbody*/
+tbody {
+  display:block;
+  height:60vh;
+  overflow:auto;
+}
+thead, tbody tr {
+  display:table;
+  width:100%;
+  table-layout:fixed;
+}
+thead {
+  width: calc( 100% - 1em )
+}
+table {
+  width:100%;
+}
+
+#parCoordsView {
+    visibility: hidden;
+    min-height: 0px;
 }

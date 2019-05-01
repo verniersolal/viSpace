@@ -266,7 +266,7 @@ def predict():
         result_obs.append(tmp)
     df_obs = pd.DataFrame(result_obs)
     hr = pd.DataFrame.from_dict(model_data)
-    obs = df_obs.sample(3)
+    obs = df_obs.sample(100)
     logList = []
     maxi = []
     for index in obs.index:
