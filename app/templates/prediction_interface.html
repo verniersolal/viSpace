@@ -5,6 +5,8 @@
         <div class="sideMenu prediction col m2">
             <form autocomplete="off" method="POST" id="prediction_form" name="predictionForm">
                 <div class="row adminPrediction">
+                    <label class="labels" for="parameters">Paramètres des Observations</label>
+
                     <div class="input-field col m12">
                         <i class="material-icons prefix">multiline_chart</i>
                         <select name="parameters" multiple id="parameters" class="predictInput">
@@ -15,7 +17,9 @@
                     </div>
                 </div>
                 <div class="row adminPrediction">
+                    <label class="labels" for="models">Modèles disponibles</label>
                     <div class="input-field col m12">
+
                         <i class="material-icons prefix">folder_open</i>
                         <select class="predictInput" name="predictModel" multiple id="models">
                             {% for model in models %}
